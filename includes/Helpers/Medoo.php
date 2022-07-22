@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link https://medoo.in
  */
 
-namespace Nebula\Database;
+namespace Nebula\Helpers;
 
 use PDO;
 use Exception;

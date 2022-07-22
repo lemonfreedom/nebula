@@ -19,15 +19,23 @@ class Request
     public $requestURI;
 
     /**
-     * 路径信息
+     * 路径信息，已去除首尾分隔符
      *
      * @var string
      */
     public $pathinfo;
 
+    /**
+     * 请求方式
+     *
+     * @var string
+     */
+    public $method;
+
     public function __construct()
     {
         $this->requestURI = $_SERVER['REQUEST_URI'];
+        $this->method = $_SERVER['REQUEST_METHOD'];
         $this->setPathInfo();
     }
 
@@ -45,10 +53,10 @@ class Request
         }
 
         if ($pos = strpos($pathinfo, '.php')) {
-            $pathinfo = rtrim(substr($pathinfo, $pos + 4), '/') . '/';
+            $pathinfo = substr($pathinfo, $pos + 4);
         }
 
-        $this->pathinfo = $pathinfo;
+        $this->pathinfo = trim($pathinfo, '/');
     }
 
     /**
