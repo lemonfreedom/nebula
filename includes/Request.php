@@ -60,6 +60,30 @@ class Request
     }
 
     /**
+     * 获取 get 参数
+     *
+     * @param string $name 参数名
+     * @param string $defaultValue 默认值
+     * @return null|string
+     */
+    public function get($name, $defaultValue = null)
+    {
+        return $_GET[$name] ?? $defaultValue;
+    }
+
+    /**
+     * 获取 post 参数
+     *
+     * @param string $name 参数名
+     * @param string $defaultValue 默认值
+     * @return null|string
+     */
+    public function post($name, $defaultValue = null)
+    {
+        return $_POST[$name] ?? $defaultValue;
+    }
+
+    /**
      * 获取单例实例
      *
      * @return Request
@@ -69,6 +93,7 @@ class Request
         if (!isset(self::$instance)) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
 }

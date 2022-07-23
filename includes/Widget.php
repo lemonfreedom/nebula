@@ -18,14 +18,14 @@ class Widget
      *
      * @var Request
      */
-    protected $request;
+    public $request;
 
     /**
      * 响应对象
      *
      * @var Response
      */
-    protected $response;
+    public $response;
 
     /**
      * 参数
@@ -48,7 +48,6 @@ class Widget
         $this->response = Response::getInstance();
         $this->params = $params;
 
-        // 执行初始化方法
         $this->init();
     }
 
@@ -106,7 +105,7 @@ class Widget
      * 行动绑定
      *
      * @param boolean $condition
-     * @return this
+     * @return $this
      */
     public function on($condition)
     {
@@ -115,6 +114,17 @@ class Widget
         } else {
             return EmptyClass::getInstance();
         }
+    }
+
+    /**
+     * 类赋值
+     *
+     * @param mixed $variable 变量
+     * @return $this
+     */
+    public function to(&$variable)
+    {
+        return $variable = $this;
     }
 
     /**

@@ -1,0 +1,23 @@
+body {
+    height: 100%;
+    color: $color-font;
+    background-color: $color-bg;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: $color-primary-hover;
+    text-decoration: none;
+
+    &:hover {
+        color: $color-primary-secondary;
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+}

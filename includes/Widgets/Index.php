@@ -6,19 +6,13 @@ use Nebula\Widget;
 
 class Index extends Widget
 {
+    /**
+     * 首页渲染函数
+     *
+     * @return void
+     */
     public function render()
     {
-        echo 'render';
-    }
-
-    /**
-     * 监听方法
-     *
-     * @var void
-     */
-    public function action()
-    {
-        print_r($this->params);
-        $this->on(true)->render();
+        $this->response->render('index');
     }
 }

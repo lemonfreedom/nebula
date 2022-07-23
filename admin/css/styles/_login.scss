@@ -1,0 +1,60 @@
+.nebula-login {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10% 16px;
+    box-sizing: border-box;
+
+    .board {
+        width: 100%;
+        max-width: 300px;
+        border-radius: 10px;
+        padding: 10px;
+
+        .title {
+            color: $color-font-secondary;
+            text-align: center;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+
+            .login-input {
+                height: 40px;
+                padding: 0 10px;
+                box-sizing: border-box;
+                margin-bottom: 20px;
+                color: inherit;
+                background-color: $color-input-bg;
+                outline: none;
+                border: 2px solid $color-input-bg;
+                border-radius: 0;
+
+                &:focus {
+                    border-color: $color-primary;
+                }
+            }
+
+            .login-btn {
+                height: 40px;
+                border: 0;
+                color: $color-white;
+                background-color: $color-primary;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: $color-primary-hover;
+                }
+            }
+        }
+
+        .tools {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
