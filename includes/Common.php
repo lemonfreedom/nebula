@@ -79,7 +79,7 @@ namespace Nebula {
          * 对字符串进行 hash 加密
          *
          * @param string $string 目标字符串
-         * @param null|string $salt 扰码
+         * @param null|string $salt 32 位扰码
          * @return string 哈希值
          */
         public static function hash($string, $salt = null)

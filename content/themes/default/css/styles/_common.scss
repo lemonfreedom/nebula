@@ -1,16 +1,16 @@
 body {
     height: 100%;
-    color: $color-font;
-    background-color: $color-bg;
+    color: $color-grey-2;
+    background-color: $color-grey-9;
     font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 a {
-    color: $color-primary-hover;
+    color: lighten($color: $color-primary, $amount: 10%);
     text-decoration: none;
 
     &:hover {
-        color: $color-primary-secondary;
+        color: lighten($color: $color-primary, $amount: 20%);
     }
 }
 

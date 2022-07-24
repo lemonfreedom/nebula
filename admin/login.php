@@ -11,6 +11,9 @@
         </form>
         <div class="tools">
             <a href="/">返回首页</a>
+            <?php if ($options->boolParse('allowRegister')) : ?>
+                <a href="/admin/register.php">立即注册</a>
+            <?php endif; ?>
         </div>
     </div>
 </div>

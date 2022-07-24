@@ -1,0 +1,126 @@
+.nebula-navbar {
+    background-color: darken($color: $color-primary, $amount: 10%);
+    margin-bottom: 1rem;
+
+    .container {
+        display: flex;
+        height: 3.6rem;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1.6rem;
+
+        .logo {
+            font-size: 1.4rem;
+            color: lighten($color: $color-primary, $amount: 30%);
+            font-weight: bold;
+            flex: none;
+            margin: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex: auto;
+
+            .menu {
+                display: flex;
+                align-items: center;
+                gap: 1.2rem;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+
+                li {
+                    a {
+                        display: flex;
+                        align-items: center;
+                        color: $color-grey-0;
+                        white-space: nowrap;
+                        gap: .3rem;
+
+                        &:hover {
+                            color: lighten($color: $color-primary, $amount: 50%);
+                        }
+                    }
+                }
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .container {
+            height: 3.6rem;
+            line-height: 3.6rem;
+
+            .main {
+                display: none;
+                height: initial;
+                position: absolute;
+                top: 3.6rem;
+                right: 0;
+                bottom: 0;
+                flex-direction: column;
+                justify-content: initial;
+                background-color: darken($color: $color-primary, $amount: 12%);
+                overflow-x: hidden;
+                overflow-y: auto;
+                z-index: 10000;
+
+                .menu {
+                    flex-direction: column;
+                    align-items: inherit;
+                    gap: initial;
+
+                    li {
+                        a {
+                            font-size: 24px;
+                            width: 3.6rem;
+                            height: 3.6rem;
+                            justify-content: center;
+
+                            .text {
+                                display: none;
+                            }
+
+                            &:hover {
+                                background-color: $color-primary;
+                                color: lighten($color: $color-primary, $amount: 50%);
+                            }
+                        }
+                    }
+                }
+
+                &.open {
+                    display: block;
+                }
+            }
+
+            .menu-toggle {
+                border: 0;
+                padding: 0;
+                cursor: pointer;
+                background-color: transparent;
+                color: $color-grey-0;
+                font-size: 2.4rem;
+                width: 3.6rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &:hover {
+                    color: lighten($color: $color-primary, $amount: 50%);
+                }
+            }
+        }
+    }
+}

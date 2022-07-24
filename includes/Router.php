@@ -19,12 +19,17 @@ class Router
         ],
         'user' => [
             'widget' => '\Nebula\Widgets\User',
-            // 行动方法名
             'params' => [
                 'action' => '',
-                'val2' => 'def2',
             ],
         ],
+
+        'options' => [
+            'widget' => '\Nebula\Widgets\Options',
+            'params' => [
+                'action' => '',
+            ],
+        ]
     ];
 
     /**

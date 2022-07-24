@@ -62,25 +62,33 @@ class Request
     /**
      * 获取 get 参数
      *
-     * @param string $name 参数名
-     * @param string $defaultValue 默认值
-     * @return null|string
+     * @param null|string $name 参数名
+     * @param null|string $defaultValue 默认值
+     * @return null|string|array
      */
-    public function get($name, $defaultValue = null)
+    public function get($name = null, $defaultValue = null)
     {
-        return $_GET[$name] ?? $defaultValue;
+        if (null === $name) {
+            return $_GET;
+        } else {
+            return $_GET[$name] ?? $defaultValue;
+        }
     }
 
     /**
      * 获取 post 参数
      *
-     * @param string $name 参数名
-     * @param string $defaultValue 默认值
-     * @return null|string
+     * @param null|string $name 参数名
+     * @param null|string $defaultValue 默认值
+     * @return null|string|array
      */
-    public function post($name, $defaultValue = null)
+    public function post($name = null, $defaultValue = null)
     {
-        return $_POST[$name] ?? $defaultValue;
+        if (null === $name) {
+            return $_POST;
+        } else {
+            return $_POST[$name] ?? $defaultValue;
+        }
     }
 
     /**

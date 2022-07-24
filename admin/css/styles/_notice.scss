@@ -1,0 +1,52 @@
+@keyframes fade {
+    0% {
+        opacity: 0;
+        top: -3rem;
+    }
+
+    10% {
+        opacity: 1;
+        top: 0;
+    }
+
+    90% {
+        opacity: 1;
+        top: 0;
+    }
+
+    100% {
+        opacity: 0;
+        top: -3rem;
+    }
+}
+
+.nebula-notice {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 1rem;
+    height: 3.6rem;
+    line-height: 3.6rem;
+    text-align: center;
+    color: $color-white;
+    background-color: $color-primary;
+    animation: fade 2s forwards;
+    box-sizing: border-box;
+
+    &.nebula-info {
+        background-color: $color-info;
+    }
+
+    &.nebula-success {
+        background-color: $color-success;
+    }
+
+    &.nebula-warning {
+        background-color: $color-warning;
+    }
+
+    &.nebula-error {
+        background-color: $color-error;
+    }
+}

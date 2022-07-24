@@ -1,173 +1,143 @@
-@font-face {
-    font-family: 'Material Symbols Rounded';
-    font-style: normal;
-    font-weight: 400;
-    src: url(/admin/fonts/MaterialSymbolsRounded.woff) format('woff');
-}
-
-.material-symbols-rounded {
-    font-family: 'Material Symbols Rounded';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    word-wrap: normal;
-    direction: ltr;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    color: inherit;
+::selection {
+    color: $color-grey-1;
+    background-color: lighten($color: $color-primary, $amount: 50%);
 }
 
 body {
     height: 100%;
-    color: $color-font;
-    background-color: $color-bg;
+    color: $color-grey-1;
+    background-color: $color-grey-9;
     font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 a {
-    color: $color-primary-hover;
+    color: lighten($color: $color-primary, $amount: 10%);
     text-decoration: none;
 
     &:hover {
-        color: $color-primary-secondary;
+        color: lighten($color: $color-primary, $amount: 20%);
+    }
+}
+
+.mask {
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: fixed;
+        top: 3.6rem;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-color: rgba($color: $color-dark, $alpha: .3);
+        z-index: 1000;
     }
 }
 
 .container {
     width: 100%;
-    max-width: 1200px;
-    padding: 0 15px;
+    max-width: 1000px;
+    padding: 0 1rem;
     margin: 0 auto;
     box-sizing: border-box;
 }
 
-@keyframes fade {
-    0% {
-        opacity: 0;
-        top: -40px;
+.page-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: .6rem 0;
+    border-bottom: 1px dashed $color-primary;
+    margin-bottom: 1rem;
+}
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    margin-bottom: 1rem;
+
+    .form-label {
+        font-weight: bold;
     }
 
-    10% {
-        opacity: 1;
-        top: 0;
-    }
-
-    90% {
-        opacity: 1;
-        top: 0;
-    }
-
-    100% {
-        opacity: 0;
-        top: -40px;
+    .form-sublabel {
+        font-size: .8rem;
+        color: $color-grey-5;
     }
 }
 
-.nebula-notice {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 0 15px;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-    color: $color-white;
+.nebula-button {
+    font-size: 1rem;
+    height: 2.4rem;
+    padding: 0 1rem;
+    color: $color-grey-1;
     background-color: $color-primary;
-    animation: fade 3s forwards;
-    box-sizing: border-box;
+    border: 0;
+    background-color: $color-primary;
+    cursor: pointer;
 
-    &.nebula-info {
-        background-color: $color-info;
-    }
-
-    &.nebula-success {
-        background-color: $color-success;
-    }
-
-    &.nebula-warning {
-        background-color: $color-warning;
-    }
-
-    &.nebula-error {
-        background-color: $color-error;
+    &:hover {
+        background-color: lighten($color: $color-primary, $amount: 10%);
     }
 }
 
-.nebula-navbar {
-    background-color: $color-input-bg;
+.nebula-input {
+    height: 2.4rem;
+    padding: 0 .6rem;
+    box-sizing: border-box;
+    color: $color-grey-1;
+    outline: none;
+    border-radius: 0;
+    border: 2px solid lighten($color: $color-grey-8, $amount: 4%);
+    background-color: $color-grey-8;
 
-    .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .left {
-            display: flex;
-            align-items: center;
-
-            .logo {
-                font-weight: bold;
-                margin-right: 8px;
-            }
-        }
-
-        .menu-toggle {
-            display: none;
-        }
-
-        .menu {
-            display: flex;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-
-            li {
-                a {
-                    display: block;
-                    color: $color-font;
-                    white-space: nowrap;
-                    height: 56px;
-                    line-height: 56px;
-                    padding: 0 8px;
-
-                    &:hover {
-                        color: $color-white;
-                    }
-                }
-            }
-        }
+    &:focus {
+        border-color: lighten($color: $color-primary, $amount: 10%);
     }
+}
 
-    @media (max-width: 992px) {
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 56px;
-            line-height: 56px;
+.nebula-switch {
+    $width: 3rem;
+    $height: 1.6rem;
+    $bg-color: $color-grey-8;
+    $false-color: $color-error;
+    $true-color: $color-success;
 
-            .menu-toggle {
-                display: block;
-                border: 0;
-                padding: 8px;
-                cursor: pointer;
-                background-color: transparent;
-                font-size: 30px;
+    input {
+        appearance: none;
+        width: $width;
+        height: $height;
+        background-color: $bg-color;
+        position: relative;
+        cursor: pointer;
+        box-sizing: content-box;
+        border: 2px solid lighten($color: $color-grey-8, $amount: 4%);
+        border-radius: 0;
 
-                &:hover {
-                    color: $color-white;
-                }
-            }
+        &::before {
+            content: '';
+            display: block;
+            height: calc($height - .4rem);
+            width: calc($height - .4rem);
+            transform: translate(-50%, -50%);
+            position: absolute;
+            top: 50%;
+            left: calc(($height - .4rem) / 2 + .2rem);
+            background-color: $false-color;
+            transition: .3s ease;
+        }
 
-            .menu {
-                display: none;
-            }
+        &:checked::before {
+            background-color: $true-color;
+            left: calc(100% - ($height - .4rem) / 2 - .2rem);
         }
     }
 }

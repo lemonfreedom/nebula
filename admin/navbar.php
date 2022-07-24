@@ -1,19 +1,39 @@
 <?php defined('NEBULA_ROOT_PATH') || exit; ?>
 <div class="nebula-navbar">
     <div class="container">
-        <div class="left">
-            <div class="logo">Nebula</div>
+        <h1 class="logo"><?= $options->title ?></h1>
+        <div class="main">
             <ul class="menu">
-                <li><a href="">仪表盘</a></li>
-                <li><a href="">设置</a></li>
+                <li>
+                    <a href="/admin/index.php">
+                        <i class="bi bi-speedometer2"></i>
+                        <span class="text">仪表盘</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/options.php">
+                        <i class="bi bi-gear"></i>
+                        <span class="text">设置</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="menu">
+                <li>
+                    <a href="">
+                        <i class="bi bi-person"></i>
+                        <span class="text">你好，<?= $user->username ?></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/user/logout">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span class="text">退出登录</span>
+                    </a>
+                </li>
             </ul>
         </div>
-        <button class="menu-toggle material-symbols-rounded">
-            menu
-        </button>
-        <ul class="menu">
-            <li><a href="">你好，<?= $user->username ?></a></li>
-            <li><a href="/user/logout">退出登陆</a></li>
-        </ul>
+        <div id="menuToggleButton" class="menu-toggle">
+            <i class="bi bi-list"></i>
+        </div>
     </div>
 </div>

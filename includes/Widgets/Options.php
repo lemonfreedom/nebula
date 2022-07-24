@@ -21,25 +21,15 @@ class Options extends Base
      */
     public function setOption($name, $value)
     {
-        $this->$name = $value;
-        if ($this->db->has('options', ['name' => $name])) {
-            $this->db->update('options', ['value' => $value], ['name' => $name]);
+        if (null === $this->$name || isset($this->$name)) {
+            if ($this->$name !== $value) {
+                $this->db->update('options', ['value' => $value], ['name' => $name]);
+            }
         } else {
             $this->db->insert('options', ['name' => $name, 'value' => $value]);
         }
-    }
 
-    /**
-     * 设置多项配置
-     *
-     * @param array $options 配置列表
-     * @return void
-     */
-    public function setOptions($options)
-    {
-        foreach ($options as $name => $value) {
-            $this->setOption($name, $value);
-        }
+        $this->$name = $value;
     }
 
     /**
@@ -64,5 +54,54 @@ class Options extends Base
         foreach ($names as $name) {
             $this->deleteOption($name);
         }
+    }
+
+    /**
+     * 布尔配置解析
+     *
+     * @param string $name 配置键
+     * @return bool
+     */
+    public function boolParse($name)
+    {
+        if (isset($this->$name)) {
+            return $this->$name === '1';
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 更新配置
+     *
+     * @return void
+     */
+    public function update()
+    {
+        $params = $this->request->post();
+
+        // 站点名称
+        $this->setOption('title', $params['title'] ?? $this->title);
+        // 站点描述
+        $this->setOption('description', $params['description'] ?? $this->description);
+        // 是否允许注册
+        $this->setOption('allowRegister', $params['allowRegister'] ?? '0');
+
+        Notice::alloc()->set('保存成功', 'success');
+        $this->response->redirect('/admin/options.php');
+    }
+
+    /**
+     * 行动方法
+     *
+     * @return $this
+     */
+    public function action()
+    {
+        $action = $this->params['action'];
+
+        $this->on($action === 'update')->update();
+
+        return $this;
     }
 }

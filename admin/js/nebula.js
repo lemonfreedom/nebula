@@ -1,4 +1,15 @@
 (() => {
+    // 菜单切换
+    let menuToggleButtonEl = document.querySelector('#menuToggleButton');
+    if (menuToggleButtonEl) {
+        menuToggleButtonEl.addEventListener('click', function () {
+            let mainEl = document.querySelector('.nebula-navbar .main');
+            mainEl.classList.toggle('open');
+            window.scrollTo(0, 0);
+            document.body.classList.toggle('mask');
+        });
+    }
+
     // 通知
     let notice = Cookies.get('nebula_notice');
     if (notice) {
@@ -9,5 +20,5 @@
         noticeEl.innerText = notice.message;
         document.body.append(noticeEl);
         Cookies.remove('nebula_notice');
-    }
+    };
 })()
