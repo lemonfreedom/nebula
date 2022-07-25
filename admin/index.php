@@ -9,4 +9,5 @@
     <h2 class="page-subtitle">最近评论</h2>
     <h2 class="page-subtitle">个人统计</h2>
 </div>
+<?php require __DIR__ . '/copyright.php'; ?>
 <?php require __DIR__ . '/footer.php'; ?>

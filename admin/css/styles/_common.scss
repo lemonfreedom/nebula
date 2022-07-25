@@ -13,8 +13,10 @@ body {
 a {
     color: lighten($color: $color-primary, $amount: 10%);
     text-decoration: none;
+    outline: none;
 
-    &:hover {
+    &:hover,
+    &:focus {
         color: lighten($color: $color-primary, $amount: 20%);
     }
 }
@@ -83,8 +85,10 @@ a {
     border: 0;
     background-color: $color-primary;
     cursor: pointer;
+    outline: none;
 
-    &:hover {
+    &:hover,
+    &:focus {
         background-color: lighten($color: $color-primary, $amount: 10%);
     }
 }
@@ -121,6 +125,7 @@ a {
         box-sizing: content-box;
         border: 2px solid lighten($color: $color-grey-8, $amount: 4%);
         border-radius: 0;
+        outline: none;
 
         &::before {
             content: '';
@@ -138,6 +143,10 @@ a {
         &:checked::before {
             background-color: $true-color;
             left: calc(100% - ($height - .4rem) / 2 - .2rem);
+        }
+
+        &:focus {
+            border-color: lighten($color: $color-primary, $amount: 10%);
         }
     }
 }

@@ -29,4 +29,5 @@
         </div>
     </form>
 </div>
+<?php require __DIR__ . '/copyright.php'; ?>
 <?php require __DIR__ . '/footer.php'; ?>

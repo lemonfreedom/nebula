@@ -153,8 +153,12 @@ class User extends Base
      */
     public function logout()
     {
+        // 清空 token
+        $this->db->update('users', ['token' => ''], ['uid' => Cookie::get('nebula_uid', '')]);
+        // 清除用户 cookie
         Cookie::delete('nebula_uid');
         Cookie::delete('nebula_token');
+
         $this->response->redirect('/admin/login.php');
     }
 

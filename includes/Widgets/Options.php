@@ -21,7 +21,7 @@ class Options extends Base
      */
     public function setOption($name, $value)
     {
-        if (null === $this->$name || isset($this->$name)) {
+        if (isset($this->$name)) {
             if ($this->$name !== $value) {
                 $this->db->update('options', ['value' => $value], ['name' => $name]);
             }
