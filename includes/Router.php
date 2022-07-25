@@ -21,9 +21,9 @@ class Router
             'widget' => '\Nebula\Widgets\User',
             'params' => [
                 'action' => '',
+                'uid' => null,
             ],
         ],
-
         'options' => [
             'widget' => '\Nebula\Widgets\Options',
             'params' => [

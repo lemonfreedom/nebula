@@ -1,5 +1,5 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php $user->hasLogin() && $options->response->redirect('/'); ?>
+<?php $user->hasLogin() && $response->redirect('/'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <div class="nebula-login">
     <div class="board">

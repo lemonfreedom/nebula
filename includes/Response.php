@@ -55,12 +55,12 @@ class Response
      * 重定向
      *
      * @param string $url 重定向地址
-     * @return $this
+     * @return void
      */
     public function redirect($url)
     {
         header('Location:' . $url);
-        return $this;
+        exit;
     }
 
     /**

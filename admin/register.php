@@ -1,6 +1,6 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php $options->boolParse('allowRegister') || $options->response->redirect('/'); ?>
-<?php $user->hasLogin() && $options->response->redirect('/'); ?>
+<?php $options->boolParse('allowRegister') || $response->redirect('/'); ?>
+<?php $user->hasLogin() && $response->redirect('/'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <div class="nebula-login">
     <div class="board">

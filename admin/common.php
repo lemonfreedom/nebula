@@ -10,3 +10,9 @@ if (!@include dirname(__DIR__) . '/config.php') {
 
 // 用户组件
 \Nebula\Widgets\User::alloc()->to($user);
+
+// 请求对象
+$request = \Nebula\Request::getInstance();
+
+// 响应对象
+$response = \Nebula\Response::getInstance();

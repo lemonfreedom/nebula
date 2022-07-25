@@ -17,6 +17,13 @@ class User extends Widget
     private $hasLogin = null;
 
     /**
+     * 登陆用户信息
+     *
+     * @var null|array
+     */
+    private $loginUserInfo = null;
+
+    /**
      * 获取登陆状态
      *
      * @return bool 是否已登陆
@@ -28,15 +35,13 @@ class User extends Widget
             $token = Cookie::get('nebula_token');
             // cookie 是否存在
             if (null !== $uid && null !== $token) {
-                $userInfo = $this->db->get('users', ['uid', 'username', 'email', 'token'], ['uid' => $uid]);
+                $loginUserInfo = $this->db->get('users', ['uid', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
                 // 用户信息是否存在
-                if ($userInfo) {
+                if ($loginUserInfo) {
                     // token 有效性
-                    $this->hasLogin = Common::hashValidate($userInfo['token'], $token);
+                    $this->hasLogin = Common::hashValidate($loginUserInfo['token'], $token);
                     if ($this->hasLogin) {
-                        foreach ($userInfo as $name => $value) {
-                            $this->$name = $value;
-                        }
+                        $this->loginUserInfo = $loginUserInfo;
                     }
                 } else {
                     $this->hasLogin = false;
@@ -50,11 +55,42 @@ class User extends Widget
     }
 
     /**
+     * 获取用户信息，若参数为空，则查询登陆用户信息
+     *
+     * @param null｜string $key 字段名
+     * @return mixed
+     */
+    public function get($key = null)
+    {
+        $uid = $this->params['uid'] ?? null;
+        $userInfo = null;
+        if (null === $uid) {
+            $userInfo = $this->loginUserInfo;
+        } else {
+            $userInfo = $this->db->get('users', ['uid', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
+        }
+
+        if (null === $key) {
+            return $userInfo;
+        } else {
+            return $userInfo[$key] ?? null;
+        }
+    }
+
+    /**
+     * 获取用户名称
+     */
+    public function getName()
+    {
+        return empty($this->get('nickname')) ? $this->get('username') : $this->get('nickname');
+    }
+
+    /**
      * 登陆验证
      *
      * @return void
      */
-    public function login()
+    private function login()
     {
         // 权限验证，避免重复登陆
         if ($this->hasLogin()) {
@@ -92,16 +128,16 @@ class User extends Widget
      *
      * @return void
      */
-    public function register()
+    private function register()
     {
         // 权限验证，避免登陆注册
         if ($this->hasLogin()) {
             $this->response->redirect('/admin');
         }
 
-        $params = $this->request->post();
+        $data = $this->request->post();
 
-        $validate = new Validate($params, [
+        $validate = new Validate($data, [
             'username' => [
                 ['type' => 'required', 'message' => '用户名不能为空'],
             ],
@@ -122,25 +158,28 @@ class User extends Widget
         ]);
 
         if ($validate->run()) {
-            if ($this->db->has('users', ['username' => $params['username']])) {
-                // 用户名已存在
+            // 用户名已存在
+            if ($this->db->has('users', ['username' => $data['username']])) {
                 Notice::alloc()->set('用户名已存在', 'warning');
                 $this->response->redirect('/admin/register.php');
-            } else if ($this->db->has('users', ['email' => $params['email']])) {
-                // 邮箱已存在
+            }
+
+            // 邮箱已存在
+            if ($this->db->has('users', ['email' => $data['email']])) {
+
                 Notice::alloc()->set('邮箱已存在', 'warning');
                 $this->response->redirect('/admin/register.php');
-            } else {
-                // 插入数据
-                $this->db->insert('users', [
-                    'username' => $params['username'],
-                    'email' => $params['email'],
-                    'password' => Common::hash($params['password']),
-                ]);
-
-                Notice::alloc()->set('注册成功', 'success');
-                $this->response->redirect('/admin/login.php');
             }
+
+            // 插入数据
+            $this->db->insert('users', [
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'password' => Common::hash($data['password']),
+            ]);
+
+            Notice::alloc()->set('注册成功', 'success');
+            $this->response->redirect('/admin/login.php');
         } else {
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/register.php');
@@ -152,8 +191,9 @@ class User extends Widget
      *
      * @return void
      */
-    public function logout()
+    private function logout()
     {
+        $this->loginUserInfo = null;
         // 清空 token
         $this->db->update('users', ['token' => ''], ['uid' => Cookie::get('nebula_uid', '')]);
         // 清除用户 cookie
@@ -161,6 +201,128 @@ class User extends Widget
         Cookie::delete('nebula_token');
 
         $this->response->redirect('/admin/login.php');
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @return void
+     */
+    private function update()
+    {
+        $uid = $this->params['uid'];
+
+        // 未登陆
+        if (!$this->hasLogin()) {
+            $this->response->redirect('/admin/login.php');
+        }
+
+        // 修改用户不存在
+        if (!$this->db->has('users', ['uid' => $uid])) {
+            Notice::alloc()->set('未知用户', 'error');
+            $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
+        }
+
+        // 如果不是修改当前登陆用户
+        if ($this->loginUserInfo['uid'] !== $uid) {
+            Notice::alloc()->set('非法请求', 'error');
+            $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
+        }
+
+        $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'username' => [
+                ['type' => 'required', 'message' => '用户名不能为空'],
+            ],
+            'email' => [
+                ['type' => 'required', 'message' => '邮箱不能为空'],
+                ['type' => 'email', 'message' => '邮箱格式不正确'],
+            ],
+        ]);
+
+        if ($validate->run()) {
+            // 用户名已存在
+            $userInfo = $this->db->get('users', ['uid'], ['username' => $data['username']]);
+            if (null !== $userInfo && $userInfo['uid'] !== $uid) {
+                Notice::alloc()->set('用户名已存在', 'warning');
+                $this->response->redirect('/admin/profile.php?uid=' . $uid);
+            }
+
+            // 邮箱已存在
+            $userInfo = $this->db->get('users', ['uid'], ['email' => $data['email']]);
+            if (null !== $userInfo && $userInfo['uid'] !== $uid) {
+                Notice::alloc()->set('邮箱已存在', 'warning');
+                $this->response->redirect('/admin/profile.php?uid=' . $uid);
+            }
+
+            // 修改数据
+            $this->db->update('users', [
+                'username' => $data['username'],
+                'nickname' => $data['nickname'],
+                'email' => $data['email'],
+            ], ['uid' => $uid]);
+
+            Notice::alloc()->set('修改成功', 'success');
+            $this->response->redirect('/admin/profile.php?uid=' . $uid);
+        } else {
+            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            $this->response->redirect('/admin/profile.php?uid=' . $uid);
+        }
+    }
+
+    /**
+     * 更新用户密码
+     *
+     * @return void
+     */
+    private function updatePassword()
+    {
+        $uid = $this->params['uid'];
+
+        // 未登陆
+        if (!$this->hasLogin()) {
+            $this->response->redirect('/admin/login.php');
+        }
+
+        // 修改用户不存在
+        if (!$this->db->has('users', ['uid' => $uid])) {
+            Notice::alloc()->set('未知用户', 'error');
+            $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
+        }
+
+        // 不是修改当前登陆用户
+        if ($this->loginUserInfo['uid'] !== $uid) {
+            Notice::alloc()->set('非法请求', 'error');
+            $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
+        }
+
+        $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'password' => [
+                ['type' => 'required', 'message' => '密码不能为空'],
+            ],
+            'confirmPassword' => [
+                ['type' => 'required', 'message' => '确认密码不能为空'],
+                ['type' => 'required', 'message' => '确认密码不能为空'],
+                ['type' => 'confirm', 'key' => 'password', 'message' => '两次输入密码不一致'],
+            ],
+        ]);
+
+        if ($validate->run()) {
+            // 修改数据
+            $this->db->update('users', [
+                'password' => Common::hash($data['password']),
+                'token' => '',
+            ], ['uid' => $uid]);
+
+            Notice::alloc()->set('修改成功', 'success');
+            $this->response->redirect('/admin/profile.php?uid=' . $uid);
+        } else {
+            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            $this->response->redirect('/admin/profile.php?uid=' . $uid);
+        }
     }
 
     /**
@@ -175,6 +337,8 @@ class User extends Widget
         $this->on($action === 'login')->login();
         $this->on($action === 'register')->register();
         $this->on($action === 'logout')->logout();
+        $this->on($action === 'update')->update();
+        $this->on($action === 'update-password')->updatePassword();
 
         return $this;
     }

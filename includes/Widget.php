@@ -80,7 +80,7 @@ class Widget
      * @param array $params 参数
      * @return object 组件实例
      */
-    public static function allocWithAlias($alias, $params = [])
+    public static function allocAlias($alias, $params = [])
     {
         return self::factory(static::class . '@' . $alias, $params);
     }
@@ -115,7 +115,7 @@ class Widget
     /**
      * 行动绑定
      *
-     * @param boolean $condition
+     * @param bool $condition
      * @return $this
      */
     public function on($condition)

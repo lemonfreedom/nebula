@@ -19,9 +19,9 @@
             </ul>
             <ul class="menu">
                 <li>
-                    <a href="">
+                    <a href="/admin/profile.php?uid=<?= $user->get('uid') ?>">
                         <i class="bi bi-person"></i>
-                        <span class="text">你好，<?= $user->username ?></span>
+                        <span class="text">您好，<?= $user->getName() ?></span>
                     </a>
                 </li>
                 <li>
