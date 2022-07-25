@@ -5,8 +5,9 @@ namespace Nebula\Widgets;
 use Nebula\Common;
 use Nebula\Helpers\Cookie;
 use Nebula\Helpers\Validate;
+use Nebula\Widget;
 
-class User extends Base
+class User extends Widget
 {
     /**
      * 是否已登陆

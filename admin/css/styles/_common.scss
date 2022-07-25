@@ -69,6 +69,7 @@ a {
     flex-direction: column;
     gap: .4rem;
     margin-bottom: 1rem;
+    align-items: flex-start;
 
     .form-label {
         font-weight: bold;
@@ -98,6 +99,7 @@ a {
 }
 
 .nebula-input {
+    width: 100%;
     height: 2.4rem;
     padding: 0 .6rem;
     box-sizing: border-box;

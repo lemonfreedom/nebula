@@ -2,7 +2,9 @@
 
 namespace Nebula\Widgets;
 
-class Options extends Base
+use Nebula\Widget;
+
+class Options extends Widget
 {
     public function execute()
     {
