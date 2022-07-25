@@ -83,7 +83,7 @@ class Widget
      */
     public static function factory($alias, $params = [])
     {
-        [$className] = explode('@', $alias);
+        $className = explode('@', $alias)[0];
 
         // 判断组件池是否存在当前组件
         if (!isset(self::$widgetPool[$alias])) {
