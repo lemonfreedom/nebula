@@ -49,6 +49,7 @@ a {
     font-weight: bold;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 1.2rem;
 }
 
@@ -58,6 +59,9 @@ a {
     padding: .6rem 0;
     border-bottom: 1px dashed $color-primary;
     margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .form-item {

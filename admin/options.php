@@ -3,12 +3,15 @@
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <div class="container">
+
+    <h2 class="page-title">
+        <span>设置</span>
+    </h2>
     <form action="/options/update" method="post">
-        <h2 class="page-title">
-            <span>设置</span>
+        <div class="page-subtitle">
+            <span>基本设置</span>
             <button class="nebula-button">保存设置</button>
-        </h2>
-        <div class="page-subtitle">基本设置</div>
+        </div>
         <div class="form-item">
             <label class="form-label" for="title">站点名称</label>
             <input class="nebula-input" id="title" name="title" value="<?= $options->title ?>"></input>

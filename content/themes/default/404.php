@@ -14,7 +14,7 @@
         .title {
             padding-top: 10%;
             color: #c7cacd;
-            font-size: 3rem;
+            font-size: 2rem;
             font-family: Arial, Helvetica, sans-serif;
             text-align: center;
         }
