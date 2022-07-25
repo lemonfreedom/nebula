@@ -3,11 +3,16 @@
     background-color: lighten($color: $color-primary, $amount: 50%);
 }
 
-body {
+html {
     height: 100%;
+}
+
+body {
+    min-height: 100%;
     color: $color-grey-1;
     background-color: $color-grey-9;
     font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    position: relative;
 }
 
 a {
@@ -22,11 +27,9 @@ a {
 }
 
 .mask {
-    overflow: hidden;
-
     &::before {
         content: "";
-        position: fixed;
+        position: absolute;
         top: 3.6rem;
         left: 0;
         bottom: 0;

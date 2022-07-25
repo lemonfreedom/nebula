@@ -1,13 +1,14 @@
 .footer {
     color: $color-grey-5;
-    margin: 10rem 0 2rem;
+    padding: 2rem 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: .6rem;
 
     p {
-        margin: 0 0 .6rem 0;
         display: flex;
-        gap: .4rem;
+        margin: 0;
+        gap: .6rem;
     }
 }
