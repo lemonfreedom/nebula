@@ -27,6 +27,8 @@ a {
 }
 
 .mask {
+    overflow: hidden;
+
     &::before {
         content: "";
         position: absolute;
