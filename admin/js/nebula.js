@@ -45,7 +45,7 @@
                     this.innerText = '发送成功';
                     this.disabled = true;
                 } else {
-                    notice(res.message, 'warning');
+                    notice(res.message, res.type);
                     this.innerText = '发送';
                 }
             })
@@ -58,13 +58,9 @@
         sendTestMailEl.addEventListener('click', function (event) {
             this.innerText = '发送中...';
             fetch('/user/send-test-mail').then(res => res.json()).then(res => {
-                if (res.errorCode === 0) {
-                    notice('发送成功', 'success');
-                } else {
-                    notice(res.message, 'warning');
-                }
+                notice(res.message, res.type);
             }).finally(() => {
-                this.innerText = '发送一封测试邮件';
+                this.innerText = '发送测试邮件';
             })
         });
     }

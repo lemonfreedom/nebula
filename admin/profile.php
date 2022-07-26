@@ -6,11 +6,11 @@
 <?php null === $userInfo && $response->redirect('/admin'); ?>
 <div class="container">
     <h2 class="page-title">
-        <span>个人设置</span>
+        <span>用户设置</span>
     </h2>
     <form action="/user/update/<?= $userInfo['uid'] ?>" method="post">
         <div class="page-subtitle">
-            <span>个人资料</span>
+            <span>用户资料</span>
             <button class="nebula-button">保存设置</button>
         </div>
         <div class="form-item">
@@ -42,6 +42,22 @@
             <input class="nebula-input" id="confirmPassword" name="confirmPassword" value=""></input>
         </div>
     </form>
+    <?php if ($user->inRole(['0'])) : ?>
+        <form action="/user/update-permission/<?= $userInfo['uid'] ?>" method="post">
+            <div class="page-subtitle">
+                <span>权限控制</span>
+                <button class="nebula-button">保存设置</button>
+            </div>
+            <div class="form-item">
+                <label class="form-label" for="role">用户角色</label>
+                <select class="nebula-select" id="role" name="role">
+                    <?php foreach ($user->roleList as $role) : ?>
+                        <option value="<?= $role['value'] ?>" <?= $userInfo['role'] === $role['value'] ? 'selected' : '' ?>><?= $role['name'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </form>
+    <?php endif; ?>
 </div>
 <?php require __DIR__ . '/copyright.php'; ?>
 <?php require __DIR__ . '/footer.php'; ?>

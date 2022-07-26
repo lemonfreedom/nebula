@@ -10,12 +10,22 @@
                         <span class="text">仪表盘</span>
                     </a>
                 </li>
-                <li>
-                    <a href="/admin/options.php">
-                        <i class="bi bi-gear"></i>
-                        <span class="text">设置</span>
-                    </a>
-                </li>
+                <?php if ($user->inRole(['0'])) : ?>
+                    <li>
+                        <a href="/admin/users.php">
+                            <i class="bi bi-people"></i>
+                            <span class="text">用户</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+                <?php if ($user->inRole(['0'])) : ?>
+                    <li>
+                        <a href="/admin/options.php">
+                            <i class="bi bi-gear"></i>
+                            <span class="text">设置</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
             <ul class="menu">
                 <li>

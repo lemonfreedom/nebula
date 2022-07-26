@@ -58,7 +58,7 @@ class Validate
      */
     public function required($value)
     {
-        return !empty($value);
+        return $value !== '';
     }
 
     /**

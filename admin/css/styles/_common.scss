@@ -60,6 +60,9 @@ a {
     .actions {
         display: flex;
         gap: .6rem;
+        input {
+            width: 10rem;
+        }
     }
 }
 
@@ -106,6 +109,7 @@ a {
     background-color: $color-primary;
     border: 2px solid lighten($color: $color-primary, $amount: 6%);
     box-sizing: border-box;
+    white-space: nowrap;
     cursor: pointer;
     outline: none;
 
@@ -122,6 +126,7 @@ a {
 }
 
 .nebula-input {
+    font: initial;
     width: 100%;
     height: 2.4rem;
     padding: 0 .6rem;
@@ -135,6 +140,19 @@ a {
     &:focus {
         border-color: lighten($color: $color-primary, $amount: 10%);
     }
+}
+
+.nebula-select {
+    width: 100%;
+    height: 2.4rem;
+    padding: 0 .6rem;
+    box-sizing: border-box;
+    color: $color-grey-1;
+    outline: none;
+    border-radius: 0;
+    border: 2px solid lighten($color: $color-grey-8, $amount: 4%);
+    background-color: $color-grey-8;
+    appearance: none;
 }
 
 .nebula-switch {
@@ -176,6 +194,42 @@ a {
 
         &:focus {
             border-color: lighten($color: $color-primary, $amount: 10%);
+        }
+    }
+}
+
+.nebula_table {
+    background-color: $color-grey-8;
+    padding: .8rem;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+
+        thead {
+            tr {
+                th {
+                    border-bottom: 2px solid $color-grey-7;
+                    text-align: left;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    padding: 0 .3rem .6rem;
+                }
+            }
+        }
+
+        tbody {
+            tr {
+                td {
+                    text-align: left;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    padding: .6rem .3rem 0;
+                }
+            }
         }
     }
 }

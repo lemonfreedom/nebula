@@ -12,14 +12,14 @@ define('NEBULA_DB_CONFIG', [
     'host' => 'localhost',
     'database' => 'nebula',
     'username' => 'root',
-    'password' => 'root',
+    'password' => 'wo123456',
 
     // 可选
     'charset' => 'utf8mb4',
     'collation' => 'utf8mb4_general_ci',
     'port' => 3306,
     'prefix' => 'nebula_',
-    'logging' => true,
+    'logging' => false,
     'error' => PDO::ERRMODE_SILENT,
     'option' => [PDO::ATTR_CASE => PDO::CASE_NATURAL],
     'command' => ['SET SQL_MODE=ANSI_QUOTES'],

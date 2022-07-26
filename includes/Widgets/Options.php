@@ -84,6 +84,12 @@ class Options extends Widget
      */
     public function updateBasic()
     {
+        // 是否是管理员
+        if (!User::alloc()->inRole(['0'])) {
+            Notice::alloc()->set('非法请求', 'error');
+            $this->response->redirect('/admin');
+        }
+
         $data = $this->request->post();
 
         $validate = new Validate($data, [
@@ -118,6 +124,12 @@ class Options extends Widget
      */
     public function updateSMTP()
     {
+        // 是否是管理员
+        if (!User::alloc()->inRole(['0'])) {
+            Notice::alloc()->set('非法请求', 'error');
+            $this->response->redirect('/admin');
+        }
+
         $data = $this->request->post();
 
         $validate = new Validate($data, [
@@ -172,5 +184,15 @@ class Options extends Widget
         $this->on($action === 'update-smtp')->updateSMTP();
 
         return $this;
+    }
+
+    /**
+     * 访问不存在选项返回空字符串
+     *
+     * return string
+     */
+    public function __get($name)
+    {
+        return isset($this->$name) ?? '';
     }
 }

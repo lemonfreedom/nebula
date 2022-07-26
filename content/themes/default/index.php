@@ -4,9 +4,9 @@
     <?php if ($user->hasLogin()) : ?>
         欢迎：<?= $user->get('username') ?>
         <a href="/user/logout">退出登录</a>
+        <a href="/admin">后台管理</a>
     <?php else : ?>
         <a href="/admin/login.php">登录</a>
     <?php endif; ?>
-
 </div>
 <?php $this->render('footer'); ?>

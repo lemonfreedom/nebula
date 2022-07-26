@@ -26,6 +26,18 @@ class User extends Widget
     private $loginUserInfo = null;
 
     /**
+     * 角色列表
+     *
+     * @var array
+     */
+    public $roleList = [
+        ['name' => '管理员', 'value' => '0'],
+        ['name' => '普通用户', 'value' => '1'],
+        ['name' => '访客', 'value' => '2'],
+        ['name' => '封禁', 'value' => '255'],
+    ];
+
+    /**
      * 获取登陆状态
      *
      * @return bool 是否已登陆
@@ -38,7 +50,7 @@ class User extends Widget
 
             // cookie 是否存在
             if (null !== $uid && null !== $token) {
-                $loginUserInfo = $this->db->get('users', ['uid', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
+                $loginUserInfo = $this->db->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
                 // 用户信息是否存在
                 if ($loginUserInfo) {
                     // token 有效性
@@ -58,7 +70,42 @@ class User extends Widget
     }
 
     /**
-     * 获取用户信息，若参数为空，则查询登陆用户信息
+     * 判断用户角色
+     *
+     * @param array $roles 角色列表
+     * @return bool
+     */
+    public function inRole($roles)
+    {
+        // 判断是否登陆
+        if ($this->hasLogin()) {
+            return in_array($this->loginUserInfo['role'], $roles);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 通过角色值返回角色名
+     *
+     * @param $value 角色值
+     * @return string 角色名
+     */
+    public function getRoleName($value)
+    {
+        $role =  array_values(array_filter($this->roleList, function ($role) use ($value) {
+            return $role['value'] === $value;
+        }));
+
+        if (count($role) > 0) {
+            return $role[0]['name'];
+        } else {
+            return '未知';
+        }
+    }
+
+    /**
+     * 获取指定用户信息，若参数为空，则查询登陆用户信息
      *
      * @param null｜string $key 字段名
      * @return mixed
@@ -71,7 +118,7 @@ class User extends Widget
         if (null === $uid) {
             $userInfo = $this->loginUserInfo;
         } else {
-            $userInfo = $this->db->get('users', ['uid', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
+            $userInfo = $this->db->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
         }
 
         if (null === $key) {
@@ -111,7 +158,6 @@ class User extends Widget
                 ['type' => 'required', 'message' => '密码不能为空'],
             ],
         ]);
-
         // 表单验证
         if (!$validate->run()) {
             Cookie::set('account', $this->request->post('account', ''), time() + 1);
@@ -181,7 +227,6 @@ class User extends Widget
                 ['type' => 'confirm', 'key' => 'password', 'message' => '两次输入密码不一致'],
             ],
         ]);
-
         if (!$validate->run()) {
             Cookie::set('username', $this->request->post('username', ''), time() + 1);
             Cookie::set('email', $this->request->post('email', ''), time() + 1);
@@ -253,12 +298,12 @@ class User extends Widget
      */
     private function update()
     {
-        $uid = $this->params['uid'];
-
-        // 未登陆
+        // 判断用户权限
         if (!$this->hasLogin()) {
             $this->response->redirect('/admin/login.php');
         }
+
+        $uid = $this->params['uid'];
 
         // 修改用户不存在
         if (!$this->db->has('users', ['uid' => $uid])) {
@@ -266,8 +311,8 @@ class User extends Widget
             $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
         }
 
-        // 如果不是修改当前登陆用户
-        if ($this->loginUserInfo['uid'] !== $uid) {
+        // 不是修改当前登陆用户，那么必须是管理员权限
+        if ($this->loginUserInfo['uid'] !== $uid && !$this->inRole(['0'])) {
             Notice::alloc()->set('非法请求', 'error');
             $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
         }
@@ -283,7 +328,6 @@ class User extends Widget
                 ['type' => 'email', 'message' => '邮箱格式不正确'],
             ],
         ]);
-
         if (!$validate->run()) {
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/profile.php?uid=' . $uid);
@@ -322,12 +366,12 @@ class User extends Widget
      */
     private function updatePassword()
     {
-        $uid = $this->params['uid'];
-
         // 未登陆
         if (!$this->hasLogin()) {
             $this->response->redirect('/admin/login.php');
         }
+
+        $uid = $this->params['uid'];
 
         // 修改用户不存在
         if (!$this->db->has('users', ['uid' => $uid])) {
@@ -335,8 +379,8 @@ class User extends Widget
             $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
         }
 
-        // 不是修改当前登陆用户
-        if ($this->loginUserInfo['uid'] !== $uid) {
+        // 不是修改当前登陆用户，那么必须是管理员权限
+        if ($this->loginUserInfo['uid'] !== $uid && !$this->inRole(['0'])) {
             Notice::alloc()->set('非法请求', 'error');
             $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
         }
@@ -353,7 +397,6 @@ class User extends Widget
                 ['type' => 'confirm', 'key' => 'password', 'message' => '两次输入密码不一致'],
             ],
         ]);
-
         if (!$validate->run()) {
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/profile.php?uid=' . $uid);
@@ -370,12 +413,61 @@ class User extends Widget
     }
 
     /**
+     * 更新用户权限
+     *
+     * @return void
+     */
+    private function updatePermission()
+    {
+        // 是否是管理员
+        if (!$this->inRole(['0'])) {
+            Notice::alloc()->set('非法请求', 'error');
+            $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
+        }
+
+        $uid = $this->params['uid'];
+
+        // 修改用户不存在
+        if (!$this->db->has('users', ['uid' => $uid])) {
+            Notice::alloc()->set('未知用户', 'error');
+            $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
+        }
+
+
+
+        $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'role' => [
+                ['type' => 'required', 'message' => '用户角色不能为空'],
+            ],
+        ]);
+        if (!$validate->run()) {
+            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            $this->response->redirect('/admin/profile.php?uid=' . $uid);
+        }
+
+        // 修改数据
+        $this->db->update('users', [
+            'role' => $data['role'],
+        ], ['uid' => $uid]);
+
+        Notice::alloc()->set('修改成功', 'success');
+        $this->response->redirect('/admin/profile.php?uid=' . $uid);
+    }
+
+    /**
      * 发送注册验证码
      *
      * @return void
      */
     private function sendRegisterCaptcha()
     {
+        // 已登陆限制
+        if ($this->hasLogin()) {
+            $this->response->sendJSON(['errorCode' => 1, 'type' => 'error', 'message' => '非法请求']);
+        }
+
         $data = $this->request->post();
 
         $validate = new Validate($data, [
@@ -384,20 +476,19 @@ class User extends Widget
                 ['type' => 'email', 'message' => '邮箱格式不正确'],
             ],
         ]);
-
         if (!$validate->run()) {
-            $this->response->sendJSON(['errorCode' => 1, 'message' => $validate->result[0]['message']]);
+            $this->response->sendJSON(['errorCode' => 2, 'type' => 'warning', 'message' => $validate->result[0]['message']]);
         }
 
         // 邮箱是否存在
         if ($this->db->has('users', ['email' => $data['email']])) {
-            $this->response->sendJSON(['errorCode' => 2, 'message' => '邮箱已存在']);
+            $this->response->sendJSON(['errorCode' => 3, 'type' => 'warning', 'message' => '邮箱已存在']);
         }
 
         // 发送邮件
         Mail::getInstance()->sendCaptcha($data['email']);
 
-        $this->response->sendJSON(['errorCode' => 0]);
+        $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
     }
 
     /**
@@ -407,13 +498,35 @@ class User extends Widget
      */
     private function sendTestMail()
     {
+        // 是否是管理员
+        if (!$this->inRole(['0'])) {
+            $this->response->sendJSON(['errorCode' => 1, 'type' => 'error', 'message' => '非法请求']);
+        }
+
         try {
             Mail::getInstance()->sendHTML(Options::alloc()->smtp['username'], '测试邮件', '这是一封测试邮件');
 
-            $this->response->sendJSON(['errorCode' => 0]);
+            $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
         } catch (Exception $e) {
-            $this->response->sendJSON(['errorCode' => 1, 'message' => $e->getMessage()]);
+            $this->response->sendJSON(['errorCode' => 2, 'type' => 'warning', 'message' => $e->getMessage()]);
         }
+    }
+
+    /**
+     * 获取用户列表
+     *
+     * @return array 用户列表
+     */
+    public function getUserList()
+    {
+        return $this->db->select('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], [
+            'OR' => [
+                'uid[~]' => $this->params['keyword'],
+                'username[~]' => $this->params['keyword'],
+                'email[~]' => $this->params['keyword'],
+                'nickname[~]' => $this->params['keyword'],
+            ],
+        ]);
     }
 
     /**
@@ -439,6 +552,9 @@ class User extends Widget
 
         // 更新用户密码
         $this->on($action === 'update-password')->updatePassword();
+
+        // 更新用户权限
+        $this->on($action === 'update-permission')->updatePermission();
 
         // 发送注册验证码
         $this->on($action === 'send-register-captcha')->sendRegisterCaptcha();
