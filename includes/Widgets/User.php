@@ -119,6 +119,7 @@ class User extends Widget
 
             $this->response->redirect('/admin');
         } else {
+            Cookie::factory()->set('account', $this->request->post('account'));
             Notice::alloc()->set('登录失败', 'warning');
             $this->response->redirect('/admin/login.php');
         }
