@@ -59,6 +59,7 @@ class Widget
         // 初始化数据库对象
         $this->db = new Medoo(NEBULA_DB_CONFIG);
 
+        // 初始化
         $this->init();
     }
 
@@ -94,11 +95,10 @@ class Widget
      */
     public static function factory($alias, $params = [])
     {
-        $className = explode('@', $alias)[0];
-
         // 判断组件池是否存在当前组件
         if (!isset(self::$widgetPool[$alias])) {
             try {
+                $className = explode('@', $alias)[0];
                 $widget = new $className($params);
                 $widget->execute();
             } catch (\Throwable $th) {
@@ -139,20 +139,20 @@ class Widget
     }
 
     /**
-     * 初始化方法
-     *
-     * @return void
-     */
-    protected function init()
-    {
-    }
-
-    /**
      * 执行方法
      *
      * @return void
      */
     protected function execute()
+    {
+    }
+
+    /**
+     * 初始化方法
+     *
+     * @return void
+     */
+    protected function init()
     {
     }
 }

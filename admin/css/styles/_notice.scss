@@ -33,6 +33,9 @@
     background-color: $color-primary;
     animation: fade 2s forwards;
     box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     &.nebula-info {
         background-color: $color-info;

@@ -52,9 +52,9 @@ namespace Nebula {
         /**
          * 生成随机字符串
          *
-         * @param integer $length 字符串长度
-         * @param boolean $mixedCase 混合大小写
-         * @param boolean $specialChars 是否有特殊字符
+         * @param int $length 字符串长度
+         * @param bool $mixedCase 混合大小写
+         * @param bool $specialChars 是否有特殊字符
          */
         public static function randString($length, $mixedCase = false, $specialChars = false)
         {

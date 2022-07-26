@@ -4,6 +4,7 @@ namespace Nebula\Widgets;
 
 use Nebula\Common;
 use Nebula\Helpers\Cookie;
+use Nebula\Helpers\Mail;
 use Nebula\Helpers\Validate;
 use Nebula\Widget;
 
@@ -31,8 +32,8 @@ class User extends Widget
     public function hasLogin()
     {
         if (null === $this->hasLogin) {
-            $uid = Cookie::get('nebula_uid');
-            $token = Cookie::get('nebula_token');
+            $uid = Cookie::factory()->get('uid');
+            $token = Cookie::factory()->get('token');
             // cookie 是否存在
             if (null !== $uid && null !== $token) {
                 $loginUserInfo = $this->db->get('users', ['uid', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
@@ -113,8 +114,8 @@ class User extends Widget
             // 更新 token
             $this->db->update('users', ['token' => $token], ['uid' => $userInfo['uid']]);
 
-            Cookie::set('nebula_uid', $userInfo['uid']);
-            Cookie::set('nebula_token', $tokenHash);
+            Cookie::factory()->set('uid', $userInfo['uid']);
+            Cookie::factory()->set('token', $tokenHash);
 
             $this->response->redirect('/admin');
         } else {
@@ -158,6 +159,12 @@ class User extends Widget
         ]);
 
         if ($validate->run()) {
+            // 验证码不正确
+            if (!Common::hashValidate($data['email'] . $data['code'], Cookie::factory()->get('code_hash', ''))) {
+                Notice::alloc()->set('验证码错误', 'warning');
+                $this->response->redirect('/admin/register.php');
+            }
+
             // 用户名已存在
             if ($this->db->has('users', ['username' => $data['username']])) {
                 Notice::alloc()->set('用户名已存在', 'warning');
@@ -195,10 +202,10 @@ class User extends Widget
     {
         $this->loginUserInfo = null;
         // 清空 token
-        $this->db->update('users', ['token' => ''], ['uid' => Cookie::get('nebula_uid', '')]);
+        $this->db->update('users', ['token' => ''], ['uid' => Cookie::factory()->get('uid', '')]);
         // 清除用户 cookie
-        Cookie::delete('nebula_uid');
-        Cookie::delete('nebula_token');
+        Cookie::factory()->delete('uid');
+        Cookie::factory()->delete('token');
 
         $this->response->redirect('/admin/login.php');
     }
@@ -326,6 +333,39 @@ class User extends Widget
     }
 
     /**
+     * 发送注册验证码
+     *
+     * @return void
+     */
+    private function sendRegisterCaptcha()
+    {
+        $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'email' => [
+                ['type' => 'required', 'message' => '邮箱不能为空'],
+                ['type' => 'email', 'message' => '邮箱格式不正确'],
+            ],
+        ]);
+
+        if ($validate->run()) {
+            if ($this->db->has('users', ['email' => $data['email']])) {
+                $this->response->sendJSON(['errorCode' => 2, 'message' => '邮箱已存在']);
+            }
+
+            // 生成随机验证码
+            $code = Common::randString(5);
+
+            // 发送邮件
+            Mail::getInstance()->sendCaptcha($data['email'], $code);
+
+            $this->response->sendJSON(['errorCode' => 0]);
+        } else {
+            $this->response->sendJSON(['errorCode' => 1, 'message' => $validate->result[0]['message']]);
+        }
+    }
+
+    /**
      * 行动方法
      *
      * @return $this
@@ -339,6 +379,9 @@ class User extends Widget
         $this->on($action === 'logout')->logout();
         $this->on($action === 'update')->update();
         $this->on($action === 'update-password')->updatePassword();
+        $this->on($action === 'send-register-captcha')->sendRegisterCaptcha();
+
+
 
         return $this;
     }

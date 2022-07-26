@@ -9,9 +9,12 @@ class Options extends Widget
     public function execute()
     {
         $options = $this->db->select('options', ['name', 'value']);
+
         foreach ($options as $option) {
             $this->{$option['name']} = $option['value'];
         }
+
+        $this->smtp = unserialize($this->smtp);
     }
 
     /**

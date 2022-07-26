@@ -38,7 +38,8 @@ class Response
      */
     public function render($fileName, $data = [])
     {
-        header('Content-Type:text/html; charset=utf-8');
+        header('Content-Type: text/html; charset=utf-8');
+
         ob_start();
         $filePath = NEBULA_ROOT_PATH . 'content/themes/default/' . $fileName . '.php';
         if (file_exists($filePath)) {
@@ -49,6 +50,18 @@ class Response
         ob_end_clean();
         echo $html;
         return $this;
+    }
+
+    /**
+     * 响应 JSON 数据
+     *
+     * @param array $data 数据
+     */
+    public function sendJSON($data)
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+        exit;
     }
 
     /**

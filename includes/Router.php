@@ -17,6 +17,7 @@ class Router
             // 映射参数键及默认值
             'params' => [],
         ],
+
         'user' => [
             'widget' => '\Nebula\Widgets\User',
             'params' => [
@@ -29,7 +30,7 @@ class Router
             'params' => [
                 'action' => '',
             ],
-        ]
+        ],
     ];
 
     /**

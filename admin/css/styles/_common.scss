@@ -101,6 +101,11 @@ a {
     &:focus {
         background-color: lighten($color: $color-primary, $amount: 10%);
     }
+
+    &[disabled] {
+        color: $color-grey-2;
+        background-color: darken($color: $color-primary, $amount: 10%);
+    }
 }
 
 .nebula-input {

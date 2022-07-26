@@ -20,7 +20,8 @@ class Notice extends Widget
             'type' => $type,
             'message' => $message,
         ];
-        Cookie::set('nebula_notice', json_encode($notice));
+        Cookie::factory()->set('notice', json_encode($notice));
+
         return $this;
     }
 }

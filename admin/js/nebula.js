@@ -1,4 +1,16 @@
 (() => {
+    // 显示通知
+    const notice = (message, type = 'info') => {
+        let noticeEl = document.createElement('div');
+        noticeEl.classList.add('nebula-notice');
+        noticeEl.classList.add('nebula-' + type);
+        noticeEl.innerText = message;
+        document.body.append(noticeEl);
+        setTimeout(() => {
+            document.body.removeChild(noticeEl);
+        }, 2000);
+    }
+
     // 菜单切换
     let menuToggleButtonEl = document.querySelector('#menuToggleButton');
     if (menuToggleButtonEl) {
@@ -10,15 +22,33 @@
         });
     }
 
-    // 通知
-    let notice = Cookies.get('nebula_notice');
-    if (notice) {
-        notice = JSON.parse(notice);
-        let noticeEl = document.createElement('div');
-        noticeEl.classList.add('nebula-notice');
-        noticeEl.classList.add('nebula-' + notice.type);
-        noticeEl.innerText = notice.message;
-        document.body.append(noticeEl);
+    // cookie 通知
+    let cookieNotice = Cookies.get('nebula_notice');
+    if (cookieNotice) {
+        cookieNotice = JSON.parse(cookieNotice);
+        notice(cookieNotice.message, cookieNotice.type)
         Cookies.remove('nebula_notice');
     };
+
+    // 发送验证码
+    let sendCaptchaEl = document.querySelector("#sendCaptcha");
+    if (sendCaptchaEl) {
+        sendCaptchaEl.addEventListener('click', function (event) {
+            this.innerText = '发送中...';
+            let formData = new FormData();
+            formData.append('email', document.querySelector('input[type="email"]').value)
+            fetch('/user/send-register-captcha', {
+                method: 'POST',
+                body: formData,
+            }).then(res => res.json()).then(res => {
+                if (res.errorCode === 0) {
+                    this.innerText = '发送成功';
+                    this.disabled = true;
+                } else {
+                    notice(res.message, 'warning');
+                    this.innerText = '发送';
+                }
+            })
+        });
+    }
 })()

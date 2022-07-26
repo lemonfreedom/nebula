@@ -9,7 +9,7 @@
             <input class="login-input" type="text" name="username" placeholder="用户名">
             <div class="group">
                 <input class="login-input" type="email" name="email" placeholder="邮箱">
-                <button type="button" class="login-btn">发送</button>
+                <button id="sendCaptcha" type="button" class="login-btn">发送</button>
             </div>
             <input class="login-input" type="text" name="code" placeholder="验证码">
             <input class="login-input" type="password" name="password" placeholder="密码">
