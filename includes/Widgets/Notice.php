@@ -16,7 +16,7 @@ class Notice extends Widget
      */
     public function set($message, $type = 'info')
     {
-        Cookie::set('notice', json_encode(['type' => $type, 'message' => $message]), time() + 1);
+        Cookie::set('notice', json_encode(['type' => $type, 'message' => $message]), time() + 10);
 
         return $this;
     }

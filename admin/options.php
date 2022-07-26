@@ -34,7 +34,7 @@
         <div class="page-subtitle">
             <span>SMTP 设置</span>
             <div class="actions">
-                <button id="sendTestMail" type="button" class="nebula-button">发送一封测试邮件</button>
+                <button id="sendTestMail" type="button" class="nebula-button">发送测试邮件</button>
                 <button class="nebula-button">保存设置</button>
             </div>
         </div>
