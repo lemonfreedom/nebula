@@ -51,4 +51,21 @@
             })
         });
     }
+
+    // 发送测试邮件
+    let sendTestMailEl = document.querySelector("#sendTestMail");
+    if (sendTestMailEl) {
+        sendTestMailEl.addEventListener('click', function (event) {
+            this.innerText = '发送中...';
+            fetch('/user/send-test-mail').then(res => res.json()).then(res => {
+                if (res.errorCode === 0) {
+                    notice('发送成功', 'success');
+                } else {
+                    notice(res.message, 'warning');
+                }
+            }).finally(() => {
+                this.innerText = '发送一封测试邮件';
+            })
+        });
+    }
 })()

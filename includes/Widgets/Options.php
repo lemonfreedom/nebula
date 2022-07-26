@@ -165,7 +165,10 @@ class Options extends Widget
     {
         $action = $this->params['action'];
 
+        // 更新基本配置
         $this->on($action === 'update-basic')->updateBasic();
+
+        // 更新 SMTP 配置
         $this->on($action === 'update-smtp')->updateSMTP();
 
         return $this;

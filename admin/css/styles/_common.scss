@@ -52,10 +52,15 @@ a {
 .page-title {
     font-size: 1.6rem;
     font-weight: bold;
+    margin-bottom: 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.2rem;
+
+    .actions {
+        display: flex;
+        gap: .6rem;
+    }
 }
 
 .page-subtitle {
@@ -67,6 +72,11 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    .actions {
+        display: flex;
+        gap: .6rem;
+    }
 }
 
 .form-item {

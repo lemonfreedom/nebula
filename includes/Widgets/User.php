@@ -5,6 +5,7 @@ namespace Nebula\Widgets;
 use Nebula\Common;
 use Nebula\Helpers\Cookie;
 use Nebula\Helpers\Mail;
+use Nebula\Helpers\PHPMailer\Exception;
 use Nebula\Helpers\Validate;
 use Nebula\Widget;
 
@@ -89,7 +90,7 @@ class User extends Widget
     }
 
     /**
-     * 登陆验证
+     * 登陆
      *
      * @return void
      */
@@ -148,7 +149,7 @@ class User extends Widget
     }
 
     /**
-     * 注册验证
+     * 注册
      *
      * @return void
      */
@@ -393,13 +394,26 @@ class User extends Widget
             $this->response->sendJSON(['errorCode' => 2, 'message' => '邮箱已存在']);
         }
 
-        // 生成随机验证码
-        $code = Common::randString(5);
-
         // 发送邮件
-        Mail::getInstance()->sendCaptcha($data['email'], $code);
+        Mail::getInstance()->sendCaptcha($data['email']);
 
         $this->response->sendJSON(['errorCode' => 0]);
+    }
+
+    /**
+     * 发送测试邮件
+     *
+     * @return void
+     */
+    private function sendTestMail()
+    {
+        try {
+            Mail::getInstance()->sendHTML(Options::alloc()->smtp['username'], '测试邮件', '这是一封测试邮件');
+
+            $this->response->sendJSON(['errorCode' => 0]);
+        } catch (Exception $e) {
+            $this->response->sendJSON(['errorCode' => 1, 'message' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -411,14 +425,26 @@ class User extends Widget
     {
         $action = $this->params['action'];
 
+        // 登录
         $this->on($action === 'login')->login();
+
+        // 注册
         $this->on($action === 'register')->register();
+
+        // 退出登陆
         $this->on($action === 'logout')->logout();
+
+        // 更新用户信息
         $this->on($action === 'update')->update();
+
+        // 更新用户密码
         $this->on($action === 'update-password')->updatePassword();
+
+        // 发送注册验证码
         $this->on($action === 'send-register-captcha')->sendRegisterCaptcha();
 
-
+        // 发送测试邮件
+        $this->on($action === 'send-test-mail')->sendTestMail();
 
         return $this;
     }

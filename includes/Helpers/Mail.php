@@ -51,18 +51,20 @@ class Mail
      * 发生验证码
      *
      * @param string $address 收件人邮箱
-     * @param string $code 验证码
      * @return void
      */
-    public function sendCaptcha($address, $code)
+    public function sendCaptcha($address)
     {
         try {
+            $code = Common::randString(5);
+
             // 设置发送人信息
             $this->mail->setFrom($this->smtpOption['username'], $this->smtpOption['name']);
             $this->mail->addAddress($address);
             $this->mail->isHTML(true);
             $this->mail->Subject = Options::alloc()->title . ' 验证码';
-            $this->mail->Body    = '您的验证码是：' . $code;
+
+            $this->mail->Body = '您的验证码是：' . $code;
 
             $this->mail->send();
 
@@ -71,6 +73,32 @@ class Mail
         } catch (Exception $e) {
             Response::getInstance()->sendJSON(['errorCode' => 1, 'message' => $this->mail->ErrorInfo]);
         }
+    }
+
+    /**
+     * 发送 html
+     *
+     * @param string $address 收件人邮箱
+     * @param string $title 邮件标题
+     * @param string $html html 邮件消息
+     * @param string $username 发件人邮箱
+     * @param string $name 发件人名称
+     * @return void
+     */
+    public function sendHTML($address, $title, $html, $username = null, $name = null)
+    {
+        $username = null === $username ? $this->smtpOption['username'] :  $username;
+        $name = null === $name ? $this->smtpOption['name'] :  $username;
+        // 设置发送人信息
+        $this->mail->setFrom($username, $name);
+
+        $this->mail->addAddress($address);
+        $this->mail->isHTML(true);
+        $this->mail->Subject = $title;
+
+        $this->mail->Body = $html;
+
+        $this->mail->send();
     }
 
     /**
