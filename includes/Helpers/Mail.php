@@ -74,7 +74,7 @@ class Mail
             $this->mail->send();
 
             // 将验证码 hash 存入 cookie，将过期时间设置为 10 分钟
-            Cookie::factory(time() + 600)->set('code_hash', Common::hash($address . $code));
+            Cookie::set('code_hash', Common::hash($address . $code), time() + 600);
         } catch (Exception $e) {
             Response::getInstance()->sendJSON(['errorCode' => 1, 'message' => $this->mail->ErrorInfo]);
         }

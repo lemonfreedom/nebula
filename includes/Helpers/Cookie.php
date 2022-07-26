@@ -7,62 +7,29 @@ use Nebula\Response;
 class Cookie
 {
     /**
-     * 对象池
-     *
-     * @var array
+     * @var string
      */
-    private static $objectPool = [];
+    private static $prefix = 'nebula_';
 
     /**
      * @var string
      */
-    private $prefix = '';
-
-    /**
-     * @var int
-     */
-    private $expiresOrOptions = 0;
+    private static $path = '/';
 
     /**
      * @var string
      */
-    private $path = '/';
-
-    /**
-     * @var string
-     */
-    private $domain = '';
+    private static $domain = '';
 
     /**
      * @var bool
      */
-    private $secure = false;
+    private static $secure = false;
 
     /**
      * @var bool
      */
-    private $httponly = false;
-
-    /**
-     * 构造方法
-     *
-     * @param int $expiresOrOptions
-     * @param string $prefix
-     * @param string $path
-     * @param string $domain
-     * @param bool $secure
-     * @param bool $httponly
-     * @return void
-     */
-    public function __construct($expiresOrOptions, $prefix, $path, $domain,  $secure, $httponly)
-    {
-        $this->expiresOrOptions = $expiresOrOptions;
-        $this->prefix = $prefix;
-        $this->path = $path;
-        $this->domain = $domain;
-        $this->secure = $secure;
-        $this->httponly = $httponly;
-    }
+    private static $httponly = false;
 
     /**
      * 获取指定的 cookie
@@ -71,9 +38,9 @@ class Cookie
      * @param null|string $default 默认值
      * @return string
      */
-    public function get($name, $default = null)
+    public static function get($name, $default = null)
     {
-        return $_COOKIE[$this->prefix . $name] ?? $default;
+        return $_COOKIE[self::$prefix . $name] ?? $default;
     }
 
     /**
@@ -81,51 +48,26 @@ class Cookie
      *
      * @param string $name 指定的键
      * @param string $value 设置的值
-     * @return $this
+     * @param string $expiresOrOptions 过期时间
+     * @return void
      */
-    public function set($name, $value)
+    public static function set($name, $value, $expiresOrOptions = 0)
     {
-        $name = $this->prefix . $name;
+        $name = self::$prefix . $name;
         $_COOKIE[$name] = $value;
-        Response::getInstance()->setCookie($name, $value, $this->expiresOrOptions, $this->path, $this->domain, $this->secure, $this->httponly);
-
-        return $this;
+        Response::getInstance()->setCookie($name, $value, $expiresOrOptions, self::$path, self::$domain, self::$secure, self::$httponly);
     }
 
     /**
      * 删除指定的 cookie
      *
      * @param string $name 指定的键
-     * @return $this
+     * @return void
      */
-    public function delete($name)
+    public static function delete($name)
     {
-        $name = $this->prefix . $name;
-        Response::getInstance()->setCookie($name, null, -1, $this->path, $this->domain, $this->secure, $this->httponly);
+        $name = self::$prefix . $name;
+        Response::getInstance()->setCookie($name, null, -1, self::$path, self::$domain, self::$secure, self::$httponly);
         unset($_COOKIE[$name]);
-
-        return $this;
-    }
-
-    /**
-     * 工厂方法
-     *
-     * @param int $expiresOrOptions
-     * @param string $prefix
-     * @param string $path
-     * @param string $domain
-     * @param bool $secure
-     * @param bool $httponly
-     * @return Cookie
-     */
-    public static function factory($expiresOrOptions = 0, $prefix = 'nebula_', $path = '/', $domain = '',  $secure = false, $httponly = false)
-    {
-        $alias =  $expiresOrOptions . '@' . $prefix . '@' . $path . '@' . $domain . '@' . $secure . '@' . $httponly;
-
-        if (!isset(self::$objectPool[$alias])) {
-            self::$objectPool[$alias] = new Cookie($expiresOrOptions, $prefix, $path, $domain,  $secure, $httponly);
-        }
-
-        return self::$objectPool[$alias];
     }
 }

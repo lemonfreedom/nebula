@@ -32,8 +32,8 @@ class User extends Widget
     public function hasLogin()
     {
         if (null === $this->hasLogin) {
-            $uid = Cookie::factory()->get('uid');
-            $token = Cookie::factory()->get('token');
+            $uid = Cookie::get('uid');
+            $token = Cookie::get('token');
             // cookie 是否存在
             if (null !== $uid && null !== $token) {
                 $loginUserInfo = $this->db->get('users', ['uid', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
@@ -114,12 +114,12 @@ class User extends Widget
             // 更新 token
             $this->db->update('users', ['token' => $token], ['uid' => $userInfo['uid']]);
 
-            Cookie::factory()->set('uid', $userInfo['uid']);
-            Cookie::factory()->set('token', $tokenHash);
+            Cookie::set('uid', $userInfo['uid']);
+            Cookie::set('token', $tokenHash);
 
             $this->response->redirect('/admin');
         } else {
-            Cookie::factory()->set('account', $this->request->post('account'));
+            Cookie::set('account', $this->request->post('account'));
             Notice::alloc()->set('登录失败', 'warning');
             $this->response->redirect('/admin/login.php');
         }
@@ -161,7 +161,7 @@ class User extends Widget
 
         if ($validate->run()) {
             // 验证码不正确
-            if (!Common::hashValidate($data['email'] . $data['code'], Cookie::factory()->get('code_hash', ''))) {
+            if (!Common::hashValidate($data['email'] . $data['code'], Cookie::get('code_hash', ''))) {
                 Notice::alloc()->set('验证码错误', 'warning');
                 $this->response->redirect('/admin/register.php');
             }
@@ -201,12 +201,13 @@ class User extends Widget
      */
     private function logout()
     {
+        // 清空登陆用户信息
         $this->loginUserInfo = null;
         // 清空 token
-        $this->db->update('users', ['token' => ''], ['uid' => Cookie::factory()->get('uid', '')]);
+        $this->db->update('users', ['token' => ''], ['uid' => Cookie::get('uid', '')]);
         // 清除用户 cookie
-        Cookie::factory()->delete('uid');
-        Cookie::factory()->delete('token');
+        Cookie::delete('uid');
+        Cookie::delete('token');
 
         $this->response->redirect('/admin/login.php');
     }

@@ -5,7 +5,7 @@
     <div class="board">
         <h1 class="title">Nebula</h1>
         <form class="login-form" action="/user/login" method="post">
-            <input class="login-input" type="text" name="account" placeholder="用户名" value="<?= \Nebula\Helpers\Cookie::factory()->get('account', '') ?>">
+            <input class="login-input" type="text" name="account" placeholder="用户名" value="<?= \Nebula\Helpers\Cookie::get('account', '') ?>">
             <input class="login-input" type="password" name="password" placeholder="密码">
             <button class="login-btn">登录</button>
         </form>
