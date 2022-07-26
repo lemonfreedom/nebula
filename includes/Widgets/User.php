@@ -34,6 +34,7 @@ class User extends Widget
         if (null === $this->hasLogin) {
             $uid = Cookie::get('uid');
             $token = Cookie::get('token');
+
             // cookie 是否存在
             if (null !== $uid && null !== $token) {
                 $loginUserInfo = $this->db->get('users', ['uid', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
@@ -65,6 +66,7 @@ class User extends Widget
     {
         $uid = $this->params['uid'] ?? null;
         $userInfo = null;
+
         if (null === $uid) {
             $userInfo = $this->loginUserInfo;
         } else {
@@ -98,6 +100,25 @@ class User extends Widget
             $this->response->redirect('/admin');
         }
 
+        $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'account' => [
+                ['type' => 'required', 'message' => '用户名不能为空'],
+            ],
+            'password' => [
+                ['type' => 'required', 'message' => '密码不能为空'],
+            ],
+        ]);
+
+        // 表单验证
+        if (!$validate->run()) {
+            Cookie::set('account', $this->request->post('account', ''), time() + 1);
+
+            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            $this->response->redirect('/admin/login.php');
+        }
+
         $userInfo = $this->db->get('users', ['uid', 'password'], [
             'OR' => [
                 'username' => $this->request->post('account'),
@@ -119,7 +140,8 @@ class User extends Widget
 
             $this->response->redirect('/admin');
         } else {
-            Cookie::set('account', $this->request->post('account'));
+            Cookie::set('account', $this->request->post('account'), time() + 1);
+
             Notice::alloc()->set('登录失败', 'warning');
             $this->response->redirect('/admin/login.php');
         }
@@ -159,39 +181,50 @@ class User extends Widget
             ],
         ]);
 
-        if ($validate->run()) {
-            // 验证码不正确
-            if (!Common::hashValidate($data['email'] . $data['code'], Cookie::get('code_hash', ''))) {
-                Notice::alloc()->set('验证码错误', 'warning');
-                $this->response->redirect('/admin/register.php');
-            }
+        if (!$validate->run()) {
+            Cookie::set('username', $this->request->post('username', ''), time() + 1);
+            Cookie::set('email', $this->request->post('email', ''), time() + 1);
+            Cookie::set('code', $this->request->post('code', ''), time() + 1);
 
-            // 用户名已存在
-            if ($this->db->has('users', ['username' => $data['username']])) {
-                Notice::alloc()->set('用户名已存在', 'warning');
-                $this->response->redirect('/admin/register.php');
-            }
-
-            // 邮箱已存在
-            if ($this->db->has('users', ['email' => $data['email']])) {
-
-                Notice::alloc()->set('邮箱已存在', 'warning');
-                $this->response->redirect('/admin/register.php');
-            }
-
-            // 插入数据
-            $this->db->insert('users', [
-                'username' => $data['username'],
-                'email' => $data['email'],
-                'password' => Common::hash($data['password']),
-            ]);
-
-            Notice::alloc()->set('注册成功', 'success');
-            $this->response->redirect('/admin/login.php');
-        } else {
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/register.php');
         }
+
+        // 验证码是否正确
+        if (!Common::hashValidate($data['email'] . $data['code'], Cookie::get('code_hash', ''))) {
+            Cookie::set('username', $this->request->post('username', ''), time() + 1);
+            Cookie::set('email', $this->request->post('email', ''), time() + 1);
+
+            Notice::alloc()->set('验证码错误', 'warning');
+            $this->response->redirect('/admin/register.php');
+        }
+
+        // 用户名是否存在
+        if ($this->db->has('users', ['username' => $data['username']])) {
+            Cookie::set('email', $this->request->post('email', ''), time() + 1);
+            Cookie::set('code', $this->request->post('code', ''), time() + 1);
+
+            Notice::alloc()->set('用户名已存在', 'warning');
+            $this->response->redirect('/admin/register.php');
+        }
+
+        // 邮箱是否存在
+        if ($this->db->has('users', ['email' => $data['email']])) {
+            Cookie::set('username', $this->request->post('username', ''), time() + 1);
+
+            Notice::alloc()->set('邮箱已存在', 'warning');
+            $this->response->redirect('/admin/register.php');
+        }
+
+        // 插入数据
+        $this->db->insert('users', [
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => Common::hash($data['password']),
+        ]);
+
+        Notice::alloc()->set('注册成功', 'success');
+        $this->response->redirect('/admin/login.php');
     }
 
     /**
@@ -250,34 +283,35 @@ class User extends Widget
             ],
         ]);
 
-        if ($validate->run()) {
-            // 用户名已存在
-            $userInfo = $this->db->get('users', ['uid'], ['username' => $data['username']]);
-            if (null !== $userInfo && $userInfo['uid'] !== $uid) {
-                Notice::alloc()->set('用户名已存在', 'warning');
-                $this->response->redirect('/admin/profile.php?uid=' . $uid);
-            }
-
-            // 邮箱已存在
-            $userInfo = $this->db->get('users', ['uid'], ['email' => $data['email']]);
-            if (null !== $userInfo && $userInfo['uid'] !== $uid) {
-                Notice::alloc()->set('邮箱已存在', 'warning');
-                $this->response->redirect('/admin/profile.php?uid=' . $uid);
-            }
-
-            // 修改数据
-            $this->db->update('users', [
-                'username' => $data['username'],
-                'nickname' => $data['nickname'],
-                'email' => $data['email'],
-            ], ['uid' => $uid]);
-
-            Notice::alloc()->set('修改成功', 'success');
-            $this->response->redirect('/admin/profile.php?uid=' . $uid);
-        } else {
+        if (!$validate->run()) {
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/profile.php?uid=' . $uid);
         }
+
+        $userInfo = $this->db->get('users', ['uid'], ['username' => $data['username']]);
+
+        // 用户名是否存在
+        if (null !== $userInfo && $userInfo['uid'] !== $uid) {
+            Notice::alloc()->set('用户名已存在', 'warning');
+            $this->response->redirect('/admin/profile.php?uid=' . $uid);
+        }
+
+        // 邮箱是否存在
+        $userInfo = $this->db->get('users', ['uid'], ['email' => $data['email']]);
+        if (null !== $userInfo && $userInfo['uid'] !== $uid) {
+            Notice::alloc()->set('邮箱已存在', 'warning');
+            $this->response->redirect('/admin/profile.php?uid=' . $uid);
+        }
+
+        // 修改数据
+        $this->db->update('users', [
+            'username' => $data['username'],
+            'nickname' => $data['nickname'],
+            'email' => $data['email'],
+        ], ['uid' => $uid]);
+
+        Notice::alloc()->set('修改成功', 'success');
+        $this->response->redirect('/admin/profile.php?uid=' . $uid);
     }
 
     /**
@@ -319,19 +353,19 @@ class User extends Widget
             ],
         ]);
 
-        if ($validate->run()) {
-            // 修改数据
-            $this->db->update('users', [
-                'password' => Common::hash($data['password']),
-                'token' => '',
-            ], ['uid' => $uid]);
-
-            Notice::alloc()->set('修改成功', 'success');
-            $this->response->redirect('/admin/profile.php?uid=' . $uid);
-        } else {
+        if (!$validate->run()) {
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/profile.php?uid=' . $uid);
         }
+
+        // 修改数据
+        $this->db->update('users', [
+            'password' => Common::hash($data['password']),
+            'token' => '',
+        ], ['uid' => $uid]);
+
+        Notice::alloc()->set('修改成功', 'success');
+        $this->response->redirect('/admin/profile.php?uid=' . $uid);
     }
 
     /**
@@ -350,21 +384,22 @@ class User extends Widget
             ],
         ]);
 
-        if ($validate->run()) {
-            if ($this->db->has('users', ['email' => $data['email']])) {
-                $this->response->sendJSON(['errorCode' => 2, 'message' => '邮箱已存在']);
-            }
-
-            // 生成随机验证码
-            $code = Common::randString(5);
-
-            // 发送邮件
-            Mail::getInstance()->sendCaptcha($data['email'], $code);
-
-            $this->response->sendJSON(['errorCode' => 0]);
-        } else {
+        if (!$validate->run()) {
             $this->response->sendJSON(['errorCode' => 1, 'message' => $validate->result[0]['message']]);
         }
+
+        // 邮箱是否存在
+        if ($this->db->has('users', ['email' => $data['email']])) {
+            $this->response->sendJSON(['errorCode' => 2, 'message' => '邮箱已存在']);
+        }
+
+        // 生成随机验证码
+        $code = Common::randString(5);
+
+        // 发送邮件
+        Mail::getInstance()->sendCaptcha($data['email'], $code);
+
+        $this->response->sendJSON(['errorCode' => 0]);
     }
 
     /**
