@@ -50,12 +50,14 @@
                 border: 0;
                 color: $color-grey-1;
                 background-color: $color-primary;
+                border: 2px solid lighten($color: $color-primary, $amount: 6%);
                 padding: 0 1rem;
                 cursor: pointer;
                 outline: none;
 
                 &:hover,
                 &:focus {
+                    border: 2px solid lighten($color: $color-primary, $amount: 16%);
                     background-color: lighten($color: $color-primary, $amount: 10%);
                 }
 

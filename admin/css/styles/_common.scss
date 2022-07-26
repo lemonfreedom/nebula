@@ -104,11 +104,14 @@ a {
     background-color: $color-primary;
     border: 0;
     background-color: $color-primary;
+    border: 2px solid lighten($color: $color-primary, $amount: 6%);
+    box-sizing: border-box;
     cursor: pointer;
     outline: none;
 
     &:hover,
     &:focus {
+        border: 2px solid lighten($color: $color-primary, $amount: 16%);
         background-color: lighten($color: $color-primary, $amount: 10%);
     }
 
