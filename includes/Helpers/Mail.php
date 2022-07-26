@@ -33,13 +33,6 @@ class Mail
 
     public function __construct()
     {
-        // echo serialize([
-        //     'host' => 'smtp.qq.com',
-        //     'username' => '226582@qq.com',
-        //     'password' => 'revpqsbyoyvucaig',
-        //     'port' => 465,
-        //     'name' => 'Nebula',
-        // ]);
         $this->mail = new PHPMailer(true);
 
         $this->smtpOption = Options::alloc()->smtp;
