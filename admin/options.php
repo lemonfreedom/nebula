@@ -64,4 +64,5 @@
     </form>
 </div>
 <?php require __DIR__ . '/copyright.php'; ?>
+<?php require __DIR__ . '/common-js.php'; ?>
 <?php require __DIR__ . '/footer.php'; ?>

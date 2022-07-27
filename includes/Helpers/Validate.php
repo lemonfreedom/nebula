@@ -72,7 +72,7 @@ class Validate
 
         foreach ($this->rules as $key => $rule) {
             foreach ($rule as $ruleItem) {
-                $value = $this->data[$key] ?? null;
+                $value = $this->data[$key] ?? '';
                 if ($ruleItem['type'] === 'confirm') {
                     if (!$this->{$ruleItem['type']}($value, $ruleItem['key'])) {
                         array_push($this->result, [

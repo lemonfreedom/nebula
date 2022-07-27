@@ -2,6 +2,7 @@
 
 namespace Nebula\Widgets;
 
+use Nebula\Helpers\Validate;
 use Nebula\Widget;
 
 class Post extends Widget
@@ -50,6 +51,23 @@ class Post extends Widget
     public function createPost()
     {
         $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'title' => [
+                ['type' => 'required', 'message' => '标题不能为空'],
+            ],
+            'mid' => [
+                ['type' => 'required', 'message' => '分类不能为空'],
+            ],
+            'content' => [
+                ['type' => 'required', 'message' => '内容不能为空'],
+            ],
+        ]);
+        // 表单验证
+        if (!$validate->run()) {
+            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            $this->response->redirect('/admin/create-post.php');
+        }
 
         $this->db->insert('posts', [
             'mid' =>  $data['mid'],

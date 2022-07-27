@@ -181,6 +181,10 @@ a {
     border: 2px solid lighten($color: $color-grey-8, $amount: 4%);
     background-color: $color-grey-8;
     appearance: none;
+
+    &:focus {
+        border-color: lighten($color: $color-primary, $amount: 10%);
+    }
 }
 
 .nebula-switch {

@@ -64,4 +64,33 @@
             })
         });
     }
+
+    // 富文本编辑器
+    if (document.querySelector('#editor-container')) {
+        const quill = new Quill('#editor-container', {
+            modules: {
+                formula: true,
+                syntax: true,
+                toolbar: [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'align': [] }],
+                    [{ 'indent': '-1' }, { 'indent': '+1' }],
+                    ['blockquote', 'code-block'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'script': 'sub' }, { 'script': 'super' }],
+                    ['link', 'image', 'video', 'formula'],
+                    ['clean'],
+                ],
+            },
+            theme: 'snow'
+        });
+
+        document.querySelector('#postSubmitButton').addEventListener('click', function () {
+            const postForm = document.querySelector('#postForm');
+            postForm.content.value = JSON.stringify(quill.getContents());
+            postForm.submit();
+        });
+    }
 })()

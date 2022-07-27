@@ -29,7 +29,7 @@
             <tbody>
                 <?php foreach ($postList as  $postInfo) : ?>
                     <tr>
-                        <td><a href="/admin/preview.php?pid=<?= $postInfo['pid'] ?>>"><?= $postInfo['title'] ?></a></td>
+                        <td><a href="/admin/preview.php?pid=<?= $postInfo['pid'] ?>"><?= $postInfo['title'] ?></a></td>
                         <td><?= $postInfo['mid'] ?></td>
                         <td><?= $postInfo['title'] ?></td>
                         <td>2022-08-22 11:32:11</td>
@@ -40,4 +40,5 @@
     </div>
 </div>
 <?php require __DIR__ . '/copyright.php'; ?>
+<?php require __DIR__ . '/common-js.php'; ?>
 <?php require __DIR__ . '/footer.php'; ?>
