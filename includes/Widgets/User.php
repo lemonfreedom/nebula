@@ -264,6 +264,8 @@ class User extends Widget
 
         // 插入数据
         $this->db->insert('users', [
+            'role' => '1',
+            'nickname' => $data['username'],
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Common::hash($data['password']),

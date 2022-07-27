@@ -60,6 +60,7 @@ a {
     .actions {
         display: flex;
         gap: .6rem;
+
         input {
             width: 10rem;
         }
@@ -200,7 +201,8 @@ a {
 
 .nebula_table {
     background-color: $color-grey-8;
-    padding: .8rem;
+    box-sizing: border-box;
+    padding: 1rem .8rem;
 
     table {
         width: 100%;
@@ -215,7 +217,8 @@ a {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
-                    padding: 0 .3rem .6rem;
+                    padding: 0 .2rem 1rem;
+                    box-sizing: border-box;
                 }
             }
         }
@@ -227,7 +230,8 @@ a {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
-                    padding: .6rem .3rem 0;
+                    padding: 1rem .2rem 0;
+                    box-sizing: border-box;
                 }
             }
         }

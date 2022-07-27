@@ -12,7 +12,7 @@ define('NEBULA_DB_CONFIG', [
     'host' => 'localhost',
     'database' => 'nebula',
     'username' => 'root',
-    'password' => 'wo123456',
+    'password' => 'root',
 
     // 可选
     'charset' => 'utf8mb4',
