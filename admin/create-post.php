@@ -20,8 +20,8 @@
             </select>
         </div>
         <div class="form-item">
-            <label class="form-label" for="editor">内容</label>
-            <textarea id="editor" name="content"></textarea>
+            <label class="form-label" for="content">内容</label>
+            <textarea id="content" name="content"></textarea>
         </div>
         <div class="form-tools">
             <button type="submit" class="nebula-button block">发布文章</button>

@@ -64,20 +64,4 @@
             })
         });
     }
-
-    // 富文本编辑器
-    tinymce.init({
-        selector: '#editor',
-        width: '100%',
-        height: 500,
-        skin: 'oxide-dark',
-        language: 'zh-Hans',
-        content_style: "body{color:#e6e8ea}",
-        // 隐藏右下角支持
-        branding: false,
-        plugins: "image",
-        mobile: {
-            menubar: true
-        }
-    });
 })()
