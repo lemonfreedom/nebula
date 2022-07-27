@@ -6,7 +6,7 @@ if (!@include dirname(__DIR__) . '/config.php') {
 }
 
 // 配置组件
-\Nebula\Widgets\Options::alloc()->to($options);
+\Nebula\Widgets\Option::alloc()->to($options);
 
 // 用户组件
 \Nebula\Widgets\User::alloc()->to($user);

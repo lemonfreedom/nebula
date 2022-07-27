@@ -30,6 +30,12 @@ class Router
                 'action' => '',
             ],
         ],
+        'post' => [
+            'widget' => '\Nebula\Widgets\Post',
+            'params' => [
+                'action' => '',
+            ],
+        ],
     ];
 
     /**

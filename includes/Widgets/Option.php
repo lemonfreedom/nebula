@@ -5,7 +5,7 @@ namespace Nebula\Widgets;
 use Nebula\Helpers\Validate;
 use Nebula\Widget;
 
-class Options extends Widget
+class Option extends Widget
 {
     public function execute()
     {

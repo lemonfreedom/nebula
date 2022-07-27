@@ -1,0 +1,11 @@
+.tox-tinymce,
+.tox .tox-tbtn,
+.tox .tox-mbtn,
+.tox .tox-menu,
+.tox .tox-collection__item {
+    border-radius: 0 !important;
+}
+
+.tox .tox-edit-area__iframe {
+    background-color: $color-grey-8  !important;
+}

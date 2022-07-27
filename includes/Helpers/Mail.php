@@ -6,7 +6,7 @@ use Nebula\Common;
 use Nebula\Helpers\PHPMailer\Exception;
 use Nebula\Helpers\PHPMailer\PHPMailer;
 use Nebula\Response;
-use Nebula\Widgets\Options;
+use Nebula\Widgets\Option;
 
 class Mail
 {
@@ -35,7 +35,7 @@ class Mail
     {
         $this->mail = new PHPMailer(true);
 
-        $this->smtpOption = Options::alloc()->smtp;
+        $this->smtpOption = Option::alloc()->smtp;
 
         // 服务器设置
         $this->mail->isSMTP();
@@ -62,7 +62,7 @@ class Mail
             $this->mail->setFrom($this->smtpOption['username'], $this->smtpOption['name']);
             $this->mail->addAddress($address);
             $this->mail->isHTML(true);
-            $this->mail->Subject = Options::alloc()->title . ' 验证码';
+            $this->mail->Subject = Option::alloc()->title . ' 验证码';
 
             $this->mail->Body = '您的验证码是：' . $code;
 

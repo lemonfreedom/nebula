@@ -70,16 +70,15 @@ class User extends Widget
     }
 
     /**
-     * 判断用户角色
+     * 判断用户角色是否存在某角色列表中
      *
      * @param array $roles 角色列表
      * @return bool
      */
     public function inRole($roles)
     {
-        // 判断是否登陆
         if ($this->hasLogin()) {
-            return in_array($this->loginUserInfo['role'], $roles);
+            return in_array($this->get('role'), $roles);
         } else {
             return false;
         }
@@ -88,29 +87,28 @@ class User extends Widget
     /**
      * 通过角色值返回角色名
      *
-     * @param $value 角色值
+     * @param string $value 角色值
      * @return string 角色名
      */
     public function getRoleName($value)
     {
-        $role =  array_values(array_filter($this->roleList, function ($role) use ($value) {
-            return $role['value'] === $value;
-        }));
-
-        if (count($role) > 0) {
-            return $role[0]['name'];
-        } else {
-            return '未知';
+        foreach ($this->roleList as $role) {
+            if ($role['value'] === $value) {
+                return $role['name'];
+            }
         }
+
+        return '未知';
     }
 
     /**
      * 获取指定用户信息，若参数为空，则查询登陆用户信息
      *
      * @param null｜string $key 字段名
+     * @param string $defaultValue 默认值
      * @return mixed
      */
-    public function get($key = null)
+    public function get($key = null, $defaultValue = '')
     {
         $uid = $this->params['uid'] ?? null;
         $userInfo = null;
@@ -124,16 +122,8 @@ class User extends Widget
         if (null === $key) {
             return $userInfo;
         } else {
-            return $userInfo[$key] ?? null;
+            return $userInfo[$key] ?? $defaultValue;
         }
-    }
-
-    /**
-     * 获取用户名称
-     */
-    public function getName()
-    {
-        return empty($this->get('nickname')) ? $this->get('username') : $this->get('nickname');
     }
 
     /**
@@ -506,7 +496,7 @@ class User extends Widget
         }
 
         try {
-            Mail::getInstance()->sendHTML(Options::alloc()->smtp['username'], '测试邮件', '这是一封测试邮件');
+            Mail::getInstance()->sendHTML(Option::alloc()->smtp['username'], '测试邮件', '这是一封测试邮件');
 
             $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
         } catch (Exception $e) {
@@ -521,12 +511,13 @@ class User extends Widget
      */
     public function getUserList()
     {
+        $keyword = trim($this->params['keyword']);
         return $this->db->select('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], [
             'OR' => [
-                'uid[~]' => $this->params['keyword'],
-                'username[~]' => $this->params['keyword'],
-                'email[~]' => $this->params['keyword'],
-                'nickname[~]' => $this->params['keyword'],
+                'uid[~]' => $keyword,
+                'username[~]' => $keyword,
+                'email[~]' => $keyword,
+                'nickname[~]' => $keyword,
             ],
         ]);
     }

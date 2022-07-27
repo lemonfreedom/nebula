@@ -10,6 +10,12 @@
                         <span class="text">仪表盘</span>
                     </a>
                 </li>
+                <li>
+                    <a href="/admin/posts.php">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span class="text">文章</span>
+                    </a>
+                </li>
                 <?php if ($user->inRole(['0'])) : ?>
                     <li>
                         <a href="/admin/users.php">
@@ -31,7 +37,7 @@
                 <li>
                     <a href="/admin/profile.php?uid=<?= $user->get('uid') ?>">
                         <i class="bi bi-person"></i>
-                        <span class="text">您好，<?= $user->getName() ?></span>
+                        <span class="text">您好，<?= $user->get('nickname') ?></span>
                     </a>
                 </li>
                 <li>
