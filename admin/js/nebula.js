@@ -76,5 +76,8 @@
         // 隐藏右下角支持
         branding: false,
         plugins: "image",
+        mobile: {
+            menubar: true
+        }
     });
 })()
