@@ -2,6 +2,7 @@
 
 namespace Nebula\Widgets;
 
+use Nebula\Helpers\Cookie;
 use Nebula\Helpers\Validate;
 use Nebula\Widget;
 
@@ -17,7 +18,7 @@ class Post extends Widget
         $pid = $this->params['pid'] ?? null;
 
         if (null !== $pid) {
-            return $this->db->get('posts', ['pid', 'mid', 'title', 'content'], [
+            return $this->db->get('posts', ['pid', 'tid', 'title', 'content'], [
                 'pid' => $pid,
             ]);
         } else {
@@ -33,7 +34,7 @@ class Post extends Widget
     public function getPostList()
     {
         // $keyword = trim($this->params['keyword']);
-        return $this->db->select('posts', ['pid', 'mid', 'title', 'content'], [
+        return $this->db->select('posts', ['pid', 'tid', 'title', 'content'], [
             // 'OR' => [
             //     'uid[~]' => $keyword,
             //     'username[~]' => $keyword,
@@ -56,7 +57,7 @@ class Post extends Widget
             'title' => [
                 ['type' => 'required', 'message' => '标题不能为空'],
             ],
-            'mid' => [
+            'tid' => [
                 ['type' => 'required', 'message' => '分类不能为空'],
             ],
             'content' => [
@@ -65,12 +66,25 @@ class Post extends Widget
         ]);
         // 表单验证
         if (!$validate->run()) {
+            Cookie::set('title', $this->request->post('title', ''), time() + 60);
+            Cookie::set('tid', $this->request->post('tid', ''), time() + 60);
+            Cookie::set('content', $this->request->post('content', ''), time() + 60);
+
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/create-post.php');
         }
 
+        if ($data['content'] === '{"ops":[{"insert":"\n"}]}') {
+            Cookie::set('title', $this->request->post('title', ''), time() + 1);
+            Cookie::set('tid', $this->request->post('tid', ''), time() + 1);
+            Cookie::set('content', $this->request->post('content', ''), time() + 1);
+
+            Notice::alloc()->set('内容不能为空', 'warning');
+            $this->response->redirect('/admin/create-post.php');
+        }
+
         $this->db->insert('posts', [
-            'mid' =>  $data['mid'],
+            'tid' =>  $data['tid'],
             'title' =>  $data['title'],
             'content' =>  $data['content'],
         ]);
