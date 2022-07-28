@@ -37,7 +37,8 @@
     border: 0;
 
     &:hover {
-        background-color: darken($color: $color-primary, $amount: 10%);
+        color: #fff;
+        background-color: darken($color: $color-primary, $amount: 4%);
     }
 }
 
@@ -72,7 +73,7 @@
         background-color: #efefef;
         position: relative;
         cursor: pointer;
-        box-sizing: content-box;
+        box-sizing: border-box;
         border-radius: 0;
         outline: none;
 

@@ -11,13 +11,13 @@ body {
 }
 
 a {
-    color: #2980b9;
+    color: $color-primary;
     text-decoration: none;
     outline: none;
 
     &:hover,
     &:focus {
-        color: #3091d1;
+        color: lighten($color: $color-primary, $amount: 10%);
     }
 }
 

@@ -1,5 +1,5 @@
 .nebula-navbar {
-    background-color: #313131;
+    background-color: $color-primary;
     margin-bottom: 1rem;
 
     .container {
@@ -10,7 +10,7 @@
 
         .logo {
             font-size: 1.4rem;
-            color: #d9d9d9;
+            color: #fff;
             font-weight: bold;
             flex: none;
             margin: 0;
@@ -26,7 +26,8 @@
             align-items: center;
             justify-content: space-between;
             flex: auto;
-            background-color: #313131;
+            background-color: $color-primary;
+            ;
 
             .menu {
                 display: flex;
@@ -39,14 +40,14 @@
                     a {
                         display: flex;
                         align-items: center;
-                        color: #d9d9d9;
+                        color: #fff;
                         white-space: nowrap;
                         gap: .3rem;
                         height: 3.6rem;
                         padding: 0 .8rem;
 
                         &:hover {
-                            background-color: #4a4a4a;
+                            background-color: rgba(0, 0, 1, .1);
                         }
                     }
                 }
@@ -106,7 +107,7 @@
                 border: 0;
                 padding: 0;
                 cursor: pointer;
-                color: #d9d9d9;
+                color: #fff;
                 background-color: transparent;
                 font-size: 1.6rem;
                 width: 3.6rem;
@@ -115,7 +116,7 @@
                 justify-content: center;
 
                 &:hover {
-                    background-color: #4a4a4a;
+                    background-color: rgba(0, 0, 1, .1);
                 }
             }
         }
