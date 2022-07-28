@@ -1,71 +1,89 @@
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
+/*
+ Navicat Premium Data Transfer
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+ Source Server         : localhost
+ Source Server Type    : MySQL
+ Source Server Version : 50728
+ Source Host           : localhost:3306
+ Source Schema         : nebula
 
+ Target Server Type    : MySQL
+ Target Server Version : 50728
+ File Encoding         : 65001
 
-CREATE TABLE `nebula_metas` (
-  `mid` tinyint UNSIGNED NOT NULL DEFAULT '0',
-  `name` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+ Date: 28/07/2022 08:57:17
+*/
 
-INSERT INTO `nebula_metas` (`mid`, `name`) VALUES
-(0, '默认分类');
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
-CREATE TABLE `nebula_options` (
-  `name` varchar(30) NOT NULL,
-  `value` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- ----------------------------
+-- Table structure for nebula_metas
+-- ----------------------------
+DROP TABLE IF EXISTS `nebula_metas`;
+CREATE TABLE `nebula_metas`  (
+  `mid` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+  `name` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`mid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-INSERT INTO `nebula_options` (`name`, `value`) VALUES
-('allowRegister', '1'),
-('description', '又一个博客网站诞生了'),
-('smtp', 'a:5:{s:4:\"host\";s:11:\"smtp.qq.com\";s:8:\"username\";s:13:\"226582@qq.com\";s:8:\"password\";s:16:\"revpqsbyoyvucaig\";s:4:\"port\";i:465;s:4:\"name\";s:6:\"Nebula\";}'),
-('title', 'Nebula');
+-- ----------------------------
+-- Records of nebula_metas
+-- ----------------------------
+INSERT INTO `nebula_metas` VALUES (0, '默认分类');
 
-CREATE TABLE `nebula_posts` (
-  `pid` int UNSIGNED NOT NULL,
-  `mid` tinyint UNSIGNED NOT NULL,
-  `title` varchar(60) NOT NULL,
-  `content` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+-- ----------------------------
+-- Table structure for nebula_options
+-- ----------------------------
+DROP TABLE IF EXISTS `nebula_options`;
+CREATE TABLE `nebula_options`  (
+  `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`name`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
-CREATE TABLE `nebula_users` (
-  `uid` int UNSIGNED NOT NULL,
-  `role` tinyint UNSIGNED NOT NULL DEFAULT '1',
-  `nickname` varchar(60) NOT NULL,
-  `username` varchar(60) NOT NULL,
-  `password` varchar(64) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `token` varchar(32) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- ----------------------------
+-- Records of nebula_options
+-- ----------------------------
+INSERT INTO `nebula_options` VALUES ('allowRegister', '1');
+INSERT INTO `nebula_options` VALUES ('description', '又一个博客网站诞生了');
+INSERT INTO `nebula_options` VALUES ('smtp', 'a:5:{s:4:\"host\";s:11:\"smtp.qq.com\";s:8:\"username\";s:13:\"226582@qq.com\";s:8:\"password\";s:16:\"revpqsbyoyvucaig\";s:4:\"port\";i:465;s:4:\"name\";s:6:\"Nebula\";}');
+INSERT INTO `nebula_options` VALUES ('title', 'Nebula');
 
-INSERT INTO `nebula_users` (`uid`, `role`, `nickname`, `username`, `password`, `email`, `token`) VALUES
-(1, 1, 'admin', 'admin', 'ciybkc88f05meqaulgc1mzlwg9nohkewff9346ae29a24f9f05c0953839cd5933', '226582@qq.com', 'xaf5f7ys9oihiaorpvr2zc4z0kmipacp');
+-- ----------------------------
+-- Table structure for nebula_posts
+-- ----------------------------
+DROP TABLE IF EXISTS `nebula_posts`;
+CREATE TABLE `nebula_posts`  (
+  `pid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mid` tinyint(3) UNSIGNED NOT NULL,
+  `title` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`pid`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
+-- ----------------------------
+-- Records of nebula_posts
+-- ----------------------------
 
-ALTER TABLE `nebula_metas`
-  ADD PRIMARY KEY (`mid`);
+-- ----------------------------
+-- Table structure for nebula_users
+-- ----------------------------
+DROP TABLE IF EXISTS `nebula_users`;
+CREATE TABLE `nebula_users`  (
+  `uid` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `role` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `nickname` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `username` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `token` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`uid`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
-ALTER TABLE `nebula_options`
-  ADD PRIMARY KEY (`name`);
+-- ----------------------------
+-- Records of nebula_users
+-- ----------------------------
+INSERT INTO `nebula_users` VALUES (1, 1, 'admin', 'admin', 'ciybkc88f05meqaulgc1mzlwg9nohkewff9346ae29a24f9f05c0953839cd5933', '226582@qq.com', 'xaf5f7ys9oihiaorpvr2zc4z0kmipacp');
 
-ALTER TABLE `nebula_posts`
-  ADD PRIMARY KEY (`pid`) USING BTREE;
-
-ALTER TABLE `nebula_users`
-  ADD PRIMARY KEY (`uid`);
-
-
-ALTER TABLE `nebula_posts`
-  MODIFY `pid` int UNSIGNED NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `nebula_users`
-  MODIFY `uid` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+SET FOREIGN_KEY_CHECKS = 1;
