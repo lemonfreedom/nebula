@@ -5,26 +5,21 @@
 <?php $postList = \Nebula\Widgets\Post::alloc()->getPostList() ?>
 <div class="container">
     <h2 class="page-title">
-        <span>文章</span>
+        <span>分类</span>
         <div class="actions">
             <a class="nebula-button" href="/admin/create-post.php">新增</a>
         </div>
     </h2>
-    <div class="page-subtitle"></div>
     <div class="nebula_table">
         <table>
             <colgroup>
+                <col width="70%">
                 <col width="30%">
-                <col width="20%">
-                <col width="30%">
-                <col width="20%">
             </colgroup>
             <thead>
                 <tr>
-                    <th>标题</th>
-                    <th>作者</th>
-                    <th>分类</th>
-                    <th>日期</th>
+                    <th>名称</th>
+                    <th>优先级</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,8 +27,6 @@
                     <tr>
                         <td><a href="/admin/preview.php?pid=<?= $postInfo['pid'] ?>"><?= $postInfo['title'] ?></a></td>
                         <td><?= $postInfo['tid'] ?></td>
-                        <td><?= $postInfo['title'] ?></td>
-                        <td>2022-08-22 11:32:11</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

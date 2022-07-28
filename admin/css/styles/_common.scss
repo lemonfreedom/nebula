@@ -71,7 +71,7 @@ a {
     font-size: 1.2rem;
     font-weight: bold;
     padding: .6rem 0;
-    border-bottom: 1px dashed $color-primary;
+    border-bottom: 2px dashed $color-primary;
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -233,7 +233,7 @@ a {
 .nebula_table {
     background-color: $color-grey-8;
     box-sizing: border-box;
-    padding: 1rem .8rem;
+    padding: 1.6rem .8rem;
 
     table {
         width: 100%;
@@ -248,7 +248,7 @@ a {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
-                    padding: 0 .2rem 1rem;
+                    padding: 0 .2rem 1.6rem;
                     box-sizing: border-box;
                 }
             }
@@ -261,7 +261,7 @@ a {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
-                    padding: 1rem .2rem 0;
+                    padding: 1.6rem .2rem 0;
                     box-sizing: border-box;
                 }
             }

@@ -16,6 +16,12 @@
                         <span class="text">文章</span>
                     </a>
                 </li>
+                <li>
+                    <a href="/admin/terms.php">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span class="text">分类</span>
+                    </a>
+                </li>
                 <?php if ($user->inRole(['0'])) : ?>
                     <li>
                         <a href="/admin/users.php">
