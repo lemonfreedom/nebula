@@ -11,7 +11,7 @@
 
         .logo {
             font-size: 1.4rem;
-            color: lighten($color: $color-primary, $amount: 30%);
+            color: $color-navbar-font;
             font-weight: bold;
             flex: none;
             margin: 0;
@@ -40,7 +40,7 @@
                     a {
                         display: flex;
                         align-items: center;
-                        color: $color-grey-0;
+                        color: $color-navbar-font;
                         white-space: nowrap;
                         gap: .3rem;
 
