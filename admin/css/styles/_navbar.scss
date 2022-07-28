@@ -1,21 +1,20 @@
 .nebula-navbar {
-    background-color: darken($color: $color-primary, $amount: 10%);
+    background-color: #313131;
     margin-bottom: 1rem;
 
     .container {
         display: flex;
-        height: 3.6rem;
         justify-content: space-between;
         align-items: center;
         gap: 1.6rem;
 
         .logo {
             font-size: 1.4rem;
-            color: $color-navbar-font;
+            color: #d9d9d9;
             font-weight: bold;
             flex: none;
             margin: 0;
-            height: 100%;
+            height: 3.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -27,11 +26,11 @@
             align-items: center;
             justify-content: space-between;
             flex: auto;
+            background-color: #313131;
 
             .menu {
                 display: flex;
                 align-items: center;
-                gap: 1.2rem;
                 list-style: none;
                 padding: 0;
                 margin: 0;
@@ -40,12 +39,14 @@
                     a {
                         display: flex;
                         align-items: center;
-                        color: $color-navbar-font;
+                        color: #d9d9d9;
                         white-space: nowrap;
                         gap: .3rem;
+                        height: 3.6rem;
+                        padding: 0 .8rem;
 
                         &:hover {
-                            color: lighten($color: $color-primary, $amount: 50%);
+                            background-color: #4a4a4a;
                         }
                     }
                 }
@@ -61,6 +62,7 @@
         .container {
             height: 3.6rem;
             line-height: 3.6rem;
+            padding-right: 0;
 
             .main {
                 display: none;
@@ -71,7 +73,6 @@
                 bottom: 0;
                 flex-direction: column;
                 justify-content: initial;
-                background-color: darken($color: $color-primary, $amount: 12%);
                 overflow-x: hidden;
                 overflow-y: auto;
                 z-index: 10000;
@@ -83,18 +84,14 @@
 
                     li {
                         a {
-                            font-size: 24px;
+                            padding: 0;
+                            font-size: 1.6rem;
                             width: 3.6rem;
                             height: 3.6rem;
                             justify-content: center;
 
                             .text {
                                 display: none;
-                            }
-
-                            &:hover {
-                                background-color: $color-primary;
-                                color: lighten($color: $color-primary, $amount: 50%);
                             }
                         }
                     }
@@ -109,16 +106,16 @@
                 border: 0;
                 padding: 0;
                 cursor: pointer;
+                color: #d9d9d9;
                 background-color: transparent;
-                color: $color-grey-0;
-                font-size: 2.4rem;
+                font-size: 1.6rem;
                 width: 3.6rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
 
                 &:hover {
-                    color: lighten($color: $color-primary, $amount: 50%);
+                    background-color: #4a4a4a;
                 }
             }
         }

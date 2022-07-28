@@ -11,7 +11,7 @@
             <button class="nebula-button">搜索</button>
         </form>
     </h2>
-    <div class="nebula_table">
+    <div class="nebula-table">
         <table>
             <colgroup>
                 <col width="20%">

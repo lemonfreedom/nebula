@@ -11,7 +11,7 @@
         </div>
     </h2>
     <div class="page-subtitle"></div>
-    <div class="nebula_table">
+    <div class="nebula-table">
         <table>
             <colgroup>
                 <col width="30%">

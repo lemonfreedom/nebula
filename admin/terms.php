@@ -10,7 +10,7 @@
             <a class="nebula-button" href="/admin/create-post.php">新增</a>
         </div>
     </h2>
-    <div class="nebula_table">
+    <div class="nebula-table">
         <table>
             <colgroup>
                 <col width="70%">

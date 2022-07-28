@@ -11,10 +11,11 @@
         padding: 1rem;
 
         .title {
-            color: $color-grey-5;
+            color: $color-primary;
             text-align: center;
-            font-size: 2rem;
+            font-size: 2.6rem;
             letter-spacing: .1rem;
+            margin: 0 0 3rem;
         }
 
         .login-form {
@@ -33,36 +34,25 @@
                 height: 3rem;
                 padding: 0 .8rem;
                 box-sizing: border-box;
-                color: $color-grey-1;
-                background-color: $color-grey-8;
+                background-color: #efefef;
                 outline: none;
-                border: 2px solid lighten($color: $color-grey-8, $amount: 4%);
+                border: 0;
                 border-radius: 0;
-
-                &:focus {
-                    border-color: lighten($color: $color-primary, $amount: 10%);
-                }
+                font: inherit;
             }
 
             .login-btn {
+                font: inherit;
                 flex: none;
                 height: 3rem;
                 border: 0;
-                color: $color-grey-1;
+                color: #fff;
                 background-color: $color-primary;
-                border: 2px solid lighten($color: $color-primary, $amount: 6%);
                 padding: 0 1rem;
                 cursor: pointer;
                 outline: none;
 
-                &:hover,
-                &:focus {
-                    border: 2px solid lighten($color: $color-primary, $amount: 16%);
-                    background-color: lighten($color: $color-primary, $amount: 10%);
-                }
-
-                &[disabled] {
-                    color: $color-grey-2;
+                &:hover {
                     background-color: darken($color: $color-primary, $amount: 10%);
                 }
             }
