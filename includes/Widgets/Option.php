@@ -99,6 +99,9 @@ class Option extends Widget
             'description' => [
                 ['type' => 'required', 'message' => '站点描述不能为空'],
             ],
+            'allowRegister' => [
+                ['type' => 'required', 'message' => '是否允许注册不能为空'],
+            ],
         ]);
 
         if (!$validate->run()) {
@@ -111,7 +114,7 @@ class Option extends Widget
         // 站点描述
         $this->setOption('description', $data['description'] ?? $this->description);
         // 是否允许注册
-        $this->setOption('allowRegister', $data['allowRegister'] ?? '0');
+        $this->setOption('allowRegister', $data['allowRegister']);
 
         Notice::alloc()->set('保存成功', 'success');
         $this->response->redirect('/admin/options.php');

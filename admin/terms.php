@@ -6,10 +6,10 @@
 <div class="container">
     <h2 class="page-title">
         <span>分类</span>
-        <div class="actions">
-            <a class="nebula-button" href="/admin/create-post.php">新增</a>
-        </div>
     </h2>
+    <div class="nebula-tools">
+        <a class="nebula-button" href="/admin/create-post.php">新增</a>
+    </div>
     <div class="nebula-table">
         <table>
             <colgroup>

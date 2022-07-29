@@ -4,13 +4,10 @@
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $postList = \Nebula\Widgets\Post::alloc()->getPostList() ?>
 <div class="container">
-    <h2 class="page-title">
-        <span>文章</span>
-        <div class="actions">
-            <a class="nebula-button" href="/admin/create-post.php">新增</a>
-        </div>
-    </h2>
-    <div class="page-subtitle"></div>
+    <h2 class="page-title">文章</h2>
+    <div class="nebula-tools">
+        <a class="nebula-button" href="/admin/create-post.php">新增</a>
+    </div>
     <div class="nebula-table">
         <table>
             <colgroup>

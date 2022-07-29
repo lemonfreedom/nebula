@@ -6,7 +6,7 @@
     <h2 class="page-title">
         <span>设置</span>
     </h2>
-    <form action="/options/update-basic" method="post">
+    <form class="nebula-form" action="/option/update-basic" method="post">
         <div class="page-subtitle">
             <span>基本设置</span>
             <button class="nebula-button">保存设置</button>
@@ -23,17 +23,25 @@
         </div>
         <div class="form-item">
             <label class="form-label" for="allowRegister">是否允许注册</label>
-            <label class="nebula-switch">
-                <input type="checkbox" id="allowRegister" name="allowRegister" value="1" <?= $options->allowRegister === '1' ? 'checked' : '' ?>>
-                <span class="slider"></span>
-            </label>
+            <div class="nebula-radio-group">
+                <label class="nebula-radio">
+                    <input type="radio" name="allowRegister" value="0" <?= $options->allowRegister === '0' ? 'checked' : '' ?>>
+                    <div class="checkmark"></div>
+                    <span>否</span>
+                </label>
+                <label class="nebula-radio">
+                    <input type="radio" name="allowRegister" value="1" <?= $options->allowRegister === '1' ? 'checked' : '' ?>>
+                    <div class="checkmark"></div>
+                    <span>是</span>
+                </label>
+            </div>
             <div class="form-sublabel">允许访问者注册到你的网站</div>
         </div>
     </form>
-    <form action="/options/update-smtp" method="post">
+    <form class="nebula-form" action="/option/update-smtp" method="post">
         <div class="page-subtitle">
             <span>SMTP 设置</span>
-            <div class="actions">
+            <div class="nebula-button-group">
                 <button id="sendTestMail" type="button" class="nebula-button">发送测试邮件</button>
                 <button class="nebula-button">保存设置</button>
             </div>
@@ -62,6 +70,23 @@
             <div class="form-sublabel">发件邮箱密码</div>
         </div>
     </form>
+    <div class="nebula-checkbox-group">
+        <label class="nebula-checkbox">
+            <input checked="checked" type="checkbox">
+            <div class="checkmark"></div>
+            <span>保存密码</span>
+        </label>
+        <label class="nebula-checkbox">
+            <input checked="checked" type="checkbox">
+            <div class="checkmark"></div>
+            <span>保存密码</span>
+        </label>
+        <label class="nebula-checkbox">
+            <input checked="checked" type="checkbox">
+            <div class="checkmark"></div>
+            <span>保存密码</span>
+        </label>
+    </div>
 </div>
 <?php require __DIR__ . '/copyright.php'; ?>
 <?php require __DIR__ . '/common-js.php'; ?>

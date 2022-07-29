@@ -38,13 +38,14 @@
 
                 li {
                     a {
-                        display: flex;
-                        align-items: center;
-                        color: #fff;
-                        white-space: nowrap;
-                        gap: .3rem;
                         height: 3.6rem;
                         padding: 0 .8rem;
+                        display: flex;
+                        align-items: center;
+                        gap: .3rem;
+                        color: #fff;
+                        font-weight: bold;
+                        white-space: nowrap;
 
                         &:hover {
                             background-color: rgba(0, 0, 1, .1);
