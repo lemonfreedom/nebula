@@ -55,7 +55,7 @@
             </ul>
         </div>
         <div id="menuToggleButton" class="menu-toggle">
-            <i class="bi bi-list"></i>
+            <i class="bi bi-grid"></i>
         </div>
     </div>
 </div>
