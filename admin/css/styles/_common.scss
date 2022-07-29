@@ -6,7 +6,8 @@ body {
     min-height: 100%;
     color: #404040;
     background-color: #fcfcfc;
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1;
+    font-family: 'Asap', Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     position: relative;
 }
 
@@ -49,17 +50,10 @@ a {
     font-weight: bold;
     margin-bottom: 1.2rem;
     display: flex;
+    gap: 1rem;
     justify-content: space-between;
     align-items: center;
-
-    .actions {
-        display: flex;
-        gap: .6rem;
-
-        input {
-            width: 10rem;
-        }
-    }
+    white-space: nowrap;
 }
 
 .page-subtitle {
@@ -68,36 +62,59 @@ a {
     padding: .6rem 0;
     margin-bottom: 1rem;
     display: flex;
+    gap: 1rem;
     align-items: center;
     justify-content: space-between;
     border-bottom: 2px dashed #ccc;
-
-    .actions {
-        display: flex;
-        gap: .4rem;
-    }
+    white-space: nowrap;
 }
 
 .nebula-table {
     background-color: #efefef;
     box-sizing: border-box;
-    padding: 1.6rem .8rem;
+    padding: .8rem;
+    border-radius: .2rem;
 
     table {
         width: 100%;
         border-collapse: collapse;
         table-layout: fixed;
 
+        th,
+        td {
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            box-sizing: border-box;
+
+            .nebula-checkbox {
+                margin: 0;
+                display: flex;
+                width: 1rem;
+
+                .checkmark {
+                    width: 1rem;
+                    height: 1rem;
+                    background-color: #fff;
+
+                    &::after {
+                        top: calc(50% - .1rem);
+                        left: 50%;
+                        width: 0.2rem;
+                        height: 0.4rem;
+                        border: solid $color-primary;
+                        border-width: 0 0.16rem 0.16rem 0;
+                        transform: translate(-50%, -50%) rotate(45deg);
+                    }
+                }
+            }
+        }
+
         thead {
             tr {
                 th {
-                    border-bottom: 2px solid darken($color: #efefef, $amount: 6%);
-                    text-align: left;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    padding: 0 .2rem 1.6rem;
-                    box-sizing: border-box;
+                    padding: .8rem .2rem;
                 }
             }
         }
@@ -105,14 +122,271 @@ a {
         tbody {
             tr {
                 td {
-                    text-align: left;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    padding: 1.6rem .2rem 0;
-                    box-sizing: border-box;
+                    font-size: .9rem;
+                    padding: .8rem .2rem;
                 }
             }
+        }
+    }
+}
+
+// 页面工具
+.nebula-tools {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: .6rem;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    form {
+        display: flex;
+        gap: .4rem;
+    }
+}
+
+// 表单
+.nebula-form {
+    .form-item {
+        display: flex;
+        flex-direction: column;
+        gap: .4rem;
+        margin-bottom: 1rem;
+        align-items: flex-start;
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-sublabel {
+            font-size: .8rem;
+            color: #808080;
+        }
+    }
+
+    .form-tools {
+        display: flex;
+        gap: .4rem;
+        justify-content: flex-end;
+    }
+}
+
+.nebula-button,
+.nebula-button-dropdown {
+    height: 2.6rem;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .9rem;
+    font-weight: bold;
+    white-space: nowrap;
+    color: #fff;
+    background-color: $color-primary;
+    border: 0;
+    border-radius: .2rem;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+        color: #fff;
+        background-color: darken($color: $color-primary, $amount: 4%);
+    }
+}
+
+.nebula-button-dropdown {
+    padding-right: 2.2rem;
+    position: relative;
+
+    &::after {
+        display: block;
+        content: "";
+        position: absolute;
+        top: calc(50% - .12rem);
+        right: .6rem;
+        width: 0.4rem;
+        height: 0.4rem;
+        border: solid #fff;
+        border-width: 0 0.16rem 0.16rem 0;
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #e0e0e0;
+        margin: 0;
+        padding: 0;
+        min-width: 150%;
+        border-radius: 0 .2rem .2rem .2rem;
+        padding: .6rem 0;
+        list-style: none;
+
+        li {
+            a {
+                display: block;
+                height: 1.8rem;
+                line-height: 1.8rem;
+                padding: 0 1rem;
+                font-weight: bold;
+                color: $color-primary;
+
+                &:hover {
+                    color: #fff;
+                    background-color: $color-primary;
+                }
+            }
+        }
+    }
+
+    &.open {
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
+
+        .dropdown-menu {
+            display: block;
+        }
+
+        &::after {
+            top: calc(50% + .12rem);
+            transform: translate(-50%, -50%) rotate(-135deg);
+        }
+    }
+}
+
+.nebula-input,
+.nebula-select {
+    display: inline-block;
+    width: 100%;
+    height: 2.6rem;
+    box-sizing: border-box;
+    outline: none;
+    background-color: #efefef;
+    border: 0;
+    border-radius: .2rem;
+    appearance: none;
+}
+
+.nebula-input {
+    padding: 0 .8rem;
+
+    &:focus {
+        background-color: #e0e0e0;
+    }
+}
+
+.nebula-select {
+    padding: 0 2.4rem 0 .8rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 16px 12px;
+
+    &:focus {
+        background-color: #e0e0e0;
+    }
+}
+
+.nebula-switch {
+    input {
+        appearance: none;
+        width: 4rem;
+        height: 2rem;
+        background-color: #efefef;
+        position: relative;
+        cursor: pointer;
+        box-sizing: border-box;
+        outline: none;
+        border-radius: .2rem;
+
+        &::before {
+            content: '';
+            display: block;
+            height: calc(2rem - .6rem);
+            width: calc(2rem - .6rem);
+            transform: translate(-50%, -50%);
+            position: absolute;
+            top: 50%;
+            left: calc((2rem - .2rem) / 2 + .2rem);
+            background-color: $color-error;
+            transition: .3s ease;
+        }
+
+        &:checked::before {
+            background-color: $color-success;
+            left: calc(100% - (2rem - .2rem) / 2 - .2rem);
+        }
+
+        &:focus {
+            background-color: #e0e0e0;
+        }
+    }
+}
+
+.nebula-checkbox-group,
+.nebula-radio-group,
+.nebula-button-group {
+    display: inline-flex;
+    display: flex;
+    gap: .6rem;
+}
+
+.nebula-checkbox,
+.nebula-radio {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    gap: .4rem;
+    font-weight: bold;
+    white-space: nowrap;
+    margin: .4rem 0;
+
+    input {
+        display: none;
+    }
+
+    .checkmark {
+        width: 1.4rem;
+        height: 1.4rem;
+        position: relative;
+        background-color: #efefef;
+        border-radius: .2rem;
+
+        &::after {
+            display: none;
+            content: "";
+            position: absolute;
+            top: calc(50% - .12rem);
+            left: 50%;
+            width: 0.3rem;
+            height: 0.6rem;
+            border: solid $color-primary;
+            border-width: 0 0.2rem 0.2rem 0;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+    }
+
+    input:checked+.checkmark::after {
+        display: block;
+    }
+}
+
+.nebula-radio {
+    .checkmark {
+        border-radius: 50%;
+
+        &::after {
+            width: 0.6rem;
+            height: 0.6rem;
+            border: 0;
+            border-radius: 50%;
+            background-color: $color-primary;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
     }
 }

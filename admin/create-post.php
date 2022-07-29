@@ -4,10 +4,8 @@
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $userList = \Nebula\Widgets\User::allocAlias('users', ['keyword' => $request->get('keyword', '')])->getUserList() ?>
 <div class="container">
-    <h2 class="page-title">
-        <span>新增文章</span>
-    </h2>
-    <form id="postForm" action="/post/create-post" method="post">
+    <h2 class="page-title">新增文章</h2>
+    <form class="nebula-form" id="postForm" action="/post/create-post" method="post">
         <div class="form-item">
             <label class="form-label" for="title">标题</label>
             <input class="nebula-input" id="title" name="title" value="<?= \Nebula\Helpers\Cookie::get('title', '') ?>"></input>

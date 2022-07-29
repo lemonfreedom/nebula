@@ -24,8 +24,8 @@ class Router
                 'uid' => null,
             ],
         ],
-        'options' => [
-            'widget' => '\Nebula\Widgets\Options',
+        'option' => [
+            'widget' => '\Nebula\Widgets\Option',
             'params' => [
                 'action' => '',
             ],

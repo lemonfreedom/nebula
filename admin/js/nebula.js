@@ -22,6 +22,14 @@
         });
     }
 
+    // 折叠按钮切换
+    let buttonDropdownEl = document.querySelectorAll('.nebula-button-dropdown');
+    buttonDropdownEl.forEach(el => {
+        el.addEventListener('click', function () {
+            el.classList.toggle('open');
+        });
+    });
+
     // cookie 通知
     let cookieNotice = Cookies.get('nebula_notice');
     if (cookieNotice) {

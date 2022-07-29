@@ -37,20 +37,22 @@
                 background-color: #efefef;
                 outline: none;
                 border: 0;
-                border-radius: 0;
-                font: inherit;
+                border-radius: .2rem;
             }
 
             .login-btn {
-                font: inherit;
                 flex: none;
                 height: 3rem;
-                border: 0;
                 color: #fff;
+                font-size: .9rem;
+                font-weight: bold;
+                letter-spacing: .1rem;
                 background-color: $color-primary;
                 padding: 0 1rem;
                 cursor: pointer;
                 outline: none;
+                border: 0;
+                border-radius: .2rem;
 
                 &:hover {
                     background-color: darken($color: $color-primary, $amount: 4%);

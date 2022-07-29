@@ -4,22 +4,34 @@
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $postList = \Nebula\Widgets\Post::alloc()->getPostList() ?>
 <div class="container">
-    <h2 class="page-title">
-        <span>分类</span>
-    </h2>
+    <h2 class="page-title">文件</h2>
     <div class="nebula-tools">
-        <a class="nebula-button" href="/admin/create-post.php">新增</a>
+        <form action="/admin/users.php" method="get">
+            <input class="nebula-input" type="text" name="keyword" placeholder="输入关键字">
+            <button class="nebula-button">搜索</button>
+        </form>
+        <div class="nebula-button-dropdown">
+            <span>选择项</span>
+            <ul class="dropdown-menu">
+                <li><a href="">删除</a></li>
+                <li><a href="">标记为中国</a></li>
+            </ul>
+        </div>
     </div>
     <div class="nebula-table">
         <table>
             <colgroup>
-                <col width="70%">
                 <col width="30%">
+                <col width="20%">
+                <col width="30%">
+                <col width="20%">
             </colgroup>
             <thead>
                 <tr>
-                    <th>名称</th>
-                    <th>优先级</th>
+                    <th>标题</th>
+                    <th>作者</th>
+                    <th>分类</th>
+                    <th>日期</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,6 +39,8 @@
                     <tr>
                         <td><a href="/admin/preview.php?pid=<?= $postInfo['pid'] ?>"><?= $postInfo['title'] ?></a></td>
                         <td><?= $postInfo['tid'] ?></td>
+                        <td><?= $postInfo['title'] ?></td>
+                        <td>2022-08-22 11:32:11</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

@@ -8,7 +8,7 @@
     <h2 class="page-title">
         <span>用户设置</span>
     </h2>
-    <form action="/user/update/<?= $userInfo['uid'] ?>" method="post">
+    <form class="nebula-form" action="/user/update/<?= $userInfo['uid'] ?>" method="post">
         <div class="page-subtitle">
             <span>用户资料</span>
             <button class="nebula-button">保存设置</button>
@@ -28,22 +28,22 @@
             <input class="nebula-input" id="email" name="email" value="<?= $userInfo['email'] ?>"></input>
         </div>
     </form>
-    <form action="/user/update-password/<?= $userInfo['uid'] ?>" method="post">
+    <form class="nebula-form" action="/user/update-password/<?= $userInfo['uid'] ?>" method="post">
         <div class="page-subtitle">
             <span>密码修改</span>
             <button class="nebula-button">保存设置</button>
         </div>
         <div class="form-item">
             <label class="form-label" for="password">密码</label>
-            <input class="nebula-input" id="password" name="password" value=""></input>
+            <input class="nebula-input" type="password" id="password" name="password" value="" autocomplete></input>
         </div>
         <div class="form-item">
             <label class="form-label" for="confirmPassword">确认密码</label>
-            <input class="nebula-input" id="confirmPassword" name="confirmPassword" value=""></input>
+            <input class="nebula-input" type="password" id="confirmPassword" name="confirmPassword" value="" autocomplete></input>
         </div>
     </form>
     <?php if ($user->inRole(['0'])) : ?>
-        <form action="/user/update-permission/<?= $userInfo['uid'] ?>" method="post">
+        <form class="nebula-form" action="/user/update-permission/<?= $userInfo['uid'] ?>" method="post">
             <div class="page-subtitle">
                 <span>权限控制</span>
                 <button class="nebula-button">保存设置</button>
