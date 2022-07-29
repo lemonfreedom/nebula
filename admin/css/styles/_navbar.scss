@@ -60,10 +60,9 @@
         }
     }
 
-    @media (max-width: 992px) {
+    @media (max-width: 760px) {
         .container {
             height: 3.6rem;
-            line-height: 3.6rem;
             padding-right: 0;
 
             .main {
@@ -112,6 +111,7 @@
                 background-color: transparent;
                 font-size: 1.6rem;
                 width: 3.6rem;
+                height: 3.6rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
