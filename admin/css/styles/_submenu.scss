@@ -1,0 +1,43 @@
+.submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #e0e0e0;
+    margin-bottom: 1.2rem;
+
+    .container {
+        .menu {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            overflow-x: auto;
+
+            li {
+
+                a {
+                    display: block;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    white-space: nowrap;
+                    color: #404040;
+                    font-weight: bold;
+                    box-sizing: border-box;
+                }
+
+                &:hover,
+                &.active {
+
+                    a {
+                        color: $color-primary;
+                    }
+                }
+            }
+        }
+    }
+}

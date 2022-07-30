@@ -34,7 +34,7 @@ class Post extends Widget
     public function getPostList()
     {
         // $keyword = trim($this->params['keyword']);
-        return $this->db->select('posts', ['pid', 'tid', 'title', 'content'], [
+        return $this->db->select('posts', ['pid', 'tid', 'title'], [
             // 'OR' => [
             //     'uid[~]' => $keyword,
             //     'username[~]' => $keyword,

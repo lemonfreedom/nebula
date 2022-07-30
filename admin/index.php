@@ -3,7 +3,6 @@
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <div class="container">
-    <h2 class="page-title">仪表盘</h2>
     <h2 class="page-subtitle">通知</h2>
     <h2 class="page-subtitle">最近发布</h2>
     <h2 class="page-subtitle">最近评论</h2>

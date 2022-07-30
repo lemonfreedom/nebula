@@ -32,11 +32,20 @@ class Request
      */
     public $method;
 
+    /**
+     * 当前首页
+     *
+     * @var string
+     */
+    public $currentIndex;
+
     public function __construct()
     {
         $this->requestURI = $_SERVER['REQUEST_URI'];
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->setPathInfo();
+        $scriptFilename = explode('/', $_SERVER['SCRIPT_FILENAME']);
+        $this->currentIndex = end($scriptFilename);
     }
 
     /**
