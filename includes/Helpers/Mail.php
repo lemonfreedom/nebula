@@ -18,33 +18,76 @@ class Mail
     private $mail;
 
     /**
-     * smtp 配置
-     *
-     * @var array
-     */
-    private $smtpOption;
-
-    /**
      * 单例实例
      *
      * @var Request
      */
     private static $instance;
 
-    public function __construct()
+    /**
+     * 主机地址
+     *
+     * @var string
+     */
+    private $host;
+
+    /**
+     * 端口
+     *
+     * @var string
+     */
+    private $port;
+
+    /**
+     * 用户名
+     *
+     * @var string
+     */
+    private $username;
+
+    /**
+     * 密码
+     *
+     * @var string
+     */
+    private $password;
+
+    /**
+     * 发件人名称
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * 构造函数
+     *
+     * @param null|string $host
+     * @param null|int $port
+     * @param null|string $username
+     * @param null|string $password
+     * @param null|string $name
+     * @return void
+     */
+    public function __construct($host = null, $port = null, $username = null, $password = null, $name = null)
     {
+        $smtpOption = Option::alloc()->smtp;
+
+        $this->host = null === $host ? $smtpOption['host'] : $host;
+        $this->port = null === $port ? $smtpOption['port'] : $port;
+        $this->username = null === $username ? $smtpOption['username'] : $username;
+        $this->password = null === $password ? $smtpOption['password'] : $password;
+        $this->name = null === $name ? $smtpOption['name'] : $name;
+
+        // 初始化
         $this->mail = new PHPMailer(true);
-
-        $this->smtpOption = Option::alloc()->smtp;
-
-        // 服务器设置
         $this->mail->isSMTP();
-        $this->mail->Host = $this->smtpOption['host'];
+        $this->mail->Host = $this->host;
+        $this->mail->Port = $this->port;
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = $this->smtpOption['username'];
-        $this->mail->Password = $this->smtpOption['password'];
+        $this->mail->Username = $this->username;
+        $this->mail->Password = $this->password;
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $this->mail->Port = $this->smtpOption['port'];
     }
 
     /**
@@ -59,7 +102,7 @@ class Mail
             $code = Common::randString(5);
 
             // 设置发送人信息
-            $this->mail->setFrom($this->smtpOption['username'], $this->smtpOption['name']);
+            $this->mail->setFrom($this->username, $this->name);
             $this->mail->addAddress($address);
             $this->mail->isHTML(true);
             $this->mail->Subject = Option::alloc()->title . ' 验证码';
@@ -87,8 +130,8 @@ class Mail
      */
     public function sendHTML($address, $title, $html, $username = null, $name = null)
     {
-        $username = null === $username ? $this->smtpOption['username'] :  $username;
-        $name = null === $name ? $this->smtpOption['name'] :  $username;
+        $username = null === $username ? $this->username :  $username;
+        $name = null === $name ? $this->name :  $username;
         // 设置发送人信息
         $this->mail->setFrom($username, $name);
 
@@ -104,12 +147,17 @@ class Mail
     /**
      * 获取单例实例
      *
+     * @param null|string $host
+     * @param null|int $port
+     * @param null|string $username
+     * @param null|string $password
+     * @param null|string $name
      * @return Mail
      */
-    public static function getInstance()
+    public static function getInstance($host = null, $port = null, $username = null, $password = null, $name = null)
     {
         if (!isset(self::$instance)) {
-            self::$instance = new self();
+            self::$instance = new self($host, $port, $username, $password, $name);
         }
 
         return self::$instance;

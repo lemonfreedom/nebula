@@ -24,7 +24,7 @@
     <?php if ($action === 'categories') : ?>
         <!-- 分类 -->
         <div class="nebula-tools">
-            <form action="/admin/content-post.php" method="get">
+            <form action="/admin/content-post.php" method="GET">
                 <input class="nebula-input" type="text" name="keyword" placeholder="输入关键字">
                 <button class="nebula-button">搜索</button>
             </form>
@@ -78,7 +78,7 @@
     <?php elseif ($action === 'comments') : ?>
         <!-- 评论 -->
         <div class="nebula-tools">
-            <form action="/admin/content-post.php" method="get">
+            <form action="/admin/content-post.php" method="GET">
                 <input class="nebula-input" type="text" name="keyword" placeholder="输入关键字">
                 <button class="nebula-button">搜索</button>
             </form>
@@ -132,7 +132,7 @@
     <?php elseif ($action === 'files') : ?>
         <!-- 文件 -->
         <div class="nebula-tools">
-            <form action="/admin/content-post.php" method="get">
+            <form action="/admin/content-post.php" method="GET">
                 <input class="nebula-input" type="text" name="keyword" placeholder="输入关键字">
                 <button class="nebula-button">搜索</button>
             </form>
@@ -186,7 +186,7 @@
     <?php else : ?>
         <!-- 文章 -->
         <div class="nebula-tools">
-            <form action="/admin/content-post.php" method="get">
+            <form action="/admin/content-post.php" method="GET">
                 <input class="nebula-input" type="text" name="keyword" placeholder="输入关键字">
                 <button class="nebula-button">搜索</button>
             </form>

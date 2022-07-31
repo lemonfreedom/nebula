@@ -16,7 +16,7 @@
     </div>
     <?php if ($action === 'smtp') : ?>
         <!-- SMTP 设置 -->
-        <form class="nebula-form" action="/option/update-smtp" method="post">
+        <form id="smtpOptionForm" class="nebula-form" action="/option/update-smtp" method="POST">
             <div class="form-item">
                 <label class="form-label" for="host">主机名</label>
                 <input class="nebula-input" id="host" name="host" value="<?= $options->smtp['host'] ?>"></input>
@@ -49,7 +49,7 @@
         </form>
     <?php else : ?>
         <!-- 基本设置 -->
-        <form class="nebula-form" action="/option/update-basic" method="post">
+        <form class="nebula-form" action="/option/update-basic" method="POST">
             <div class="form-item">
                 <label class="form-label" for="title">站点名称</label>
                 <input class="nebula-input" id="title" name="title" value="<?= $options->title ?>"></input>

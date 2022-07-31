@@ -5,7 +5,7 @@
 <?php $userList = \Nebula\Widgets\User::allocAlias('users', ['keyword' => $request->get('keyword', '')])->getUserList() ?>
 <div class="container">
     <h2 class="nebula-title">新增文章</h2>
-    <form class="nebula-form" id="postForm" action="/post/create-post" method="post">
+    <form class="nebula-form" id="postForm" action="/post/create-post" method="POST">
         <div class="form-item">
             <label class="form-label" for="title">标题</label>
             <input class="nebula-input" id="title" name="title" value="<?= \Nebula\Helpers\Cookie::get('title', '') ?>"></input>

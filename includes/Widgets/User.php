@@ -368,13 +368,13 @@ class User extends Widget
         // 修改用户不存在
         if (!$this->db->has('users', ['uid' => $uid])) {
             Notice::alloc()->set('未知用户', 'error');
-            $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
+            $this->response->redirect('/admin/profile.php?action=password&uid=' . $this->loginUserInfo['uid']);
         }
 
         // 不是修改当前登陆用户，那么必须是管理员权限
         if ($this->loginUserInfo['uid'] !== $uid && !$this->inRole(['0'])) {
             Notice::alloc()->set('非法请求', 'error');
-            $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
+            $this->response->redirect('/admin/profile.php?action=password&uid=' . $this->loginUserInfo['uid']);
         }
 
         $data = $this->request->post();
@@ -391,7 +391,7 @@ class User extends Widget
         ]);
         if (!$validate->run()) {
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
-            $this->response->redirect('/admin/profile.php?uid=' . $uid);
+            $this->response->redirect('/admin/profile.php?action=password&uid=' . $uid);
         }
 
         // 修改数据
@@ -401,7 +401,7 @@ class User extends Widget
         ], ['uid' => $uid]);
 
         Notice::alloc()->set('修改成功', 'success');
-        $this->response->redirect('/admin/profile.php?uid=' . $uid);
+        $this->response->redirect('/admin/profile.php?action=password&uid=' . $uid);
     }
 
     /**
@@ -414,7 +414,7 @@ class User extends Widget
         // 是否是管理员
         if (!$this->inRole(['0'])) {
             Notice::alloc()->set('非法请求', 'error');
-            $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
+            $this->response->redirect('/admin/profile.php?action=permission&uid=' . $this->loginUserInfo['uid']);
         }
 
         $uid = $this->params['uid'];
@@ -422,7 +422,7 @@ class User extends Widget
         // 修改用户不存在
         if (!$this->db->has('users', ['uid' => $uid])) {
             Notice::alloc()->set('未知用户', 'error');
-            $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
+            $this->response->redirect('/admin/profile.php?action=permission&uid=' . $this->loginUserInfo['uid']);
         }
 
 
@@ -436,7 +436,7 @@ class User extends Widget
         ]);
         if (!$validate->run()) {
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
-            $this->response->redirect('/admin/profile.php?uid=' . $uid);
+            $this->response->redirect('/admin/profile.php?action=permission&uid=' . $uid);
         }
 
         // 修改数据
@@ -445,7 +445,7 @@ class User extends Widget
         ], ['uid' => $uid]);
 
         Notice::alloc()->set('修改成功', 'success');
-        $this->response->redirect('/admin/profile.php?uid=' . $uid);
+        $this->response->redirect('/admin/profile.php?action=permission&uid=' . $uid);
     }
 
     /**
@@ -481,27 +481,6 @@ class User extends Widget
         Mail::getInstance()->sendCaptcha($data['email']);
 
         $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
-    }
-
-    /**
-     * 发送测试邮件
-     *
-     * @return void
-     */
-    private function sendTestMail()
-    {
-        // 是否是管理员
-        if (!$this->inRole(['0'])) {
-            $this->response->sendJSON(['errorCode' => 1, 'type' => 'error', 'message' => '非法请求']);
-        }
-
-        try {
-            Mail::getInstance()->sendHTML(Option::alloc()->smtp['username'], '测试邮件', '这是一封测试邮件');
-
-            $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
-        } catch (Exception $e) {
-            $this->response->sendJSON(['errorCode' => 2, 'type' => 'warning', 'message' => $e->getMessage()]);
-        }
     }
 
     /**
@@ -551,9 +530,6 @@ class User extends Widget
 
         // 发送注册验证码
         $this->on($action === 'send-register-captcha')->sendRegisterCaptcha();
-
-        // 发送测试邮件
-        $this->on($action === 'send-test-mail')->sendTestMail();
 
         return $this;
     }

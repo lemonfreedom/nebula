@@ -90,7 +90,7 @@ class Post extends Widget
         ]);
 
         Notice::alloc()->set('新增成功', 'success');
-        $this->response->redirect('/admin/posts.php');
+        $this->response->redirect('/admin/comment.php');
     }
 
     /**

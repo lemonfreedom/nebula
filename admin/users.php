@@ -6,7 +6,7 @@
 <div class="container">
     <div class="nebula-title">用户</div>
     <div class="nebula-tools">
-        <form action="/admin/users.php" method="get">
+        <form action="/admin/users.php" method="GET">
             <input class="nebula-input" type="text" name="keyword" placeholder="输入关键字">
             <button class="nebula-button">搜索</button>
         </form>
@@ -53,6 +53,23 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+    </div>
+    <div class="nebula-checkbox-group">
+        <label class="nebula-checkbox">
+            <input checked="checked" type="checkbox">
+            <div class="checkmark"></div>
+            <span>保存密码</span>
+        </label>
+        <label class="nebula-checkbox">
+            <input checked="checked" type="checkbox">
+            <div class="checkmark"></div>
+            <span>保存密码</span>
+        </label>
+        <label class="nebula-checkbox">
+            <input checked="checked" type="checkbox">
+            <div class="checkmark"></div>
+            <span>保存密码</span>
+        </label>
     </div>
 </div>
 <?php require __DIR__ . '/copyright.php'; ?>

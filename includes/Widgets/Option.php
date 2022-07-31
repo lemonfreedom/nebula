@@ -2,6 +2,8 @@
 
 namespace Nebula\Widgets;
 
+use Nebula\Helpers\Mail;
+use Nebula\Helpers\PHPMailer\Exception;
 use Nebula\Helpers\Validate;
 use Nebula\Widget;
 
@@ -121,6 +123,51 @@ class Option extends Widget
     }
 
     /**
+     * 发送测试邮件
+     *
+     * @return void
+     */
+    private function sendTestMail()
+    {
+        // 是否是管理员
+        if (!User::alloc()->inRole(['0'])) {
+            $this->response->sendJSON(['errorCode' => 1, 'type' => 'error', 'message' => '非法请求']);
+        }
+
+        $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'host' => [
+                ['type' => 'required', 'message' => '主机名不能为空'],
+            ],
+            'port' => [
+                ['type' => 'required', 'message' => '端口不能为空'],
+            ],
+            'name' => [
+                ['type' => 'required', 'message' => '名称不能为空'],
+            ],
+            'username' => [
+                ['type' => 'required', 'message' => '用户名不能为空'],
+            ],
+            'password' => [
+                ['type' => 'required', 'message' => '密码不能为空'],
+            ],
+        ]);
+
+        if (!$validate->run()) {
+            $this->response->sendJSON(['errorCode' => 2, 'type' => 'warning', 'message' => $validate->result[0]['message']]);
+        }
+
+        try {
+            Mail::getInstance($data['host'], $data['port'], $data['username'], $data['password'], $data['name'])->sendHTML(Option::alloc()->smtp['username'], '测试邮件', '这是一封测试邮件');
+
+            $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
+        } catch (Exception $e) {
+            $this->response->sendJSON(['errorCode' => 3, 'type' => 'warning', 'message' => $e->getMessage()]);
+        }
+    }
+
+    /**
      * 更新 SMTP 配置
      *
      * @return void
@@ -155,7 +202,7 @@ class Option extends Widget
 
         if (!$validate->run()) {
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
-            $this->response->redirect('/admin/options.php');
+            $this->response->redirect('/admin/options.php?action=smtp');
         }
 
         // 更新
@@ -168,7 +215,7 @@ class Option extends Widget
         ]));
 
         Notice::alloc()->set('保存成功', 'success');
-        $this->response->redirect('/admin/options.php');
+        $this->response->redirect('/admin/options.php?action=smtp');
     }
 
     /**
@@ -182,6 +229,9 @@ class Option extends Widget
 
         // 更新基本配置
         $this->on($action === 'update-basic')->updateBasic();
+
+        // 发送测试邮件
+        $this->on($action === 'send-test-mail')->sendTestMail();
 
         // 更新 SMTP 配置
         $this->on($action === 'update-smtp')->updateSMTP();

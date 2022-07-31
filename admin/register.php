@@ -5,7 +5,7 @@
 <div class="nebula-login">
     <div class="board">
         <h1 class="title">Nebula</h1>
-        <form class="login-form" action="/user/register" method="post">
+        <form class="login-form" action="/user/register" method="POST">
             <input class="login-input" type="text" name="username" placeholder="用户名" value="<?= \Nebula\Helpers\Cookie::get('username', '') ?>">
             <div class="group">
                 <input class="login-input" type="email" name="email" placeholder="邮箱" value="<?= \Nebula\Helpers\Cookie::get('email', '') ?>">
