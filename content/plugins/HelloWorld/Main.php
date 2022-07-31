@@ -47,6 +47,11 @@ class Main
         });
     }
 
+    /**
+     * 插件自定义方法
+     *
+     * @param $data 数据
+     */
     public static function render($data)
     {
         include __DIR__ . '/views/copyright.php';
