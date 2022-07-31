@@ -5,7 +5,9 @@
 <?php $postInfo = \Nebula\Widgets\Post::alloc(['pid' => $request->get('pid', '')])->get() ?>
 <div class="container">
     <h1><?= $postInfo['title'] ?></h1>
-    <div id="preview-container"></div>
+    <div class="standalone-container">
+        <div id="preview-container"></div>
+    </div>
 </div>
 <?php require __DIR__ . '/copyright.php'; ?>
 <?php require __DIR__ . '/common-js.php'; ?>

@@ -4,21 +4,21 @@
         <h1 class="logo"><?= $options->title ?></h1>
         <div class="main">
             <ul class="menu">
-                <li class="active">
+                <li>
                     <a href="/admin/index.php">
                         <i class="bi bi-speedometer2"></i>
                         <span class="text">仪表盘</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/admin/content-post.php">
+                    <a href="/admin/contents.php">
                         <i class="bi bi-file-earmark-text"></i>
                         <span class="text">内容</span>
                     </a>
                 </li>
                 <?php if ($user->inRole(['0'])) : ?>
                     <li>
-                        <a href="/admin/user.php">
+                        <a href="/admin/users.php">
                             <i class="bi bi-people"></i>
                             <span class="text">用户</span>
                         </a>
@@ -26,7 +26,19 @@
                 <?php endif; ?>
                 <?php if ($user->inRole(['0'])) : ?>
                     <li>
-                        <a href="/admin/option-basic.php">
+                        <a href="/admin/themes.php">
+                            <i class="bi bi-palette"></i>
+                            <span class="text">主题</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/plugins.php">
+                            <i class="bi bi-plugin"></i>
+                            <span class="text">插件</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/options.php">
                             <i class="bi bi-gear"></i>
                             <span class="text">设置</span>
                         </a>

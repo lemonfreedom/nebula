@@ -1,6 +1,13 @@
 .standalone-container {
-    width: 100%;
     #editor-container {
         height: 20rem;
+    }
+
+    #preview-container {
+        border: 0;
+
+        .ql-editor {
+            padding: 0;
+        }
     }
 }

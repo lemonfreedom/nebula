@@ -3,14 +3,8 @@
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $userList = \Nebula\Widgets\User::allocAlias('userList', ['keyword' => $request->get('keyword', '')])->getUserList() ?>
-<div class="submenu">
-    <div class="container">
-        <ul class="menu">
-            <li class="active"><a href="/admin/user.php">用户</a></li>
-        </ul>
-    </div>
-</div>
 <div class="container">
+    <div class="nebula-title">用户</div>
     <div class="nebula-tools">
         <form action="/admin/users.php" method="get">
             <input class="nebula-input" type="text" name="keyword" placeholder="输入关键字">

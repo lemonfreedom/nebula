@@ -1,12 +1,8 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php $user->hasLogin() || $response->redirect('/admin/login.php'); ?>
+<?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <div class="container">
-    <h2 class="nebula-title">通知</h2>
-    <h2 class="nebula-title">最近发布</h2>
-    <h2 class="nebula-title">最近评论</h2>
-    <h2 class="nebula-title">个人统计</h2>
 </div>
 <?php require __DIR__ . '/copyright.php'; ?>
 <?php require __DIR__ . '/common-js.php'; ?>

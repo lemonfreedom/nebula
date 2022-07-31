@@ -5,7 +5,7 @@
 <?php $userInfo = \Nebula\Widgets\User::allocAlias($request->get('uid'), ['uid' => $request->get('uid')])->get(); ?>
 <?php null === $userInfo && $response->redirect('/admin'); ?>
 <div class="container">
-    <h2 class="page-title">
+    <h2 class="nebula-title">
         <span>用户设置</span>
     </h2>
     <form class="nebula-form" action="/user/update/<?= $userInfo['uid'] ?>" method="post">

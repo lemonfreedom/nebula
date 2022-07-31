@@ -45,10 +45,13 @@ a {
     box-sizing: border-box;
 }
 
-.page-title {
-    font-size: 1.6rem;
+.nebula-title {
+    font-size: 1.2rem;
+    line-height: 3.6rem;
     font-weight: bold;
-    margin-bottom: 1.2rem;
+    margin: 1.2rem 0;
+    box-sizing: border-box;
+    border-bottom: 2px dashed #ccc;
     display: flex;
     gap: 1rem;
     justify-content: space-between;
@@ -56,17 +59,59 @@ a {
     white-space: nowrap;
 }
 
-.page-subtitle {
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: .6rem 0;
-    margin-bottom: 1rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    justify-content: space-between;
+.nebula-tabs {
+    height: 2.6rem;
     border-bottom: 2px dashed #ccc;
-    white-space: nowrap;
+    box-sizing: border-box;
+    margin: 1.2rem 0;
+
+    .scroll {
+        width: 100%;
+        height: 2.6rem;
+        display: flex;
+        gap: 1.2rem;
+        align-items: center;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .tab {
+        line-height: 2.6rem;
+        position: relative;
+        cursor: pointer;
+        white-space: nowrap;
+        font-weight: bold;
+
+        a {
+            color: #404040;
+        }
+
+        &::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 2px;
+            position: absolute;
+            left: 0;
+            bottom: 0px;
+        }
+
+        &:hover::after {
+            background-color: #ccc;
+        }
+
+        &.active {
+            color: $color-primary;
+
+            a {
+                color: $color-primary;
+            }
+
+            &::after {
+                background-color: $color-primary;
+            }
+        }
+    }
 }
 
 .nebula-table {
@@ -151,7 +196,6 @@ a {
         flex-direction: column;
         gap: .4rem;
         margin-bottom: 1rem;
-        align-items: flex-start;
 
         .form-label {
             font-weight: bold;
@@ -260,7 +304,6 @@ a {
 .nebula-input,
 .nebula-select {
     display: inline-block;
-    width: 100%;
     height: 2.6rem;
     box-sizing: border-box;
     outline: none;
