@@ -1,13 +1,17 @@
 <?php require __DIR__ . '/common.php'; ?>
 <?php $user->hasLogin() && $response->redirect('/'); ?>
 <?php require __DIR__ . '/header.php'; ?>
-<div class="nebula-login">
+<div class="nebula-account">
     <div class="board">
         <h1 class="title">Nebula</h1>
-        <form class="login-form" action="/user/login" method="POST">
-            <input class="login-input" type="text" name="account" placeholder="用户名" value="<?= \Nebula\Helpers\Cookie::get('account', '') ?>">
-            <input class="login-input" type="password" name="password" placeholder="密码">
-            <button class="login-btn">登录</button>
+        <form class="nebula-form" action="/user/login" method="POST">
+            <div class="form-item">
+                <input class="nebula-input" type="text" name="account" placeholder="用户名" value="<?= \Nebula\Helpers\Cookie::get('account', '') ?>">
+            </div>
+            <div class="form-item">
+                <input class="nebula-input" type="password" name="password" placeholder="密码">
+            </div>
+            <button type="submit" class="nebula-button block">登录</button>
         </form>
         <div class="tools">
             <a href="/">返回首页</a>

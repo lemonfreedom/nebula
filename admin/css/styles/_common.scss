@@ -205,6 +205,11 @@ a {
             font-size: .8rem;
             color: #808080;
         }
+
+        .group {
+            display: flex;
+            gap: .6rem;
+        }
     }
 
     .form-tools {
@@ -236,6 +241,11 @@ a {
     &:hover {
         color: #fff;
         background-color: darken($color: $color-primary, $amount: 4%);
+    }
+
+    &.block {
+        display: flex;
+        width: 100%;
     }
 }
 
@@ -304,6 +314,7 @@ a {
 .nebula-input,
 .nebula-select {
     display: inline-block;
+    width: 100%;
     height: 2.6rem;
     box-sizing: border-box;
     outline: none;
