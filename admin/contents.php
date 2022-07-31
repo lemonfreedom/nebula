@@ -36,7 +36,7 @@
                         <li><a href="">标记为中国</a></li>
                     </ul>
                 </div>
-                <a class="nebula-button" href="/admin/post-create.php">新增</a>
+                <a class="nebula-button" href="/admin/create-post.php">新增</a>
             </div>
         </div>
         <div class="nebula-table">
