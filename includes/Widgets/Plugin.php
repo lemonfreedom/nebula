@@ -17,6 +17,17 @@ class Plugin extends Widget
     private $pluginList = null;
 
     /**
+     * 获取插件类名
+     *
+     * @param string 插件名
+     * @return string 类名
+     */
+    public function getPluginClassName($pluginName)
+    {
+        return 'Content\Plugins\\' . $pluginName . '\Main';
+    }
+
+    /**
      * 获取插件列表
      *
      * @return array 插件列表
@@ -24,7 +35,7 @@ class Plugin extends Widget
     public function getPluginList()
     {
         if (null === $this->pluginList) {
-            // 已启用插件
+            // 已启用插件列表
             $plugins = NebulaPlugin::export();
 
             // 插件目录列表
@@ -38,7 +49,7 @@ class Plugin extends Widget
                 $pluginInfo['dir'] = basename($pluginDir);
 
                 // 插件类名
-                $pluginClassName =  'Content\Plugins\\' . $pluginInfo['dir'] . '\Main';
+                $pluginClassName =  $this->getPluginClassName($pluginInfo['dir']);
 
                 // 修改启用状态
                 $pluginInfo['is_activated'] = in_array($pluginClassName, array_keys($plugins));
@@ -92,7 +103,7 @@ class Plugin extends Widget
                 if (strpos($token[1], 'name')) {
                     $isDoc = true;
 
-                    // 插件名称
+                    // 插件名
                     preg_match('/name:(.*)[\\r\\n]/', $token[1], $matches);
                     $info['name'] = trim($matches[1] ?? '未知');
 
@@ -129,9 +140,9 @@ class Plugin extends Widget
      */
     private function enable()
     {
-        $pluginName = 'Content\Plugins\\' . $this->params['pluginName'] . '\Main';
+        $pluginName = $this->getPluginClassName($this->params['pluginName']);
 
-        // 已启用插件
+        // 已启用插件列表
         $plugins = NebulaPlugin::export();
 
         // 判断组件是否已启用
@@ -170,9 +181,9 @@ class Plugin extends Widget
     private function disabled()
     {
         // 插件类名
-        $pluginClassName = 'Content\Plugins\\' . $this->params['pluginName'] . '\Main';
+        $pluginClassName = $this->getPluginClassName($this->params['pluginName']);
 
-        // 已启用插件
+        // 已启用插件列表
         $plugins = NebulaPlugin::export();
 
         // 判断组件是否已停用
@@ -200,11 +211,11 @@ class Plugin extends Widget
 
     private function updateConfig()
     {
-        // 已启用插件
+        // 已启用插件列表
         $plugins = NebulaPlugin::export();
 
         // 插件类名
-        $pluginClassName = 'Content\Plugins\\' . $this->request->post('pluginName') . '\Main';
+        $pluginClassName = $this->getPluginClassName($this->request->post('pluginName'));
 
         if (null === $pluginClassName) {
             Notice::alloc()->set('插件名不能为空', 'warning');
@@ -246,9 +257,9 @@ class Plugin extends Widget
     public function config()
     {
         // 插件类名
-        $pluginClassName = 'Content\Plugins\\' . $this->params['pluginName'] . '\Main';
+        $pluginClassName = $this->getPluginClassName($this->params['pluginName']);
 
-        // 已启用插件
+        // 已启用插件列表
         $plugins = NebulaPlugin::export();
 
         if (!array_key_exists($pluginClassName, $plugins)) {

@@ -56,7 +56,9 @@ class Plugin
      */
     public static function init($plugins)
     {
+        // 已启用插件列表
         self::$plugins = $plugins;
+
         self::$handles = array_reduce($plugins, function ($carry, $handles) {
             return array_merge_recursive($carry, $handles['handles']);
         }, []);
@@ -92,7 +94,6 @@ class Plugin
      */
     public static function activate($pluginName, $pluginConfig)
     {
-        // self::$plugins[$pluginName]['class_name'] = 'Content\Plugins\\' . $pluginName . '\Main';
         self::$plugins[$pluginName]['config'] = $pluginConfig;
         self::$plugins[$pluginName]['handles'] = self::$tmp;
         self::$tmp = [];
