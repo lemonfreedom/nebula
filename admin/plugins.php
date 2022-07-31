@@ -2,56 +2,36 @@
 <?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
-<?php $postList = \Nebula\Widgets\Post::alloc()->getPostList(); ?>
+<?php $pluginList = \Nebula\Widgets\Plugin::alloc()->getPluginList(); ?>
 <div class="container">
     <div class="nebula-title">插件</div>
-    <div class="nebula-tools">
-        <form action="/admin/content-post.php" method="GET">
-            <input class="nebula-input" type="text" name="keyword" placeholder="输入关键字">
-            <button class="nebula-button">搜索</button>
-        </form>
-        <div class="nebula-button-group">
-            <div class="nebula-button-dropdown">
-                <span>选择项</span>
-                <ul class="dropdown-menu">
-                    <li><a href="">删除</a></li>
-                    <li><a href="">标记为中国</a></li>
-                </ul>
-            </div>
-            <a class="nebula-button" href="/admin/create-post.php">新增</a>
-        </div>
-    </div>
     <div class="nebula-table">
         <table>
             <colgroup>
-                <col width="10%">
-                <col width="30%">
                 <col width="20%">
-                <col width="20%">
-                <col width="20%">
+                <col width="80%">
             </colgroup>
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>标题</th>
-                    <th>作者</th>
-                    <th>分类</th>
-                    <th>日期</th>
+                    <th>插件名称</th>
+                    <th>插件信息</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($postList as  $postInfo) : ?>
+                <?php foreach ($pluginList as $plugin) : ?>
                     <tr>
+                        <td><a href="<?= $plugin['url'] ?>"><?= $plugin['name'] ?></a></td>
                         <td>
-                            <label class="nebula-checkbox">
-                                <input type="checkbox">
-                                <div class="checkmark"></div>
-                            </label>
+                            <div>作者：<a href="<?= $plugin['author_url'] ?>"><?= $plugin['author'] ?></a></div>
+                            <div>版本：<?= $plugin['version'] ?></div>
+                            <div>描述：<?= $plugin['description'] ?></div>
+                            <?php if ($plugin['is_activated']) : ?>
+                                <a href="/admin/plugin-config.php?name=<?= $plugin['dir'] ?>">设置</a>
+                                <a href="/plugin/disabled/<?= $plugin['dir'] ?>">禁用</a>
+                            <?php else : ?>
+                                <a href="/plugin/enable/<?= $plugin['dir'] ?>">启用</a>
+                            <?php endif; ?>
                         </td>
-                        <td><a href="/admin/preview.php?pid=<?= $postInfo['pid'] ?>"><?= $postInfo['title'] ?></a></td>
-                        <td><?= $postInfo['tid'] ?></td>
-                        <td><?= $postInfo['title'] ?></td>
-                        <td>2022-08-22 11:32:11</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

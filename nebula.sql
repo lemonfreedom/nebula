@@ -11,7 +11,7 @@
  Target Server Version : 80029 (8.0.29)
  File Encoding         : 65001
 
- Date: 31/07/2022 14:59:32
+ Date: 31/07/2022 21:10:56
 */
 
 SET NAMES utf8mb4;
@@ -33,6 +33,7 @@ CREATE TABLE `nebula_options` (
 BEGIN;
 INSERT INTO `nebula_options` (`name`, `value`) VALUES ('allowRegister', '1');
 INSERT INTO `nebula_options` (`name`, `value`) VALUES ('description', '又一个博客网站诞生了');
+INSERT INTO `nebula_options` (`name`, `value`) VALUES ('plugins', 'a:0:{}');
 INSERT INTO `nebula_options` (`name`, `value`) VALUES ('smtp', 'a:5:{s:4:\"host\";s:11:\"smtp.qq.com\";s:8:\"username\";s:13:\"226582@qq.com\";s:8:\"password\";s:16:\"revpqsbyoyvucaig\";s:4:\"port\";i:465;s:4:\"name\";s:6:\"Nebula\";}');
 INSERT INTO `nebula_options` (`name`, `value`) VALUES ('title', 'Nebula');
 COMMIT;
@@ -47,12 +48,13 @@ CREATE TABLE `nebula_posts` (
   `title` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
   `content` longtext CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`pid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of nebula_posts
 -- ----------------------------
 BEGIN;
+INSERT INTO `nebula_posts` (`pid`, `tid`, `title`, `content`) VALUES (12, 1, '1', '{\"ops\":[{\"insert\":\"function add() {\"},{\"attributes\":{\"code-block\":true},\"insert\":\"\\n\"},{\"insert\":\"  let a = 1;\"},{\"attributes\":{\"code-block\":true},\"insert\":\"\\n\"},{\"insert\":\"}\"},{\"attributes\":{\"code-block\":true},\"insert\":\"\\n\"}]}');
 COMMIT;
 
 -- ----------------------------
@@ -91,7 +93,7 @@ CREATE TABLE `nebula_users` (
 -- Records of nebula_users
 -- ----------------------------
 BEGIN;
-INSERT INTO `nebula_users` (`uid`, `role`, `nickname`, `username`, `password`, `email`, `token`) VALUES (1, 0, 'admin', 'admin', 'n0wuobcl68hrcd4k3nicqqzfn5ocze0f1105e53a2698e9035fbbb2a160475e32', '226582@qq.com', '7zsew0yp44e2xohcliccy8nhtpa9bcmi');
+INSERT INTO `nebula_users` (`uid`, `role`, `nickname`, `username`, `password`, `email`, `token`) VALUES (1, 0, 'admin', 'admin', 'n0wuobcl68hrcd4k3nicqqzfn5ocze0f1105e53a2698e9035fbbb2a160475e32', '226582@qq.com', 'qafc3cjnuq858b30jk15scv72dilvdy6');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

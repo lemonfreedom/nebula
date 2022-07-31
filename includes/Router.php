@@ -36,6 +36,13 @@ class Router
                 'action' => '',
             ],
         ],
+        'plugin' => [
+            'widget' => '\Nebula\Widgets\Plugin',
+            'params' => [
+                'action' => '',
+                'pluginName' => '',
+            ],
+        ],
     ];
 
     /**

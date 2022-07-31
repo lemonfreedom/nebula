@@ -47,7 +47,7 @@ a {
 
 .nebula-title {
     font-size: 1rem;
-    line-height: 2.6rem;
+    height: 2.6rem;
     font-weight: bold;
     margin: 1.2rem 0;
     box-sizing: border-box;
@@ -128,10 +128,9 @@ a {
         th,
         td {
             text-align: left;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
             box-sizing: border-box;
+            white-space: normal;
+            word-break: break-all;
 
             .nebula-checkbox {
                 margin: 0;

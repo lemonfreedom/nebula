@@ -5,7 +5,6 @@ namespace Nebula\Widgets;
 use Nebula\Common;
 use Nebula\Helpers\Cookie;
 use Nebula\Helpers\Mail;
-use Nebula\Helpers\PHPMailer\Exception;
 use Nebula\Helpers\Validate;
 use Nebula\Widget;
 

@@ -18,6 +18,7 @@ class Option extends Widget
         }
 
         $this->smtp = unserialize($this->smtp);
+        $this->plugins = unserialize($this->plugins);
     }
 
     /**
