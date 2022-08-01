@@ -25,6 +25,13 @@ class Validate
      */
     public $result = [];
 
+    /**
+     * 构造函数
+     *
+     * @param array $data 待验证数据
+     * @param array $rules 验证规则
+     * @return void
+     */
     public function __construct($data, $rules)
     {
         $this->data = $data;
@@ -34,7 +41,7 @@ class Validate
     /**
      * 验证是否为邮箱
      *
-     * @param string $value
+     * @param string $value  值
      * @return bool
      */
     public function email($value)
@@ -44,6 +51,10 @@ class Validate
 
     /**
      * 一致性验证
+     *
+     * @param string $value 值
+     * @param string $key 比对的键
+     * @return bool
      */
     public function confirm($value, $key)
     {
@@ -55,6 +66,7 @@ class Validate
      * 必填验证
      *
      * @param string $name 数据项名称
+     * @return bool
      */
     public function required($value)
     {
