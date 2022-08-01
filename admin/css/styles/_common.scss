@@ -444,3 +444,19 @@ a {
         }
     }
 }
+
+.nebula-wecome {
+    background-color: #efefef;
+    box-sizing: border-box;
+    padding: 2rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+
+    .title {
+        font-weight: bold;
+    }
+
+    .strong {
+        color: $color-primary;
+    }
+}

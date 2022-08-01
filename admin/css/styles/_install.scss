@@ -1,0 +1,20 @@
+.install {
+    padding: 4% 1rem;
+
+    .logo {
+        margin: 2rem 0;
+        font-size: 3rem;
+        text-align: center;
+        font-style: italic;
+        color: $color-primary;
+    }
+
+    .nebula-title {
+        height: 3rem;
+        font-size: 1.2rem;
+    }
+
+    p {
+        margin: 0;
+    }
+}
