@@ -1,9 +1,18 @@
 <?php
+// 定义根路径
+define('NEBULA_ROOT_PATH', dirname(__DIR__) . '/');
+
 // 载入程序配置
-if (!@include dirname(__DIR__) . '/config.php') {
-    file_exists(dirname(__DIR__) . '/install.php') ? header('Location: /install.php') : print('Missing Config File');
+if (!@include NEBULA_ROOT_PATH . '/config.php') {
+    file_exists(NEBULA_ROOT_PATH . '/install.php') ? header('Location: /install.php') : print('Missing Config File');
     exit;
 }
+
+// 加载公共文件
+require NEBULA_ROOT_PATH . 'includes/Common.php';
+
+// 初始化
+\Nebula\Common::init();
 
 // 配置组件
 \Nebula\Widgets\Option::alloc()->to($options);

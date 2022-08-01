@@ -69,11 +69,17 @@ class Response
      * 重定向
      *
      * @param string $url 重定向地址
+     * @param callable $callback 回调函数
      * @return void
      */
-    public function redirect($url)
+    public function redirect($url, $callback = null)
     {
         header('Location:' . $url);
+
+        if (null !== $callback) {
+            call_user_func($callback, $url);
+        }
+
         exit;
     }
 

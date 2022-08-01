@@ -5,9 +5,8 @@ namespace Nebula\Widgets;
 use Nebula\Helpers\Mail;
 use Nebula\Helpers\PHPMailer\Exception;
 use Nebula\Helpers\Validate;
-use Nebula\Widget;
 
-class Option extends Widget
+class Option extends Base
 {
     public function execute()
     {
@@ -39,6 +38,19 @@ class Option extends Widget
         }
 
         $this->$name = $value;
+    }
+
+    /**
+     * 设置多个配置项
+     *
+     * @param array $options 配置项列表
+     * @return void
+     */
+    public function setOptions($options)
+    {
+        foreach ($options as $name => $value) {
+            $this->setOption($name, $value);
+        }
     }
 
     /**
@@ -211,7 +223,7 @@ class Option extends Widget
             'host' => $data['host'],
             'username' => $data['username'],
             'password' => $data['password'],
-            'port' => (int)$data['port'],
+            'port' => $data['port'],
             'name' => $data['name'],
         ]));
 

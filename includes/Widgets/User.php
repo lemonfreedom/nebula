@@ -6,9 +6,8 @@ use Nebula\Common;
 use Nebula\Helpers\Cookie;
 use Nebula\Helpers\Mail;
 use Nebula\Helpers\Validate;
-use Nebula\Widget;
 
-class User extends Widget
+class User extends Base
 {
     /**
      * 是否已登陆
@@ -252,13 +251,7 @@ class User extends Widget
         }
 
         // 插入数据
-        $this->db->insert('users', [
-            'role' => '1',
-            'nickname' => $data['username'],
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Common::hash($data['password']),
-        ]);
+        $this->createUser($data['username'], $data['password'], $data['email']);
 
         Notice::alloc()->set('注册成功', 'success');
         $this->response->redirect('/admin/login.php');
@@ -497,6 +490,26 @@ class User extends Widget
                 'email[~]' => $keyword,
                 'nickname[~]' => $keyword,
             ],
+        ]);
+    }
+
+    /**
+     * 创建用户
+     *
+     * @param string $username 用户名
+     * @param string $password 密码
+     * @param string $email 邮箱
+     * @param string $role 角色
+     * @return void
+     */
+    public function createUser($username, $password, $email, $role = 1)
+    {
+        $this->db->insert('users', [
+            'nickname' => $username,
+            'username' => $username,
+            'password' => Common::hash($password),
+            'email' => $email,
+            'role' => $role,
         ]);
     }
 

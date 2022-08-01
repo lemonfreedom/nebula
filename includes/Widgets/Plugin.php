@@ -5,9 +5,8 @@ namespace Nebula\Widgets;
 use Nebula\Helpers\Renderer;
 use Nebula\Helpers\Validate;
 use Nebula\Plugin as NebulaPlugin;
-use Nebula\Widget;
 
-class Plugin extends Widget
+class Plugin extends Base
 {
     /**
      * 插件列表
