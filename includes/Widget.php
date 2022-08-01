@@ -3,7 +3,6 @@
 namespace Nebula;
 
 use Nebula\Helpers\EmptyClass;
-use Nebula\Helpers\Medoo;
 
 class Widget
 {
@@ -55,9 +54,6 @@ class Widget
         $this->request = Request::getInstance();
         $this->response = Response::getInstance();
         $this->params = $params;
-
-        // 初始化数据库对象
-        $this->db = new Medoo(NEBULA_DB_CONFIG);
 
         // 初始化
         $this->init();
