@@ -55,7 +55,7 @@ class Router
         $pathInfo = Request::getInstance()->pathinfo;
         $routeFragment = explode('/', $pathInfo);
 
-        $actionOption = self::$routerWidgetMap[!empty($routeFragment[0]) ? array_shift($routeFragment) : 'index'] ?? null;
+        $actionOption = self::$routerWidgetMap[isset($routeFragment[0]) && '' !== $routeFragment[0] ? array_shift($routeFragment) : 'index'] ?? null;
         if (null !== $actionOption) {
             // 参数键
             $paramkeys = array_keys($actionOption['params']);

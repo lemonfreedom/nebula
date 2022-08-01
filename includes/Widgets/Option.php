@@ -241,12 +241,12 @@ class Option extends Widget
     }
 
     /**
-     * 访问不存在选项返回空字符串
+     * 访问不存在选项返回 null
      *
-     * return string
+     * @return string|null
      */
     public function __get($name)
     {
-        return isset($this->$name) ?? '';
+        return $this->$name ?? null;
     }
 }

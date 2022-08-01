@@ -43,6 +43,7 @@ class Plugin
      * 构造函数
      *
      * @param string $handle 句柄
+     * @return void
      */
     public function __construct($handle)
     {
@@ -53,6 +54,7 @@ class Plugin
      * 初始化
      *
      * @param array $plugins 启用插件列表
+     * @return void
      */
     public static function init($plugins)
     {
