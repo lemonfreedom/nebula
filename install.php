@@ -6,19 +6,21 @@ include NEBULA_ROOT_PATH . 'includes/Common.php';
 // 步骤一
 function step0()
 {
+    $errorMessage = 'PHP 版本最低为 7.3';
     echo <<<HTML
 <div class="nebula-title">欢迎使用 Nebula</div>
 <div class="nebula-wecome">
     <div class="title">安装说明</div>
-    <p>本安装程序将自动检测服务器环境是否符合最低配置需求。如果服务器环境符合要求，将在下方出现「<span class="strong">现在就开始</span>」的按钮，点击此按钮即可开始下一步。</p>
+    <p>本安装程序将自动检测服务器环境是否符合最低配置需求。如果服务器环境符合要求，将在下方出现「<em class="mark">现在就开始</em>」按钮，点击此按钮即可开始下一步。</p>
     <div class="title">许可协议</div>
     <ul>
-        <li>Nebula 基于 <span class="strong">GNU 通用公共许可证 v3.0</span>，我们提供许可作品和修改的完整源代码，其中包括在同一许可下使用许可作品的大型作品。但必须保留版权和许可声明。</li>
+        <li>Nebula 基于 <em class="mark">GNU 通用公共许可证 v3.0</em>，我们提供许可作品和修改的完整源代码，其中包括在同一许可下使用许可作品的大型作品。但必须保留版权和许可声明。</li>
     </ul>
     <a href="/install.php?step=1" class="nebula-button">
         <span>现在就开始</span>
         <i class="bi bi-chevron-double-right"></i>
     </a>
+    <!-- <div class="error">很遗憾，你服务器不满足最低要求，错误信息：<strong><em>{$errorMessage}</em></strong></div> -->
 </div>
 HTML;
 }
@@ -117,8 +119,8 @@ function step3()
     echo <<<HTML
 <div class="nebula-title">安装成功</div>
 <div class="nebula-wecome">
-    <p>您的用户名是：<strong class="strong">admin</strong></p>
-    <p>您的密码是：<strong class="strong">admin</strong></p>
+    <p>您的用户名是：<span class="mark">admin</span></p>
+    <p>您的密码是：<span class="mark">admin</span></p>
     <ul>
         <li><a href="/admin">点击这里访问您的控制面板</a></li>
         <li><a href="/">点击这里查看您的首页</a></li>

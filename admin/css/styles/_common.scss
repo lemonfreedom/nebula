@@ -194,7 +194,7 @@ a {
         display: flex;
         flex-direction: column;
         gap: .4rem;
-        margin-bottom: 1rem;
+        margin-bottom: .6rem;
 
         .form-label {
             font-weight: bold;
@@ -442,21 +442,5 @@ a {
             top: 50%;
             transform: translate(-50%, -50%);
         }
-    }
-}
-
-.nebula-wecome {
-    background-color: #efefef;
-    box-sizing: border-box;
-    padding: 2rem;
-    line-height: 1.5;
-    border-radius: .2rem;
-
-    .title {
-        font-weight: bold;
-    }
-
-    .strong {
-        color: $color-primary;
     }
 }

@@ -9,6 +9,28 @@
         color: $color-primary;
     }
 
+    .mark {
+        color: $color-primary;
+    }
+
+    .nebula-wecome {
+        background-color: #efefef;
+        box-sizing: border-box;
+        padding: 2rem;
+        line-height: 1.5;
+        border-radius: .2rem;
+
+        .title {
+            font-weight: bold;
+            margin: .6rem 0;
+        }
+
+        .error {
+            color: $color-error;
+        }
+    }
+
+
     .nebula-title {
         height: 3rem;
         font-size: 1.2rem;
