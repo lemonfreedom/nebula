@@ -123,7 +123,7 @@ function step3()
         <li><a href="/admin">点击这里访问您的控制面板</a></li>
         <li><a href="/">点击这里查看您的首页</a></li>
     </ul>
-    <p>敬请享受 Nebula 带给你的无穷乐趣！</p>
+    <p>代码如诗，尽情享受 Nebula 带给你的无穷乐趣！</p>
 </div>
 HTML;
 }
