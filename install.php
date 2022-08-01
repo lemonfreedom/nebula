@@ -131,16 +131,16 @@ define('NEBULA_DEBUG', true);
 define('NEBULA_DB_CONFIG', [
     // 必填
     'type' => 'mysql',
-    'host' => {$data['host']},
-    'database' => {$data['database']},
-    'username' => {$data['username']},
-    'password' => {$data['password']},
+    'host' => '{$data['host']}',
+    'database' => '{$data['database']}',
+    'username' => '{$data['username']}',
+    'password' => '{$data['password']}',
 
     // 可选
-    'charset' => {$data['charset']},
-    'collation' => {$data['collation']},
+    'charset' => '{$data['charset']}',
+    'collation' => '{$data['collation']}',
     'port' => {$data['port']},
-    'prefix' => {$data['prefix']},
+    'prefix' => '{$data['prefix']}',
     'logging' => false,
     'error' => PDO::ERRMODE_SILENT,
     'option' => [PDO::ATTR_CASE => PDO::CASE_NATURAL],
