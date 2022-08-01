@@ -56,6 +56,7 @@ class Response
      * 响应 JSON 数据
      *
      * @param array $data 数据
+     * @return void
      */
     public function sendJSON($data)
     {
