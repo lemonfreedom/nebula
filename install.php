@@ -3,6 +3,28 @@ define('NEBULA_ROOT_PATH', __DIR__ . '/');
 
 include NEBULA_ROOT_PATH . 'includes/Common.php';
 
+// 检查是否初始化
+function has_been_init()
+{
+    if (!file_exists(NEBULA_ROOT_PATH . 'config.php')) {
+        return false;
+    }
+
+    include_once NEBULA_ROOT_PATH . 'config.php';
+    return true;
+}
+
+// 检查管理员是否存在
+function administrator_exists()
+{
+    return \Nebula\Widgets\Option::alloc()->db->count('users') > 0;
+}
+
+// 安装已完成跳出安装程序
+if (has_been_init() && administrator_exists()) {
+    \Nebula\Response::getInstance()->redirect('/');
+}
+
 // 步骤一
 function step()
 {
@@ -10,10 +32,6 @@ function step()
 
     if (version_compare(PHP_VERSION, '7.3.0') === -1) {
         $errorMessage = '「PHP 版本最低为 7.3」';
-    }
-
-    if (file_exists(NEBULA_ROOT_PATH . 'config.php')) {
-        $errorMessage .= '<li><em>如需重复安装请删除程序根目录「config.php」文件。</em></li>';
     }
 
     echo <<<EOT
@@ -47,6 +65,11 @@ EOT;
 // 步骤二
 function step1()
 {
+    // 如果已经初始化跳过此步
+    if (has_been_init()) {
+        \Nebula\Response::getInstance()->redirect('/install.php?step=2');
+    }
+
     echo <<<EOT
 <div class="nebula-title">数据库配置</div>
 <form class="nebula-form" action="/install.php?step=2" method="post">
@@ -64,15 +87,15 @@ function step1()
         <input class="nebula-input" id="database" name="database" value="nebula">
     </div>
     <div class="form-item">
-        <label class="form-label" for="username">数据库用户名</label>
+        <label class="form-label" for="username">用户名</label>
         <input class="nebula-input" id="username" name="username">
     </div>
     <div class="form-item">
-        <label class="form-label" for="password">数据库密码</label>
-        <input class="nebula-input" id="password" name="password">
+        <label class="form-label" for="password">密码</label>
+        <input class="nebula-input" type="password" id="password" name="password">
     </div>
     <div class="form-item">
-        <label class="form-label" for="prefix">数据库表前缀</label>
+        <label class="form-label" for="prefix">表前缀</label>
         <input class="nebula-input" id="prefix" name="prefix" value="nebula_">
         <label class="form-sublabel">同数据库多程序请设置前缀</label>
     </div>
@@ -93,36 +116,68 @@ function step1()
 </form>
 EOT;
 }
-$db = null;
+
 // 步骤三
 function step2()
 {
-    $data = \Nebula\Request::getInstance()->post();
-    try {
-        // 连接数据库
-        $db = new \Nebula\Helpers\Medoo([
-            // 必填
-            'type' => 'mysql',
-            'host' => $data['host'],
-            'database' => $data['database'],
-            'username' => $data['username'],
-            'password' => $data['password'],
+    // 未初始化，新增配置文件
+    if (!has_been_init()) {
+        $data = \Nebula\Request::getInstance()->post();
 
-            // 可选
-            'charset' => $data['charset'],
-            'collation' => $data['collation'],
-            'port' => $data['port'],
-            'prefix' => $data['prefix'],
-            'logging' => false,
-            'error' => PDO::ERRMODE_SILENT,
-            'option' => [PDO::ATTR_CASE => PDO::CASE_NATURAL],
-            'command' => ['SET SQL_MODE=ANSI_QUOTES'],
+        $validate = new \Nebula\Helpers\Validate($data, [
+            'host' => [
+                ['type' => 'required', 'message' => '数据库地址不能为空'],
+            ],
+            'port' => [
+                ['type' => 'required', 'message' => '数据库端口不能为空'],
+            ],
+            'database' => [
+                ['type' => 'required', 'message' => '数据库名不能为空'],
+            ],
+            'username' => [
+                ['type' => 'required', 'message' => '用户名不能为空'],
+            ],
+            'password' => [
+                ['type' => 'required', 'message' => '密码不能为空'],
+            ],
+            'charset' => [
+                ['type' => 'required', 'message' => '字符集不能为空'],
+            ],
+            'collation' => [
+                ['type' => 'required', 'message' => '整理类型不能为空'],
+            ],
         ]);
-    } catch (\PDOException $e) {
-        \Nebula\Widgets\Notice::alloc()->set('数据库连接失败：' . $e->getMessage(), 'warning');
-        \Nebula\Response::getInstance()->redirect('/install.php?step=1');
-    }
-    $configString = <<<EOT
+        // 表单验证
+        if (!$validate->run()) {
+            \Nebula\Widgets\Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            \Nebula\Response::getInstance()->redirect('/install.php?step=1');
+        }
+
+        try {
+            // 连接数据库
+            $db = new \Nebula\Helpers\Medoo([
+                // 必填
+                'type' => 'mysql',
+                'host' => $data['host'],
+                'database' => $data['database'],
+                'username' => $data['username'],
+                'password' => $data['password'],
+
+                // 可选
+                'charset' => $data['charset'],
+                'collation' => $data['collation'],
+                'port' => $data['port'],
+                'prefix' => $data['prefix'],
+                'logging' => false,
+                'error' => PDO::ERRMODE_SILENT,
+                'option' => [PDO::ATTR_CASE => PDO::CASE_NATURAL],
+                'command' => ['SET SQL_MODE=ANSI_QUOTES'],
+            ]);
+        } catch (\PDOException $e) {
+            \Nebula\Widgets\Notice::alloc()->set('数据库连接失败：' . $e->getMessage(), 'warning');
+            \Nebula\Response::getInstance()->redirect('/install.php?step=1');
+        }
+        $configString = <<<EOT
 <?php
 // 调试模式
 define('NEBULA_DEBUG', true);
@@ -147,53 +202,65 @@ define('NEBULA_DB_CONFIG', [
     'command' => ['SET SQL_MODE=ANSI_QUOTES'],
 ]);\n
 EOT;
-    // 写入配置文件
-    file_put_contents(NEBULA_ROOT_PATH . 'config.php', $configString);
 
-    try {
-        $db->action(function ($db) {
-            // 创建用户表
-            $db->create('users', [
-                'uid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
-                'role' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
-                'nickname' => ['VARCHAR(60)', 'NOT NULL'],
-                'username' => ['VARCHAR(60)', 'NOT NULL', 'UNIQUE'],
-                'password' => ['VARCHAR(64)', 'NOT NULL', 'UNIQUE'],
-                'email' => ['VARCHAR(100)', 'NOT NULL', 'UNIQUE'],
-                'token' => ['VARCHAR(32)', 'NOT NULL'],
-            ]);
+        try {
+            $db->action(function ($db) {
+                // 创建用户表
+                $db->create('users', [
+                    'uid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
+                    'role' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
+                    'nickname' => ['VARCHAR(60)', 'NOT NULL'],
+                    'username' => ['VARCHAR(60)', 'NOT NULL', 'UNIQUE'],
+                    'password' => ['VARCHAR(64)', 'NOT NULL', 'UNIQUE'],
+                    'email' => ['VARCHAR(100)', 'NOT NULL', 'UNIQUE'],
+                    'token' => ['VARCHAR(32)', 'NOT NULL'],
+                ]);
 
-            // 创建配置表
-            $db->create('options', [
-                'name' => ['VARCHAR(30)', 'NOT NULL', 'PRIMARY KEY'],
-                'value' => ['TEXT', 'NOT NULL'],
-            ]);
-            // 插入配置数据
-            $db->insert("options", [
-                ['name' => 'title', 'value' => ''],
-                ['name' => 'description', 'value' => '又一个博客网站诞生了'],
-                ['name' => 'allowRegister', 'value' => '0'],
-                ['name' => 'smtp', 'value' => 'a:5:{s:4:"host";s:0:"";s:8:"username";s:0:"";s:8:"password";s:0:"";s:4:"port";s:0:"";s:4:"name";s:0:"";}'],
-                ['name' => 'plugins', 'value' => 'a:0:{}'],
-            ]);
+                // 创建配置表
+                $db->create('options', [
+                    'name' => ['VARCHAR(30)', 'NOT NULL', 'PRIMARY KEY'],
+                    'value' => ['TEXT', 'NOT NULL'],
+                ]);
+                // 插入配置数据
+                $db->insert("options", [
+                    ['name' => 'title', 'value' => ''],
+                    ['name' => 'description', 'value' => '又一个博客网站诞生了'],
+                    ['name' => 'allowRegister', 'value' => '0'],
+                    ['name' => 'smtp', 'value' => 'a:5:{s:4:"host";s:0:"";s:8:"username";s:0:"";s:8:"password";s:0:"";s:4:"port";s:0:"";s:4:"name";s:0:"";}'],
+                    ['name' => 'plugins', 'value' => 'a:0:{}'],
+                ]);
 
-            // 创建分类表
-            $db->create('terms', [
-                'tid' => ['TINYINT', 'UNSIGNED', 'NOT NULL', 'PRIMARY KEY'],
-                'name' => ['VARCHAR(30)', 'NOT NULL'],
-            ]);
+                // 创建分类表
+                $db->create('terms', [
+                    'tid' => ['TINYINT', 'UNSIGNED', 'NOT NULL', 'PRIMARY KEY'],
+                    'name' => ['VARCHAR(30)', 'NOT NULL'],
+                ]);
 
-            // 创建文章表
-            $db->create('posts', [
-                'pid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
-                'tid' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
-                'title' => ['VARCHAR(60)', 'NOT NULL'],
-                'content' => ['TEXT', 'NOT NULL'],
-            ]);
-        });
-    } catch (\PDOException $e) {
-        \Nebula\Widgets\Notice::alloc()->set('数据库初始化失败：' . $e->getMessage(), 'warning');
+                // 创建文章表
+                $db->create('posts', [
+                    'pid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
+                    'tid' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
+                    'title' => ['VARCHAR(60)', 'NOT NULL'],
+                    'content' => ['TEXT', 'NOT NULL'],
+                ]);
+            });
+        } catch (\PDOException $e) {
+            \Nebula\Widgets\Notice::alloc()->set('数据库初始化失败：' . $e->getMessage(), 'warning');
+            \Nebula\Response::getInstance()->redirect('/install.php?step=1');
+        }
+
+        // 写入配置文件
+        file_put_contents(NEBULA_ROOT_PATH . 'config.php', $configString);
+    }
+
+    // 未初始化跳到步骤一
+    if (!has_been_init()) {
         \Nebula\Response::getInstance()->redirect('/install.php?step=1');
+    }
+
+    // 存在管理员退出安装程序
+    if (administrator_exists()) {
+        \Nebula\Response::getInstance()->redirect('/');
     }
 
     echo <<<EOT
@@ -201,7 +268,7 @@ EOT;
 <form class="nebula-form" action="/install.php?step=3" method="post">
     <div class="form-item">
         <label class="form-label" for="title">站点名称</label>
-        <input class="nebula-input" id="title" name="title">
+        <input class="nebula-input" id="title" name="title" value="Nebula">
     </div>
     <div class="form-item">
         <label class="form-label" for="username">用户名</label>
@@ -214,7 +281,7 @@ EOT;
         <label class="form-sublabel">请填写您的登录密码</label>
     </div>
     <div class="form-item">
-        <label class="form-label" for="email">邮箱地址</label>
+        <label class="form-label" for="email">邮箱</label>
         <input class="nebula-input" id="email" name="email">
         <label class="form-sublabel">请填写一个您的常用邮箱</label>
     </div>
@@ -229,9 +296,38 @@ EOT;
 // 步骤四
 function step3()
 {
-    include NEBULA_ROOT_PATH . 'config.php';
+    // 未初始化跳到步骤一
+    if (!has_been_init()) {
+        \Nebula\Response::getInstance()->redirect('/install.php?step=1');
+    }
+
+    // 存在管理员退出安装程序
+    if (administrator_exists()) {
+        \Nebula\Response::getInstance()->redirect('/');
+    }
 
     $data = \Nebula\Request::getInstance()->post();
+
+    $validate = new \Nebula\Helpers\Validate($data, [
+        'title' => [
+            ['type' => 'required', 'message' => '站点名称不能为空'],
+        ],
+        'username' => [
+            ['type' => 'required', 'message' => '用户名不能为空'],
+        ],
+        'password' => [
+            ['type' => 'required', 'message' => '密码不能为空'],
+        ],
+        'email' => [
+            ['type' => 'required', 'message' => '邮箱不能为空'],
+            ['type' => 'email', 'message' => '邮箱格式不正确'],
+        ],
+    ]);
+    // 表单验证
+    if (!$validate->run()) {
+        \Nebula\Widgets\Notice::alloc()->set($validate->result[0]['message'], 'warning');
+        \Nebula\Response::getInstance()->redirect('/install.php?step=2');
+    }
 
     // 修改配置
     \Nebula\Widgets\Option::alloc()->setOptions([
@@ -254,13 +350,6 @@ function step3()
 EOT;
 }
 
-function error404()
-{
-    echo <<<EOT
-<div class="nebula-title">404</div>
-EOT;
-}
-
 function render()
 {
     $funcName = 'step' . \Nebula\Request::getInstance()->get('step', '');
@@ -268,7 +357,7 @@ function render()
     if (function_exists($funcName)) {
         $funcName();
     } else {
-        error404();
+        \Nebula\Response::getInstance()->redirect('/install.php');
     }
 }
 ?>

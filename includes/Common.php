@@ -27,9 +27,6 @@ namespace {
 }
 
 namespace Nebula {
-
-    use Nebula\Widgets\Option;
-
     class Common
     {
         /**
@@ -52,7 +49,7 @@ namespace Nebula {
             }
 
             // 插件初始化
-            Plugin::init(Option::alloc()->plugins);
+            Plugin::init(\Nebula\Widgets\Option::alloc()->plugins);
         }
 
         /**
