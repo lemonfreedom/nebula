@@ -16,8 +16,8 @@ class Option extends Base
             $this->{$option['name']} = $option['value'];
         }
 
-        $this->smtp = unserialize($this->smtp);
-        $this->plugins = unserialize($this->plugins);
+        $this->smtp = null !== $this->smtp ? unserialize($this->smtp) : null;
+        $this->plugins = null !== $this->plugins ? unserialize($this->plugins) : [];
     }
 
     /**

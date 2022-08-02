@@ -1,4 +1,13 @@
 <?php
+
+use Nebula\Helpers\Medoo;
+use Nebula\Helpers\Validate;
+use Nebula\Request;
+use Nebula\Response;
+use Nebula\Widgets\Notice;
+use Nebula\Widgets\Option;
+use Nebula\Widgets\User;
+
 define('NEBULA_ROOT_PATH', __DIR__ . '/');
 
 include NEBULA_ROOT_PATH . 'includes/Common.php';
@@ -22,10 +31,10 @@ function administrator_exists()
 
 // 安装已完成跳出安装程序
 if (has_been_init() && administrator_exists()) {
-    \Nebula\Response::getInstance()->redirect('/');
+    Response::getInstance()->redirect('/');
 }
 
-// 步骤一
+// 欢迎界面
 function step()
 {
     $errorMessage = null;
@@ -62,12 +71,12 @@ EOT;
     }
 }
 
-// 步骤二
+// 步骤一
 function step1()
 {
     // 如果已经初始化跳过此步
     if (has_been_init()) {
-        \Nebula\Response::getInstance()->redirect('/install.php?step=2');
+        Response::getInstance()->redirect('/install.php?step=2');
     }
 
     echo <<<EOT
@@ -117,14 +126,14 @@ function step1()
 EOT;
 }
 
-// 步骤三
+// 步骤二
 function step2()
 {
     // 未初始化，新增配置文件
     if (!has_been_init()) {
-        $data = \Nebula\Request::getInstance()->post();
+        $data = Request::getInstance()->post();
 
-        $validate = new \Nebula\Helpers\Validate($data, [
+        $validate = new Validate($data, [
             'host' => [
                 ['type' => 'required', 'message' => '数据库地址不能为空'],
             ],
@@ -149,13 +158,13 @@ function step2()
         ]);
         // 表单验证
         if (!$validate->run()) {
-            \Nebula\Widgets\Notice::alloc()->set($validate->result[0]['message'], 'warning');
-            \Nebula\Response::getInstance()->redirect('/install.php?step=1');
+            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Response::getInstance()->redirect('/install.php?step=1');
         }
 
         try {
             // 连接数据库
-            $db = new \Nebula\Helpers\Medoo([
+            $db = new Medoo([
                 // 必填
                 'type' => 'mysql',
                 'host' => $data['host'],
@@ -174,8 +183,8 @@ function step2()
                 'command' => ['SET SQL_MODE=ANSI_QUOTES'],
             ]);
         } catch (\PDOException $e) {
-            \Nebula\Widgets\Notice::alloc()->set('数据库连接失败：' . $e->getMessage(), 'warning');
-            \Nebula\Response::getInstance()->redirect('/install.php?step=1');
+            Notice::alloc()->set('数据库连接失败：' . $e->getMessage(), 'warning');
+            Response::getInstance()->redirect('/install.php?step=1');
         }
         $configString = <<<EOT
 <?php
@@ -245,8 +254,8 @@ EOT;
                 ]);
             });
         } catch (\PDOException $e) {
-            \Nebula\Widgets\Notice::alloc()->set('数据库初始化失败：' . $e->getMessage(), 'warning');
-            \Nebula\Response::getInstance()->redirect('/install.php?step=1');
+            Notice::alloc()->set('数据库初始化失败：' . $e->getMessage(), 'warning');
+            Response::getInstance()->redirect('/install.php?step=1');
         }
 
         // 写入配置文件
@@ -255,12 +264,12 @@ EOT;
 
     // 未初始化跳到步骤一
     if (!has_been_init()) {
-        \Nebula\Response::getInstance()->redirect('/install.php?step=1');
+        Response::getInstance()->redirect('/install.php?step=1');
     }
 
     // 存在管理员退出安装程序
     if (administrator_exists()) {
-        \Nebula\Response::getInstance()->redirect('/');
+        Response::getInstance()->redirect('/');
     }
 
     echo <<<EOT
@@ -293,22 +302,22 @@ EOT;
 EOT;
 }
 
-// 步骤四
+// 步骤三
 function step3()
 {
     // 未初始化跳到步骤一
     if (!has_been_init()) {
-        \Nebula\Response::getInstance()->redirect('/install.php?step=1');
+        Response::getInstance()->redirect('/install.php?step=1');
     }
 
     // 存在管理员退出安装程序
     if (administrator_exists()) {
-        \Nebula\Response::getInstance()->redirect('/');
+        Response::getInstance()->redirect('/');
     }
 
-    $data = \Nebula\Request::getInstance()->post();
+    $data = Request::getInstance()->post();
 
-    $validate = new \Nebula\Helpers\Validate($data, [
+    $validate = new Validate($data, [
         'title' => [
             ['type' => 'required', 'message' => '站点名称不能为空'],
         ],
@@ -325,16 +334,16 @@ function step3()
     ]);
     // 表单验证
     if (!$validate->run()) {
-        \Nebula\Widgets\Notice::alloc()->set($validate->result[0]['message'], 'warning');
-        \Nebula\Response::getInstance()->redirect('/install.php?step=2');
+        Notice::alloc()->set($validate->result[0]['message'], 'warning');
+        Response::getInstance()->redirect('/install.php?step=2');
     }
 
     // 修改配置
-    \Nebula\Widgets\Option::alloc()->setOptions([
+    Option::alloc()->setOptions([
         'title' => $data['title'],
     ]);
     // 创建管理员
-    \Nebula\Widgets\User::alloc()->createUser($data['username'], $data['password'], $data['email'], '0');
+    User::alloc()->createUser($data['username'], $data['password'], $data['email'], '0');
 
     echo <<<EOT
 <div class="nebula-title">安装成功</div>
@@ -352,12 +361,12 @@ EOT;
 
 function render()
 {
-    $funcName = 'step' . \Nebula\Request::getInstance()->get('step', '');
+    $funcName = 'step' . Request::getInstance()->get('step', '');
 
     if (function_exists($funcName)) {
         $funcName();
     } else {
-        \Nebula\Response::getInstance()->redirect('/install.php');
+        Response::getInstance()->redirect('/install.php');
     }
 }
 ?>
