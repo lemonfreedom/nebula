@@ -8,23 +8,26 @@
     <div class="nebula-table">
         <table>
             <colgroup>
+                <col width="30%">
                 <col width="20%">
-                <col width="80%">
+                <col width="30%">
+                <col width="20%">
             </colgroup>
             <thead>
                 <tr>
-                    <th>插件名称</th>
-                    <th>插件信息</th>
+                    <th>名称</th>
+                    <th>版本</th>
+                    <th>作者</th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($pluginList as $plugin) : ?>
                     <tr>
                         <td><a href="<?= $plugin['url'] ?>"><?= $plugin['name'] ?></a></td>
+                        <td><?= $plugin['version'] ?></td>
+                        <td><a href="<?= $plugin['author_url'] ?>"><?= $plugin['author'] ?></a></td>
                         <td>
-                            <div>作者：<a href="<?= $plugin['author_url'] ?>"><?= $plugin['author'] ?></a></div>
-                            <div>版本：<?= $plugin['version'] ?></div>
-                            <div>描述：<?= $plugin['description'] ?></div>
                             <?php if ($plugin['is_activated']) : ?>
                                 <a href="/admin/plugin-config.php?name=<?= $plugin['dir'] ?>">设置</a>
                                 <a href="/plugin/disabled/<?= $plugin['dir'] ?>">禁用</a>

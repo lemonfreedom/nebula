@@ -18,6 +18,7 @@ class Option extends Base
 
         $this->smtp = null !== $this->smtp ? unserialize($this->smtp) : null;
         $this->plugins = null !== $this->plugins ? unserialize($this->plugins) : [];
+        $this->theme = ['name' => 'default', 'config' => []];
     }
 
     /**

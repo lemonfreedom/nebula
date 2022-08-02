@@ -2,6 +2,7 @@
 
 namespace Nebula\Widgets;
 
+use Nebula\Common;
 use Nebula\Helpers\Renderer;
 use Nebula\Helpers\Validate;
 use Nebula\Plugin as NebulaPlugin;
@@ -54,82 +55,18 @@ class Plugin extends Base
                 $pluginInfo['is_activated'] = in_array($pluginClassName, array_keys($plugins));
 
                 // 插件是否可配置
-                $pluginInfo['is_config'] = false;
-                if ($pluginInfo['is_activated']) {
-                    $pluginInfo['is_config'] = [] !== $plugins[$pluginClassName]['config'];
-                }
+                $pluginInfo['is_config'] = $pluginInfo['is_activated'] && [] !== $plugins[$pluginClassName]['config'];
+
+                $pluginIndexPath = $pluginDir . '/Main.php';
 
                 // 判断插件是否完整
-                $pluginIndexPath = $pluginDir . '/Main.php';
-                if (file_exists($pluginIndexPath)) {
-                    // 是否完整
-                    $pluginInfo['is_complete'] = true;
-                    $info = $this->parseHeaderInfo($pluginIndexPath);
-                    $pluginInfo = array_merge($pluginInfo, $info);
-                } else {
-                    $pluginInfo['is_complete'] = false;
-                }
+                $pluginInfo['is_complete'] = file_exists($pluginIndexPath);
 
-                return $pluginInfo;
+                return array_merge($pluginInfo, Common::parseDoc($pluginIndexPath));
             }, $pluginDirs);
         }
 
         return $this->pluginList;
-    }
-
-    /**
-     * 格式化文件头信息
-     *
-     * @param string $pluginPath 插件路径
-     * @return array 插件信息
-     */
-    private function parseHeaderInfo($pluginPath)
-    {
-        $tokens = token_get_all(file_get_contents($pluginPath));
-        $isDoc = false;
-        // 初始数据
-        $info = [
-            'name' => '未知',
-            'url' => '',
-            'description' => '未知',
-            'version' => '未知',
-            'author' => '未知',
-            'author_url' => '',
-        ];
-
-        foreach ($tokens as $token) {
-            if (!$isDoc && $token[0] === T_DOC_COMMENT) {
-                if (strpos($token[1], 'name')) {
-                    $isDoc = true;
-
-                    // 插件名
-                    preg_match('/name:(.*)[\\r\\n]/', $token[1], $matches);
-                    $info['name'] = trim($matches[1] ?? '未知');
-
-                    // 插件地址
-                    preg_match('/url:(.*)[\\r\\n]/', $token[1], $matches);
-                    $info['url'] = trim($matches[1] ?? '');
-
-                    // 插件描述
-                    preg_match('/description:(.*)[\\r\\n]/', $token[1], $matches);
-                    $info['description'] = trim($matches[1] ?? '未知');
-
-                    // 插件版本
-                    preg_match('/version:(.*)[\\r\\n]/', $token[1], $matches);
-                    $info['version'] = trim($matches[1] ?? '未知');
-
-                    // 插件作者
-                    preg_match('/author:(.*)[\\r\\n]/', $token[1], $matches);
-                    $info['author'] = trim($matches[1] ?? '未知');
-
-                    // 插件作者地址
-                    preg_match('/author_url:(.*)[\\r\\n]/', $token[1], $matches);
-                    $info['author_url'] = trim($matches[1] ?? '');
-                }
-            }
-        }
-
-        return $info;
     }
 
     /**
