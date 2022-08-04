@@ -183,7 +183,7 @@ class Plugin extends Base
         // 提交修改
         $this->db->update('options', ['value' => serialize(NebulaPlugin::export())], ['name' => 'plugins']);
 
-        Notice::alloc()->set('保存成功', 'success');
+        Notice::alloc()->set('修改成功', 'success');
         $this->response->redirect('/admin/plugins.php');
     }
 

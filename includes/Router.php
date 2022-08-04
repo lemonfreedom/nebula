@@ -43,6 +43,13 @@ class Router
                 'pluginName' => '',
             ],
         ],
+        'theme' => [
+            'widget' => '\Nebula\Widgets\Theme',
+            'params' => [
+                'action' => '',
+                'themeName' => '',
+            ],
+        ],
     ];
 
     /**

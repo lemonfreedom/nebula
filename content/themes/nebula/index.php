@@ -1,7 +1,7 @@
 <?php \Nebula\Widgets\User::alloc()->to($user); ?>
 <?php $this->render('header'); ?>
 <div class="container">
-    <div>这是主题 default</div>
+    <div>这是主题 nebula</div>
     <?php if ($user->hasLogin()) : ?>
         欢迎：<?= $user->get('username') ?>
         <a href="/user/logout">退出登录</a>

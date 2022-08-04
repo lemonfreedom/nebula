@@ -3,7 +3,7 @@
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $themeList = \Nebula\Widgets\Theme::alloc()->getThemeList(); ?>
-<div class="container">
+<div class="container theme">
     <div class="nebula-title">主题</div>
     <div class="nebula-table">
         <table>
@@ -26,14 +26,29 @@
                             </div>
                         </td>
                         <td>
-                            <a href="<?= $theme['url'] ?>"><?= $theme['name'] ?></a>
-                            <?= $theme['version'] ?>
-                            <a href="<?= $theme['author_url'] ?>"><?= $theme['author'] ?></a>
-                            <?php if ($theme['is_activated']) : ?>
-                                <a href="/admin/theme-config.php">设置</a>
-                            <?php else : ?>
-                                <a href="/plugin/enable/<?= $theme['dir'] ?>">启用</a>
-                            <?php endif; ?>
+                            <div class="theme-title">
+                                <span>名称：</span>
+                                <a href="<?= $theme['url'] ?>"><?= $theme['name'] ?></a>
+                            </div>
+                            <div class="theme-info-row">
+                                <div>
+                                    <span>版本：</span>
+                                    <span><?= $theme['version'] ?></span>
+                                </div>
+                                <div>
+                                    <span>作者：</span>
+                                    <a href="<?= $theme['author_url'] ?>"><?= $theme['author'] ?></a>
+                                </div>
+                            </div>
+                            <div class="theme-info-row">
+                                <?php if ($theme['is_activated']) : ?>
+                                    <?php if ($theme['is_config']) : ?>
+                                        <a href="/admin/theme-config.php">设置</a>
+                                    <?php endif; ?>
+                                <?php else : ?>
+                                    <a href="/theme/enable/<?= $theme['dir'] ?>">启用</a>
+                                <?php endif; ?>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>

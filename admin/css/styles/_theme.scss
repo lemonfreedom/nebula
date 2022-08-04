@@ -1,0 +1,14 @@
+.theme {
+    .theme-title {
+        font-weight: bold;
+        display: flex;
+        margin-bottom: .6rem;
+    }
+
+    .theme-info-row {
+        display: flex;
+        gap: .4rem;
+        flex-wrap: wrap;
+        margin-bottom: .6rem;
+    }
+}

@@ -237,6 +237,7 @@ EOT;
                     ['name' => 'allowRegister', 'value' => '0'],
                     ['name' => 'smtp', 'value' => 'a:5:{s:4:"host";s:0:"";s:8:"username";s:0:"";s:8:"password";s:0:"";s:4:"port";s:0:"";s:4:"name";s:0:"";}'],
                     ['name' => 'plugins', 'value' => 'a:0:{}'],
+                    ['name' => 'theme', 'value' => 'a:2:{s:4:"name";s:7:"default";s:6:"config";a:0:{}}'],
                 ]);
 
                 // 创建分类表

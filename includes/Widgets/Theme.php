@@ -4,6 +4,7 @@ namespace Nebula\Widgets;
 
 use Nebula\Common;
 use Nebula\Helpers\Renderer;
+use Nebula\Helpers\Validate;
 
 class Theme extends Base
 {
@@ -64,31 +65,60 @@ class Theme extends Base
         // 已启用主题
         $theme = Option::alloc()->theme;
 
-        $themeName = $this->request->post('themeName');
+        $themeName = $this->params['themeName'];
+
         if ($themeName === $theme['name']) {
             Notice::alloc()->set('不能重复启用', 'warning');
             $this->response->redirect('/admin/themes.php');
         }
+
         // 获取主题配置
         $themeConfig = [];
-        $themeFunctionsFile = '/content/themes/' . $themeName . '/function.png';
+        $themeFunctionsFile = NEBULA_ROOT_PATH . 'content/themes/' . $themeName . '/functions.php';
         if (file_exists($themeFunctionsFile)) {
-            require $themeFunctionsFile;
+            include $themeFunctionsFile;
+
             if (function_exists('theme_config')) {
                 $renderer = new Renderer();
                 theme_config($renderer);
-                // $themeConfig = $renderer->getData();
+                $themeConfig = $renderer->getValues();
             }
         }
 
-        $themeOption = [
-            'name' => $themeName,
-            'config' => $themeConfig,
-        ];
+        // 提交修改
+        $this->db->update('options', ['value' => serialize(['name' => $themeName, 'config' => $themeConfig])], ['name' => 'theme']);
+
+        Notice::alloc()->set('启用成功', 'success');
+        $this->response->redirect('/admin/themes.php');
     }
 
+    //
     private function updateConfig()
     {
+        // 已启用主题
+        $theme = Option::alloc()->theme;
+
+        $data = $this->request->post();
+
+        $rules = [];
+        foreach (array_keys($theme['config']) as $value) {
+            $rules[$value] = [['type' => 'required', 'message' => '「' . $value . '」不能为空']];
+        }
+        $validate = new Validate($data, $rules);
+        if (!$validate->run()) {
+            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            $this->response->redirect('/admin/theme-config.php');
+        }
+
+        foreach (array_keys($theme['config']) as $value) {
+            $theme['config'][$value] = $data[$value];
+        }
+
+        // 提交修改
+        $this->db->update('options', ['value' => serialize($theme)], ['name' => 'theme']);
+
+        Notice::alloc()->set('修改成功', 'success');
+        $this->response->redirect('/admin/themes.php');
     }
 
     /**
@@ -96,7 +126,7 @@ class Theme extends Base
      */
     public function config()
     {
-        // 启用主题
+        // 启用主题信息
         $theme = Option::alloc()->theme;
 
         // 是否具备配置功能
@@ -105,7 +135,8 @@ class Theme extends Base
             $this->response->redirect('/admin/themes.php');
         }
 
-        require '/content/themes/' . $theme['dir'] . '/functions.php';
+        include NEBULA_ROOT_PATH . 'content/themes/' . $theme['name'] . '/functions.php';
+
         $renderer = new Renderer();
         theme_config($renderer);
         $renderer->render($theme['config']);

@@ -2,6 +2,9 @@
 
 namespace Nebula;
 
+use Exception;
+use Nebula\Widgets\Option;
+
 class Response
 {
     /**
@@ -38,13 +41,19 @@ class Response
      */
     public function render($fileName, $data = [])
     {
+        // 当前主题
+        $theme = Option::alloc()->theme;
+        $data['theme_config'] = $theme['config'];
+
         header('Content-Type: text/html; charset=utf-8');
 
         ob_start();
-        $filePath = NEBULA_ROOT_PATH . 'content/themes/default/' . $fileName . '.php';
+        $filePath = NEBULA_ROOT_PATH . 'content/themes/' . $theme['name'] . '/' . $fileName . '.php';
         if (file_exists($filePath)) {
             extract($data);
             include $filePath;
+        } else {
+            throw new Exception("主题缺少 {$fileName} 文件");
         }
         $html = ob_get_contents();
         ob_end_clean();
