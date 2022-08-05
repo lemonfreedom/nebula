@@ -89,7 +89,7 @@ class Post extends Base
         ]);
 
         Notice::alloc()->set('新增成功', 'success');
-        $this->response->redirect('/admin/comment.php');
+        $this->response->redirect('/admin/contents.php');
     }
 
     /**

@@ -13,8 +13,8 @@
         <div class="form-item">
             <label class="form-label" for="tid">分类</label>
             <select class="nebula-select" id="tid" name="tid" value="<?= \Nebula\Helpers\Cookie::get('title', '') ?>">
-                <option value="0">分类一</option>
-                <option value="1" selected>分类二</option>
+                <option value="0" selected>分类一</option>
+                <option value="1">分类二</option>
             </select>
         </div>
         <div class="form-item">
