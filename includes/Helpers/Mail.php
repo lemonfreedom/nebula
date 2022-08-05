@@ -91,6 +91,9 @@ class Mail
         $this->mail->Password = $this->password;
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $this->mail->CharSet = 'UTF-8';
+
+        // 设置发送人信息
+        $this->mail->setFrom($this->email, $this->name);
     }
 
     /**
@@ -104,8 +107,7 @@ class Mail
         try {
             $code = Common::randString(5);
 
-            // 设置发送人信息
-            $this->mail->setFrom($this->email, $this->name);
+
             $this->mail->addAddress($address);
             $this->mail->isHTML(true);
             $this->mail->Subject = Option::alloc()->title . ' 验证码';
@@ -127,18 +129,10 @@ class Mail
      * @param string $address 收件人邮箱
      * @param string $title 邮件标题
      * @param string $html html 邮件消息
-     * @param string $name 发件人名称
-     * @param string $email 发件人名称
      * @return void
      */
-    public function sendHTML($address, $title, $html, $name = null, $email = null)
+    public function sendHTML($address, $title, $html)
     {
-        $name = null === $name ? $this->name : $name;
-        $email = null === $email ? $this->email : $email;
-
-        // 设置发送人信息
-        $this->mail->setFrom($email, $name);
-
         $this->mail->addAddress($address);
         $this->mail->isHTML(true);
         $this->mail->Subject = $title;
