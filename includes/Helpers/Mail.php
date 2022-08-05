@@ -150,12 +150,13 @@ class Mail
      * @param null|string $username
      * @param null|string $password
      * @param null|string $name
+     * @param null|string $email
      * @return Mail
      */
-    public static function getInstance($host = null, $port = null, $username = null, $password = null, $name = null)
+    public static function getInstance($host = null, $port = null, $username = null, $password = null, $name = null, $email = null)
     {
         if (!isset(self::$instance)) {
-            self::$instance = new self($host, $port, $username, $password, $name);
+            self::$instance = new self($host, $port, $username, $password, $name, $email);
         }
 
         return self::$instance;
