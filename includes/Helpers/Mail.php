@@ -67,9 +67,10 @@ class Mail
      * @param null|string $username
      * @param null|string $password
      * @param null|string $name
+     * @param null|string $email
      * @return void
      */
-    public function __construct($host = null, $port = null, $username = null, $password = null, $name = null)
+    public function __construct($host = null, $port = null, $username = null, $password = null, $name = null, $email = null)
     {
         $smtpOption = Option::alloc()->smtp;
 
@@ -78,6 +79,7 @@ class Mail
         $this->username = null === $username ? $smtpOption['username'] : $username;
         $this->password = null === $password ? $smtpOption['password'] : $password;
         $this->name = null === $name ? $smtpOption['name'] : $name;
+        $this->email = null === $email ? $smtpOption['email'] : $email;
 
         // 初始化
         $this->mail = new PHPMailer(true);
@@ -88,6 +90,7 @@ class Mail
         $this->mail->Username = $this->username;
         $this->mail->Password = $this->password;
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $this->mail->CharSet = 'UTF-8';
     }
 
     /**
@@ -102,7 +105,7 @@ class Mail
             $code = Common::randString(5);
 
             // 设置发送人信息
-            $this->mail->setFrom($this->username, $this->name);
+            $this->mail->setFrom($this->email, $this->name);
             $this->mail->addAddress($address);
             $this->mail->isHTML(true);
             $this->mail->Subject = Option::alloc()->title . ' 验证码';
@@ -124,16 +127,17 @@ class Mail
      * @param string $address 收件人邮箱
      * @param string $title 邮件标题
      * @param string $html html 邮件消息
-     * @param string $username 发件人邮箱
      * @param string $name 发件人名称
+     * @param string $email 发件人名称
      * @return void
      */
-    public function sendHTML($address, $title, $html, $username = null, $name = null)
+    public function sendHTML($address, $title, $html, $name = null, $email = null)
     {
-        $username = null === $username ? $this->username :  $username;
-        $name = null === $name ? $this->name :  $username;
+        $name = null === $name ? $this->name : $name;
+        $email = null === $email ? $this->email : $email;
+
         // 设置发送人信息
-        $this->mail->setFrom($username, $name);
+        $this->mail->setFrom($email, $name);
 
         $this->mail->addAddress($address);
         $this->mail->isHTML(true);

@@ -166,6 +166,9 @@ class Option extends Base
             'password' => [
                 ['type' => 'required', 'message' => '密码不能为空'],
             ],
+            'email' => [
+                ['type' => 'required', 'message' => '发件人邮箱不能为空'],
+            ],
         ]);
 
         if (!$validate->run()) {
@@ -173,7 +176,7 @@ class Option extends Base
         }
 
         try {
-            Mail::getInstance($data['host'], $data['port'], $data['username'], $data['password'], $data['name'])->sendHTML(Option::alloc()->smtp['username'], '测试邮件', '这是一封测试邮件');
+            Mail::getInstance($data['host'], $data['port'], $data['username'], $data['password'], $data['name'], $data['email'])->sendHTML(User::alloc()->get('email'), '测试邮件', '这是一封测试邮件');
 
             $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
         } catch (Exception $e) {
@@ -203,14 +206,17 @@ class Option extends Base
             'port' => [
                 ['type' => 'required', 'message' => '端口不能为空'],
             ],
-            'name' => [
-                ['type' => 'required', 'message' => '名称不能为空'],
-            ],
             'username' => [
                 ['type' => 'required', 'message' => '用户名不能为空'],
             ],
             'password' => [
                 ['type' => 'required', 'message' => '密码不能为空'],
+            ],
+            'name' => [
+                ['type' => 'required', 'message' => '发件人名称不能为空'],
+            ],
+            'email' => [
+                ['type' => 'required', 'message' => '发件人邮箱不能为空'],
             ],
         ]);
 
@@ -226,6 +232,7 @@ class Option extends Base
             'password' => $data['password'],
             'port' => $data['port'],
             'name' => $data['name'],
+            'email' => $data['email'],
         ]));
 
         Notice::alloc()->set('保存成功', 'success');

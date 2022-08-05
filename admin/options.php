@@ -26,19 +26,20 @@
                 <input class="nebula-input" id="port" name="port" value="<?= $options->smtp['port'] ?>"></input>
             </div>
             <div class="form-item">
-                <label class="form-label" for="name">名称</label>
-                <input class="nebula-input" id="name" name="name" value="<?= $options->smtp['name'] ?>"></input>
-                <div class="form-sublabel">系统发送邮箱名称</div>
-            </div>
-            <div class="form-item">
                 <label class="form-label" for="username">用户名</label>
                 <input class="nebula-input" id="username" name="username" value="<?= $options->smtp['username'] ?>"></input>
-                <div class="form-sublabel">发件邮箱名</div>
             </div>
             <div class="form-item">
                 <label class="form-label" for="password">密码</label>
                 <input class="nebula-input" id="password" type="password" name="password" value="<?= $options->smtp['password'] ?>"></input>
-                <div class="form-sublabel">发件邮箱密码</div>
+            </div>
+            <div class="form-item">
+                <label class="form-label" for="name">发件人名称</label>
+                <input class="nebula-input" id="name" name="name" value="<?= $options->smtp['name'] ?>"></input>
+            </div>
+            <div class="form-item">
+                <label class="form-label" for="email">发件人邮箱</label>
+                <input class="nebula-input" id="email" name="email" value="<?= $options->smtp['email'] ?>"></input>
             </div>
             <div class="form-tools">
                 <div class="nebula-button-group">

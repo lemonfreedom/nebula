@@ -12,6 +12,19 @@ define('NEBULA_ROOT_PATH', __DIR__ . '/');
 
 include NEBULA_ROOT_PATH . 'includes/Common.php';
 
+// SMTP 配置
+function smtp_config()
+{
+    return [
+        'host' => '',
+        'username' => '',
+        'password' => '',
+        'port' => '',
+        'name' => '',
+        'email' => ''
+    ];
+}
+
 // 检查是否初始化
 function has_been_init()
 {
@@ -235,7 +248,7 @@ EOT;
                     ['name' => 'title', 'value' => ''],
                     ['name' => 'description', 'value' => '又一个博客网站诞生了'],
                     ['name' => 'allowRegister', 'value' => '0'],
-                    ['name' => 'smtp', 'value' => 'a:5:{s:4:"host";s:0:"";s:8:"username";s:0:"";s:8:"password";s:0:"";s:4:"port";s:0:"";s:4:"name";s:0:"";}'],
+                    ['name' => 'smtp', 'value' => serialize(smtp_config())],
                     ['name' => 'plugins', 'value' => 'a:0:{}'],
                     ['name' => 'theme', 'value' => 'a:2:{s:4:"name";s:7:"default";s:6:"config";a:0:{}}'],
                 ]);
