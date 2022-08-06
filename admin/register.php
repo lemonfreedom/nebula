@@ -1,5 +1,5 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php $options->boolParse('allowRegister') || $response->redirect('/'); ?>
+<?php $option->boolParse('allowRegister') || $response->redirect('/'); ?>
 <?php $user->hasLogin() && $response->redirect('/'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <div class="nebula-account">
@@ -7,16 +7,16 @@
         <h1 class="title">Nebula</h1>
         <form class="nebula-form" action="/user/register" method="POST">
             <div class="form-item">
-                <input class="nebula-input" type="text" name="username" placeholder="用户名" value="<?= \Nebula\Helpers\Cookie::get('username', '') ?>">
+                <input class="nebula-input" type="text" name="username" placeholder="用户名" value="<?= $cache->get('registerUsername', '') ?>">
             </div>
             <div class="form-item">
                 <div class="group">
-                    <input class="nebula-input" type="email" name="email" placeholder="邮箱" value="<?= \Nebula\Helpers\Cookie::get('email', '') ?>">
+                    <input class="nebula-input" type="email" name="email" placeholder="邮箱" value="<?= $cache->get('registerEmail', '') ?>">
                     <button id="sendCaptcha" type="button" class="nebula-button">发送</button>
                 </div>
             </div>
             <div class="form-item">
-                <input class="nebula-input" type="text" name="code" placeholder="验证码" value="<?= \Nebula\Helpers\Cookie::get('code', '') ?>">
+                <input class="nebula-input" type="text" name="code" placeholder="验证码" value="<?= $cache->get('registerCode', '') ?>">
             </div>
             <div class="form-item">
                 <input class="nebula-input" type="password" name="password" placeholder="密码">

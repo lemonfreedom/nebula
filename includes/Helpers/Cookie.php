@@ -35,12 +35,12 @@ class Cookie
      * 获取指定的 cookie
      *
      * @param string $name 指定的键
-     * @param null|string $default 默认值
+     * @param null|string $defaultValue 默认值
      * @return string
      */
-    public static function get($name, $default = null)
+    public static function get($name, $defaultValue = null)
     {
-        return $_COOKIE[self::$prefix . $name] ?? $default;
+        return $_COOKIE[self::$prefix . $name] ?? $defaultValue;
     }
 
     /**

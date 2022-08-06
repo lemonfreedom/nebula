@@ -227,6 +227,13 @@ EOT;
 
         try {
             $db->action(function ($db) {
+                // 删除表
+                $db->drop('users');
+                $db->drop('options');
+                $db->drop('terms');
+                $db->drop('posts');
+                $db->drop('caches');
+
                 // 创建用户表
                 $db->create('users', [
                     'uid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
@@ -241,7 +248,7 @@ EOT;
                 // 创建配置表
                 $db->create('options', [
                     'name' => ['VARCHAR(30)', 'NOT NULL', 'PRIMARY KEY'],
-                    'value' => ['TEXT', 'NOT NULL'],
+                    'value' => ['LONGTEXT', 'NOT NULL'],
                 ]);
                 // 插入配置数据
                 $db->insert("options", [
@@ -264,7 +271,14 @@ EOT;
                     'pid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
                     'tid' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
                     'title' => ['VARCHAR(60)', 'NOT NULL'],
-                    'content' => ['TEXT', 'NOT NULL'],
+                    'content' => ['LONGTEXT', 'NOT NULL'],
+                ]);
+
+                // 创建缓存表
+                $db->create('caches', [
+                    'name' => ['VARCHAR(200)', 'NOT NULL', 'PRIMARY KEY'],
+                    'value' => ['LONGTEXT', 'NOT NULL'],
+                    'expires' => ['int', 'UNSIGNED', 'NOT NULL'],
                 ]);
             });
         } catch (\PDOException $e) {

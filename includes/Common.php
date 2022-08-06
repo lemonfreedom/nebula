@@ -27,6 +27,10 @@ namespace {
 }
 
 namespace Nebula {
+
+    use Nebula\Widgets\Cache;
+    use Nebula\Widgets\Option;
+
     class Common
     {
         /**
@@ -48,8 +52,11 @@ namespace Nebula {
                 });
             }
 
+            // 选项初始化
+            $option = Option::alloc();
+
             // 插件初始化
-            Plugin::init(\Nebula\Widgets\Option::alloc()->plugins);
+            Plugin::init($option->plugins);
         }
 
         /**

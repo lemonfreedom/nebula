@@ -148,7 +148,7 @@ class User extends Base
         ]);
         // 表单验证
         if (!$validate->run()) {
-            Cookie::set('account', $this->request->post('account', ''), time() + 1);
+            Cache::alloc()->set('loginAccount', $this->request->post('account', ''));
 
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/login.php');
@@ -175,7 +175,7 @@ class User extends Base
 
             $this->response->redirect('/admin');
         } else {
-            Cookie::set('account', $this->request->post('account'), time() + 1);
+            Cache::alloc()->set('loginAccount', $this->request->post('account', ''));
 
             Notice::alloc()->set('登录失败', 'warning');
             $this->response->redirect('/admin/login.php');
@@ -216,9 +216,9 @@ class User extends Base
             ],
         ]);
         if (!$validate->run()) {
-            Cookie::set('username', $this->request->post('username', ''), time() + 1);
-            Cookie::set('email', $this->request->post('email', ''), time() + 1);
-            Cookie::set('code', $this->request->post('code', ''), time() + 1);
+            Cache::alloc()->set('registerUsername', $this->request->post('username', ''));
+            Cache::alloc()->set('registerEmail', $this->request->post('email', ''));
+            Cache::alloc()->set('registerCode', $this->request->post('code', ''));
 
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/register.php');
@@ -226,8 +226,8 @@ class User extends Base
 
         // 验证码是否正确
         if (!Common::hashValidate($data['email'] . $data['code'], Cookie::get('code_hash', ''))) {
-            Cookie::set('username', $this->request->post('username', ''), time() + 1);
-            Cookie::set('email', $this->request->post('email', ''), time() + 1);
+            Cache::alloc()->set('registerUsername', $this->request->post('username', ''));
+            Cache::alloc()->set('registerEmail', $this->request->post('email', ''));
 
             Notice::alloc()->set('验证码错误', 'warning');
             $this->response->redirect('/admin/register.php');
@@ -235,8 +235,8 @@ class User extends Base
 
         // 用户名是否存在
         if ($this->db->has('users', ['username' => $data['username']])) {
-            Cookie::set('email', $this->request->post('email', ''), time() + 1);
-            Cookie::set('code', $this->request->post('code', ''), time() + 1);
+            Cache::alloc()->set('registerEmail', $this->request->post('email', ''));
+            Cache::alloc()->set('registerCode', $this->request->post('code', ''));
 
             Notice::alloc()->set('用户名已存在', 'warning');
             $this->response->redirect('/admin/register.php');
@@ -244,7 +244,7 @@ class User extends Base
 
         // 邮箱是否存在
         if ($this->db->has('users', ['email' => $data['email']])) {
-            Cookie::set('username', $this->request->post('username', ''), time() + 1);
+            Cache::alloc()->set('registerUsername', $this->request->post('username', ''));
 
             Notice::alloc()->set('邮箱已存在', 'warning');
             $this->response->redirect('/admin/register.php');

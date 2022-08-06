@@ -65,18 +65,17 @@ class Post extends Base
         ]);
         // 表单验证
         if (!$validate->run()) {
-            Cookie::set('title', $this->request->post('title', ''), time() + 60);
-            Cookie::set('tid', $this->request->post('tid', ''), time() + 60);
-            Cookie::set('content', $this->request->post('content', ''), time() + 60);
+            Cache::alloc()->set('createPostTitle', $this->request->post('title', ''));
+            Cache::alloc()->set('createPostTid', $this->request->post('tid', ''));
+            Cache::alloc()->set('createPostContent', $this->request->post('content', ''));
 
             Notice::alloc()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/create-post.php');
         }
 
         if ($data['content'] === '{"ops":[{"insert":"\n"}]}') {
-            Cookie::set('title', $this->request->post('title', ''), time() + 1);
-            Cookie::set('tid', $this->request->post('tid', ''), time() + 1);
-            Cookie::set('content', $this->request->post('content', ''), time() + 1);
+            Cache::alloc()->set('createPostTitle', $this->request->post('title', ''));
+            Cache::alloc()->set('createPostTid', $this->request->post('tid', ''));
 
             Notice::alloc()->set('内容不能为空', 'warning');
             $this->response->redirect('/admin/create-post.php');

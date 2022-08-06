@@ -1,7 +1,7 @@
 <?php defined('NEBULA_ROOT_PATH') || exit; ?>
 <div class="nebula-navbar">
     <div class="container">
-        <h1 class="logo"><?= $options->title ?></h1>
+        <h1 class="logo"><?= $option->title ?></h1>
         <div class="main">
             <ul class="menu">
                 <li class="<?= $request->currentIndex === 'index.php' ? 'active' : '' ?>">

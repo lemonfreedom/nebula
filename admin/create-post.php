@@ -8,11 +8,11 @@
     <form class="nebula-form" id="postForm" action="/post/create-post" method="POST">
         <div class="form-item">
             <label class="form-label" for="title">标题</label>
-            <input class="nebula-input" id="title" name="title" value="<?= \Nebula\Helpers\Cookie::get('title', '') ?>"></input>
+            <input class="nebula-input" id="title" name="title" value="<?= $cache->get('createPostTitle', '') ?>"></input>
         </div>
         <div class="form-item">
             <label class="form-label" for="tid">分类</label>
-            <select class="nebula-select" id="tid" name="tid" value="<?= \Nebula\Helpers\Cookie::get('title', '') ?>">
+            <select class="nebula-select" id="tid" name="tid" value="<?= $cache->get('createPostTid', '') ?>">
                 <option value="0" selected>分类一</option>
                 <option value="1">分类二</option>
             </select>
@@ -77,7 +77,7 @@
     });
 
     // 表单回填
-    quill.setContents(<?= \Nebula\Helpers\Cookie::get('content', '') ?>);
+    quill.setContents(<?= $cache->get('createPostContent', '') ?>);
 
     document.querySelector('#postSubmitButton').addEventListener('click', function() {
         const postForm = document.querySelector('#postForm');

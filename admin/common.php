@@ -14,8 +14,11 @@ require NEBULA_ROOT_PATH . 'includes/Common.php';
 // 初始化
 \Nebula\Common::init();
 
+// 缓存组件
+\Nebula\Widgets\Cache::alloc()->to($cache);
+
 // 配置组件
-\Nebula\Widgets\Option::alloc()->to($options);
+\Nebula\Widgets\Option::alloc()->to($option);
 
 // 用户组件
 \Nebula\Widgets\User::alloc()->to($user);
