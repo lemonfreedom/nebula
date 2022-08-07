@@ -2,18 +2,19 @@
     background-color: $color-primary;
 
     .container {
+        height: 3.6rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 1.6rem;
 
         .logo {
+            height: 100%;
             font-size: 1.4rem;
             color: #fff;
             font-weight: bold;
             flex: none;
             margin: 0;
-            height: 3.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -31,12 +32,13 @@
                 display: flex;
                 align-items: center;
                 list-style: none;
+                gap: .3rem;
                 padding: 0;
                 margin: 0;
 
                 li {
                     a {
-                        height: 3.6rem;
+                        height: 3rem;
                         padding: 0 .6rem;
                         display: flex;
                         align-items: center;
@@ -44,6 +46,14 @@
                         color: #fff;
                         font-weight: bold;
                         white-space: nowrap;
+                        border-radius: .4rem;
+                        transition: background-color .2s linear;
+
+                        .avatar {
+                            width: 1.8rem;
+                            height: 1.8rem;
+                            border-radius: .2rem;
+                        }
                     }
 
                     &:hover,
@@ -83,13 +93,16 @@
                     flex-direction: column;
                     align-items: inherit;
                     gap: initial;
+                    width: 3.6rem;
+                    gap: .3rem;
+                    margin-bottom: .3rem;
 
                     li {
                         a {
                             padding: 0;
                             font-size: 1.6rem;
-                            width: 3.6rem;
-                            height: 3.6rem;
+                            width: 3rem;
+                            height: 3rem;
                             justify-content: center;
 
                             .text {
@@ -111,11 +124,13 @@
                 color: #fff;
                 background-color: transparent;
                 font-size: 1.6rem;
-                width: 3.6rem;
-                height: 3.6rem;
+                width: 3rem;
+                height: 3rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                border-radius: .4rem;
+                margin-right: .3rem;
 
                 &:hover {
                     background-color: rgba(0, 0, 1, .1);

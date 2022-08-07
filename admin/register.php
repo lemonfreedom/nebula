@@ -1,5 +1,5 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php $option->boolParse('allowRegister') || $response->redirect('/'); ?>
+<?php $option->get('allowRegister') || $response->redirect('/'); ?>
 <?php $user->hasLogin() && $response->redirect('/'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <div class="nebula-account">

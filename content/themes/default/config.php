@@ -1,7 +1,6 @@
-<?php $themeName = \Nebula\Widgets\Option::alloc()->theme['name']; ?>
 <div class="nebula-title">
     <div>
-        <span>主题配置「<?= $themeName ?>」</span>
+        <span>主题配置「<?= \Nebula\Widgets\Option::alloc()->get('theme')['name'] ?>」</span>
         <a href="/admin/themes.php">返回</a>
     </div>
 </div>

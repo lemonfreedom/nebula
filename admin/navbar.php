@@ -1,7 +1,7 @@
 <?php defined('NEBULA_ROOT_PATH') || exit; ?>
 <div class="nebula-navbar">
     <div class="container">
-        <h1 class="logo"><?= $option->title ?></h1>
+        <h1 class="logo"><?= $option->get('title') ?></h1>
         <div class="main">
             <ul class="menu">
                 <li class="<?= $request->currentIndex === 'index.php' ? 'active' : '' ?>">
@@ -44,10 +44,10 @@
                 <?php endif; ?>
             </ul>
             <ul class="menu">
-                <li>
+                <li class="<?= $request->currentIndex === 'profile.php' ? 'active' : '' ?>">
                     <a href="/admin/profile.php?uid=<?= $user->get('uid') ?>">
-                        <i class="bi bi-person"></i>
-                        <span class="text">您好，<?= $user->get('nickname') ?></span>
+                        <img class="avatar" src="https://www.gravatar.com/avatar/<?= md5('nbacms@gmail.com') ?>" alt="">
+                        <span class="text"><?= $user->get('nickname') ?></span>
                     </a>
                 </li>
                 <li>

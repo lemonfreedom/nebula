@@ -24,7 +24,7 @@ class Theme extends Base
     {
         if (null === $this->themeList) {
             // 已启用主题
-            $theme = Option::alloc()->theme;
+            $theme = Option::alloc()->get('theme');
 
             // 主题目录列表
             $themeDirs = glob(NEBULA_ROOT_PATH . 'content/themes/*/');
@@ -63,7 +63,7 @@ class Theme extends Base
     private function enable()
     {
         // 已启用主题
-        $theme = Option::alloc()->theme;
+        $theme = Option::alloc()->get('theme');
 
         $themeName = $this->params['themeName'];
 
@@ -96,7 +96,7 @@ class Theme extends Base
     private function updateConfig()
     {
         // 已启用主题
-        $theme = Option::alloc()->theme;
+        $theme = Option::alloc()->get('theme');
 
         $data = $this->request->post();
 
@@ -127,7 +127,7 @@ class Theme extends Base
     public function config()
     {
         // 启用主题信息
-        $theme = Option::alloc()->theme;
+        $theme = Option::alloc()->get('theme');
 
         // 是否具备配置功能
         if ([] === $theme['config']) {

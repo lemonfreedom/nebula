@@ -42,7 +42,7 @@ class Response
     public function render($fileName, $data = [])
     {
         // 当前主题
-        $theme = Option::alloc()->theme;
+        $theme = Option::alloc()->get('theme');
         $data['theme_config'] = $theme['config'];
 
         header('Content-Type: text/html; charset=utf-8');

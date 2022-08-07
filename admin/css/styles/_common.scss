@@ -15,6 +15,7 @@ a {
     color: $color-primary;
     text-decoration: none;
     outline: none;
+    transition: color .2s linear;
 
     &:hover,
     &:focus {
@@ -84,6 +85,7 @@ a {
 
         a {
             color: #404040;
+            transition: color .2s linear;
         }
 
         &::after {
@@ -94,6 +96,7 @@ a {
             position: absolute;
             left: 0;
             bottom: 0px;
+            transition: background-color .2s linear;
         }
 
         &:hover::after {

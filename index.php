@@ -21,3 +21,5 @@ require NEBULA_ROOT_PATH . 'includes/Common.php';
 
 // 注册一个结束插件
 \Nebula\Plugin::factory('index.php')->end();
+
+

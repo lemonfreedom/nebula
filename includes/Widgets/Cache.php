@@ -68,11 +68,9 @@ class Cache extends Base
     {
         $name = $this->cacheId . '@' . $name;
 
-        $cacheNames = array_map(function ($cache) {
+        $index = array_search($name, array_map(function ($cache) {
             return $cache['name'];
-        }, $this->caches);
-
-        $index = array_search($name, $cacheNames);
+        }, $this->caches));
 
         if (false === $index) {
             $this->db->insert('caches', [

@@ -72,7 +72,7 @@ class Mail
      */
     public function __construct($host = null, $port = null, $username = null, $password = null, $name = null, $email = null)
     {
-        $smtpOption = Option::alloc()->smtp;
+        $smtpOption = Option::alloc()->get('smtp');
 
         $this->host = null === $host ? $smtpOption['host'] : $host;
         $this->port = null === $port ? $smtpOption['port'] : $port;
@@ -108,7 +108,7 @@ class Mail
             $this->mail->setFrom($this->email, $this->name);
             $this->mail->addAddress($address);
             $this->mail->isHTML(true);
-            $this->mail->Subject = Option::alloc()->title . ' 验证码';
+            $this->mail->Subject = Option::alloc()->get('title') . ' 验证码';
 
             $this->mail->Body = '您的验证码是：' . $code;
 

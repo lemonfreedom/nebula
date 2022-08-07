@@ -8,56 +8,95 @@ use Nebula\Helpers\Validate;
 
 class Option extends Base
 {
+    /**
+     * @var array
+     */
+    private $options = [];
+
     public function execute()
     {
-        $options = $this->db->select('options', ['name', 'value']);
+        $this->options = $this->db->select('options', ['name', 'value']);
 
-        foreach ($options as $option) {
-            $this->{$option['name']} = $option['value'];
+        foreach ($this->options as $index => $option) {
+            // 布尔选项处理
+            if ('allowRegister' === $option['name']) {
+                $this->options[$index]['value'] = '1' === $this->options[$index]['value'];
+            }
+
+            // 选项去序列化处理
+            if (in_array($option['name'], ['smtp', 'plugins', 'theme'])) {
+                $this->options[$index]['value'] = unserialize($this->options[$index]['value']);
+            }
         }
+    }
 
-        $this->smtp = unserialize($this->smtp);
-        $this->plugins = unserialize($this->plugins);
-        $this->theme = unserialize($this->theme);
+    /**
+     * 获取选项
+     *
+     * @param null|string $name 选项名
+     * @param null|string $defaultValue 默认值
+     * @return null|string|array
+     */
+    public function get($name = null, $defaultValue = null)
+    {
+        if (null === $name) {
+            return $this->options;
+        } else {
+            return array_values(array_filter($this->options, function ($option) use ($name) {
+                return $option['name'] === $name;
+            }))[0]['value'] ?? $defaultValue;
+        }
     }
 
     /**
      * 设置配置项
      *
-     * @param string $name 配置键
-     * @param string $value 配置值
+     * @param string $name 选项名
+     * @param string $value 选项值
      * @return void
      */
-    public function setOption($name, $value)
+    public function set($name, $value)
     {
-        if (isset($this->$name)) {
-            if ($this->$name !== $value) {
-                $this->db->update('options', ['value' => $value], ['name' => $name]);
-            }
-        } else {
-            $this->db->insert('options', ['name' => $name, 'value' => $value]);
-        }
+        $name = $this->cacheId . '@' . $name;
 
-        $this->$name = $value;
+        $index = array_search($name, array_map(function ($option) {
+            return $option['name'];
+        }, $this->options));
+
+        if (false === $index) {
+            $this->db->insert('options', [
+                'name' => $name,
+                'value' => $value,
+            ]);
+            array_push($this->options, ['name' => $name, 'value' => $value]);
+        } else {
+            if ($this->options[$index]['value'] !== $value) {
+                $this->db->update('options', [
+                    'value' => $value,
+                ], ['name' => $name]);
+                $this->options[$index]['value'] = $value;
+            }
+        }
     }
 
+
     /**
-     * 设置多个配置项
+     * 设置多个选项项
      *
-     * @param array $options 配置项列表
+     * @param array $options 选项列表
      * @return void
      */
-    public function setOptions($options)
+    public function sets($options)
     {
         foreach ($options as $name => $value) {
-            $this->setOption($name, $value);
+            $this->set($name, $value);
         }
     }
 
     /**
-     * 删除配置项
+     * 删除选项
      *
-     * @param string $name 配置键
+     * @param string $name 选项名称
      * @return void
      */
     public function deleteOption($name)
@@ -66,9 +105,9 @@ class Option extends Base
     }
 
     /**
-     * 删除多项配置
+     * 删除多项选项
      *
-     * @param array $names 配置键列表
+     * @param array $names 选项名称列表
      * @return void
      */
     public function deleteOptions($names)
@@ -79,22 +118,7 @@ class Option extends Base
     }
 
     /**
-     * 布尔配置解析
-     *
-     * @param string $name 配置键
-     * @return bool
-     */
-    public function boolParse($name)
-    {
-        if (isset($this->$name)) {
-            return $this->$name === '1';
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 更新基本配置
+     * 更新基本选项
      *
      * @return void
      */
@@ -126,11 +150,11 @@ class Option extends Base
         }
 
         // 站点名称
-        $this->setOption('title', $data['title'] ?? $this->title);
+        $this->set('title', $data['title'] ?? $this->title);
         // 站点描述
-        $this->setOption('description', $data['description'] ?? $this->description);
+        $this->set('description', $data['description'] ?? $this->description);
         // 是否允许注册
-        $this->setOption('allowRegister', $data['allowRegister']);
+        $this->set('allowRegister', $data['allowRegister']);
 
         Notice::alloc()->set('保存成功', 'success');
         $this->response->redirect('/admin/options.php');
@@ -185,7 +209,7 @@ class Option extends Base
     }
 
     /**
-     * 更新 SMTP 配置
+     * 更新 SMTP 选项
      *
      * @return void
      */
@@ -226,7 +250,7 @@ class Option extends Base
         }
 
         // 更新
-        $this->setOption('smtp', serialize([
+        $this->set('smtp', serialize([
             'host' => $data['host'],
             'username' => $data['username'],
             'password' => $data['password'],
@@ -248,25 +272,15 @@ class Option extends Base
     {
         $action = $this->params['action'];
 
-        // 更新基本配置
+        // 更新基本选项
         $this->on($action === 'update-basic')->updateBasic();
 
         // 发送测试邮件
         $this->on($action === 'send-test-mail')->sendTestMail();
 
-        // 更新 SMTP 配置
+        // 更新 SMTP 选项
         $this->on($action === 'update-smtp')->updateSMTP();
 
         return $this;
-    }
-
-    /**
-     * 访问不存在选项返回 null
-     *
-     * @return string|null
-     */
-    public function __get($name)
-    {
-        return $this->$name ?? null;
     }
 }

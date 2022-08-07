@@ -13,9 +13,10 @@
             </div>
             <button type="submit" class="nebula-button block">登录</button>
         </form>
+        <?php \Nebula\Plugin::factory('admin/login.php')->btn(); ?>
         <div class="tools">
             <a href="/">返回首页</a>
-            <?php if ($option->boolParse('allowRegister')) : ?>
+            <?php if ($option->get('allowRegister')) : ?>
                 <a href="/admin/register.php">立即注册</a>
             <?php endif; ?>
         </div>

@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/admin/katex/katex.min.css" />
     <link rel="stylesheet" href="/admin/quill/quill.snow.css">
     <link rel="stylesheet" href="/admin/css/index.min.css">
+    <?php \Nebula\Plugin::factory('admin/header.php')->link(); ?>
 </head>
 
 <body>

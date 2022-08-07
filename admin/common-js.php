@@ -3,3 +3,4 @@
 <script src="/admin/katex/katex.min.js"></script>
 <script src="/admin/quill/quill.min.js"></script>
 <script src="/admin/js/nebula.js"></script>
+<?php \Nebula\Plugin::factory('admin/common-js.php')->script(); ?>

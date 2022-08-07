@@ -366,10 +366,9 @@ function step3()
         Response::getInstance()->redirect('/install.php?step=2');
     }
 
-    // 修改配置
-    Option::alloc()->setOptions([
-        'title' => $data['title'],
-    ]);
+    // 修改选项
+    Option::alloc()->set('title', $data['title']);
+
     // 创建管理员
     User::alloc()->createUser($data['username'], $data['password'], $data['email'], '0');
 
