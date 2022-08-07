@@ -315,6 +315,7 @@ a {
 }
 
 .nebula-input,
+.nebula-textarea,
 .nebula-select {
     display: inline-block;
     width: 100%;
@@ -326,14 +327,19 @@ a {
     border: 0;
     border-radius: .2rem;
     appearance: none;
-}
-
-.nebula-input {
-    padding: 0 .8rem;
 
     &:focus {
         background-color: #e0e0e0;
     }
+}
+
+.nebula-input {
+    padding: 0 .8rem;
+}
+
+.nebula-textarea {
+    padding: .6rem .8rem;
+    min-height: 10rem;
 }
 
 .nebula-select {
@@ -342,10 +348,6 @@ a {
     background-repeat: no-repeat;
     background-position: right 0.8rem center;
     background-size: 16px 12px;
-
-    &:focus {
-        background-color: #e0e0e0;
-    }
 }
 
 .nebula-switch {

@@ -46,7 +46,7 @@
             <ul class="menu">
                 <li class="<?= $request->currentIndex === 'profile.php' ? 'active' : '' ?>">
                     <a href="/admin/profile.php?uid=<?= $user->get('uid') ?>">
-                        <img class="avatar" src="https://www.gravatar.com/avatar/<?= md5('nbacms@gmail.com') ?>" alt="">
+                        <img class="avatar" src="" alt="">
                         <span class="text"><?= $user->get('nickname') ?></span>
                     </a>
                 </li>
