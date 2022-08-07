@@ -7,7 +7,7 @@ use Nebula\Helpers\Cookie;
 use Nebula\Helpers\Mail;
 use Nebula\Helpers\Validate;
 
-class User extends Base
+class User extends Database
 {
     /**
      * 是否已登陆

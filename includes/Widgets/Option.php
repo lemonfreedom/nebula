@@ -6,7 +6,7 @@ use Nebula\Helpers\Mail;
 use Nebula\Helpers\PHPMailer\Exception;
 use Nebula\Helpers\Validate;
 
-class Option extends Base
+class Option extends Database
 {
     /**
      * @var array
@@ -57,8 +57,6 @@ class Option extends Base
      */
     public function set($name, $value)
     {
-        $name = $this->cacheId . '@' . $name;
-
         $index = array_search($name, array_map(function ($option) {
             return $option['name'];
         }, $this->options));

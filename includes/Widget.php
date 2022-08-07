@@ -35,13 +35,6 @@ class Widget
     protected $params;
 
     /**
-     * 数据库对象
-     *
-     * @var Medoo
-     */
-    protected $db;
-
-    /**
      * 构造函数
      *
      * @param Request $request Request 对象

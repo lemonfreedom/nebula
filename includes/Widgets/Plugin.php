@@ -7,7 +7,7 @@ use Nebula\Helpers\Renderer;
 use Nebula\Helpers\Validate;
 use Nebula\Plugin as NebulaPlugin;
 
-class Plugin extends Base
+class Plugin extends Database
 {
     /**
      * 插件列表

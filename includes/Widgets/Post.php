@@ -5,7 +5,7 @@ namespace Nebula\Widgets;
 use Nebula\Helpers\Cookie;
 use Nebula\Helpers\Validate;
 
-class Post extends Base
+class Post extends Database
 {
     /**
      * 获取指定文章信息

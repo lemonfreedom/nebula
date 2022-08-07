@@ -6,7 +6,7 @@ use Nebula\Common;
 use Nebula\Helpers\Renderer;
 use Nebula\Helpers\Validate;
 
-class Theme extends Base
+class Theme extends Database
 {
     /**
      * 插件列表

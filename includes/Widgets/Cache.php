@@ -5,7 +5,7 @@ namespace Nebula\Widgets;
 use Nebula\Common;
 use Nebula\Helpers\Cookie;
 
-class Cache extends Base
+class Cache extends Database
 {
     /**
      * 缓存 id

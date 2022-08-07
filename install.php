@@ -4,6 +4,7 @@ use Nebula\Helpers\Medoo;
 use Nebula\Helpers\Validate;
 use Nebula\Request;
 use Nebula\Response;
+use Nebula\Widgets\Database;
 use Nebula\Widgets\Notice;
 use Nebula\Widgets\Option;
 use Nebula\Widgets\User;
@@ -39,7 +40,7 @@ function has_been_init()
 // 检查管理员是否存在
 function administrator_exists()
 {
-    return \Nebula\Widgets\Option::alloc()->db->count('users') > 0;
+    return Database::alloc()->db->count('users', ['gid' => '0']) > 0;
 }
 
 // 安装已完成跳出安装程序
@@ -195,7 +196,7 @@ function step2()
                 'option' => [PDO::ATTR_CASE => PDO::CASE_NATURAL],
                 'command' => ['SET SQL_MODE=ANSI_QUOTES'],
             ]);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             Notice::alloc()->set('数据库连接失败：' . $e->getMessage(), 'warning');
             Response::getInstance()->redirect('/install.php?step=1');
         }
@@ -281,7 +282,7 @@ EOT;
                     'expires' => ['int', 'UNSIGNED', 'NOT NULL'],
                 ]);
             });
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             Notice::alloc()->set('数据库初始化失败：' . $e->getMessage(), 'warning');
             Response::getInstance()->redirect('/install.php?step=1');
         }
@@ -337,9 +338,6 @@ function step3()
     if (!has_been_init()) {
         Response::getInstance()->redirect('/install.php?step=1');
     }
-
-    // 缓存初始化
-    \Nebula\Common::init();
 
     // 存在管理员退出安装程序
     if (administrator_exists()) {

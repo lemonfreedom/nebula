@@ -5,7 +5,7 @@ namespace Nebula\Widgets;
 use Nebula\Helpers\Medoo;
 use Nebula\Widget;
 
-abstract class Base extends Widget
+class Database extends Widget
 {
     /**
      * @var Medoo
