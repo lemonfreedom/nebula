@@ -28,6 +28,7 @@ namespace {
 
 namespace Nebula {
 
+    use Nebula\Widgets\Cache;
     use Nebula\Widgets\Option;
 
     class Common
@@ -45,6 +46,9 @@ namespace Nebula {
                     exit;
                 });
             }
+
+            // 缓存初始化
+            Cache::alloc();
 
             // 选项初始化
             $option = Option::alloc();

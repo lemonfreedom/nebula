@@ -338,6 +338,9 @@ function step3()
         Response::getInstance()->redirect('/install.php?step=1');
     }
 
+    // 缓存初始化
+    \Nebula\Common::init();
+
     // 存在管理员退出安装程序
     if (administrator_exists()) {
         Response::getInstance()->redirect('/');
