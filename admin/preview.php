@@ -5,12 +5,8 @@
 <?php $postInfo = \Nebula\Widgets\Post::alloc(['pid' => $request->get('pid', '')])->get() ?>
 <div class="container">
     <h1><?= $postInfo['title'] ?></h1>
-    <p id="content"></p>
+    <p><?= $postInfo['content'] ?></p>
 </div>
 <?php require __DIR__ . '/copyright.php'; ?>
 <?php require __DIR__ . '/common-js.php'; ?>
-<script>
-    var md = window.markdownit();
-    document.querySelector('#content').innerHTML = md.render(`> a\n > b\n> s`);
-</script>
 <?php require __DIR__ . '/footer.php'; ?>
