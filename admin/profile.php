@@ -3,7 +3,7 @@
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $action = $request->get('action'); ?>
-<?php $userInfo = \Nebula\Widgets\User::allocAlias($request->get('uid'), ['uid' => $request->get('uid')])->get(); ?>
+<?php $userInfo = \Nebula\Widgets\User::factory(['uid' => $request->get('uid')], 'render')->getUserInfo(); ?>
 <?php null === $userInfo && $response->redirect('/admin'); ?>
 <div class="container">
     <div class="nebula-tabs">

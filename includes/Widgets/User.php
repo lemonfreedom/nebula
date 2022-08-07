@@ -4,7 +4,6 @@ namespace Nebula\Widgets;
 
 use Nebula\Common;
 use Nebula\Helpers\Cookie;
-use Nebula\Helpers\Mail;
 use Nebula\Helpers\Validate;
 
 class User extends Database
@@ -68,17 +67,28 @@ class User extends Database
     }
 
     /**
-     * 判断用户角色是否存在某角色列表中
+     * 获取指定用户信息，若参数为空，则查询登陆用户信息
      *
-     * @param array $roles 角色列表
-     * @return bool
+     * @param null｜string $key 字段名
+     * @param string $defaultValue 默认值
+     * @return mixed
      */
-    public function inRole($roles)
+    public function getUserInfo($key = null, $defaultValue = '')
     {
-        if ($this->hasLogin()) {
-            return in_array($this->get('role'), $roles);
+        $userInfo = null;
+
+        $uid = $this->params('uid');
+
+        if (null === $uid) {
+            $userInfo = $this->loginUserInfo;
         } else {
-            return false;
+            $userInfo = $this->db->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
+        }
+
+        if (null === $key) {
+            return $userInfo;
+        } else {
+            return $userInfo[$key] ?? $defaultValue;
         }
     }
 
@@ -100,27 +110,36 @@ class User extends Database
     }
 
     /**
-     * 获取指定用户信息，若参数为空，则查询登陆用户信息
+     * 获取用户列表
      *
-     * @param null｜string $key 字段名
-     * @param string $defaultValue 默认值
-     * @return mixed
+     * @return array 用户列表
      */
-    public function get($key = null, $defaultValue = '')
+    public function getUserList()
     {
-        $uid = $this->params['uid'] ?? null;
-        $userInfo = null;
+        $keyword = trim($this->params('keyword'));
 
-        if (null === $uid) {
-            $userInfo = $this->loginUserInfo;
-        } else {
-            $userInfo = $this->db->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
-        }
+        return $this->db->select('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], [
+            'OR' => [
+                'uid[~]' => $keyword,
+                'username[~]' => $keyword,
+                'email[~]' => $keyword,
+                'nickname[~]' => $keyword,
+            ],
+        ]);
+    }
 
-        if (null === $key) {
-            return $userInfo;
+    /**
+     * 判断用户角色是否存在某角色列表中
+     *
+     * @param array $roles 角色列表
+     * @return bool
+     */
+    public function inRole($roles)
+    {
+        if ($this->hasLogin()) {
+            return in_array($this->getUserInfo('role'), $roles);
         } else {
-            return $userInfo[$key] ?? $defaultValue;
+            return false;
         }
     }
 
@@ -148,9 +167,9 @@ class User extends Database
         ]);
         // 表单验证
         if (!$validate->run()) {
-            Cache::alloc()->set('loginAccount', $this->request->post('account', ''));
+            Cache::factory()->set('loginAccount', $this->request->post('account', ''));
 
-            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/login.php');
         }
 
@@ -175,9 +194,9 @@ class User extends Database
 
             $this->response->redirect('/admin');
         } else {
-            Cache::alloc()->set('loginAccount', $this->request->post('account', ''));
+            Cache::factory()->set('loginAccount', $this->request->post('account', ''));
 
-            Notice::alloc()->set('登录失败', 'warning');
+            Notice::factory()->set('登录失败', 'warning');
             $this->response->redirect('/admin/login.php');
         }
     }
@@ -216,44 +235,44 @@ class User extends Database
             ],
         ]);
         if (!$validate->run()) {
-            Cache::alloc()->set('registerUsername', $this->request->post('username', ''));
-            Cache::alloc()->set('registerEmail', $this->request->post('email', ''));
-            Cache::alloc()->set('registerCode', $this->request->post('code', ''));
+            Cache::factory()->set('registerUsername', $this->request->post('username', ''));
+            Cache::factory()->set('registerEmail', $this->request->post('email', ''));
+            Cache::factory()->set('registerCode', $this->request->post('code', ''));
 
-            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/register.php');
         }
 
         // 验证码是否正确
         if (!Common::hashValidate($data['email'] . $data['code'], Cookie::get('code_hash', ''))) {
-            Cache::alloc()->set('registerUsername', $this->request->post('username', ''));
-            Cache::alloc()->set('registerEmail', $this->request->post('email', ''));
+            Cache::factory()->set('registerUsername', $this->request->post('username', ''));
+            Cache::factory()->set('registerEmail', $this->request->post('email', ''));
 
-            Notice::alloc()->set('验证码错误', 'warning');
+            Notice::factory()->set('验证码错误', 'warning');
             $this->response->redirect('/admin/register.php');
         }
 
         // 用户名是否存在
         if ($this->db->has('users', ['username' => $data['username']])) {
-            Cache::alloc()->set('registerEmail', $this->request->post('email', ''));
-            Cache::alloc()->set('registerCode', $this->request->post('code', ''));
+            Cache::factory()->set('registerEmail', $this->request->post('email', ''));
+            Cache::factory()->set('registerCode', $this->request->post('code', ''));
 
-            Notice::alloc()->set('用户名已存在', 'warning');
+            Notice::factory()->set('用户名已存在', 'warning');
             $this->response->redirect('/admin/register.php');
         }
 
         // 邮箱是否存在
         if ($this->db->has('users', ['email' => $data['email']])) {
-            Cache::alloc()->set('registerUsername', $this->request->post('username', ''));
+            Cache::factory()->set('registerUsername', $this->request->post('username', ''));
 
-            Notice::alloc()->set('邮箱已存在', 'warning');
+            Notice::factory()->set('邮箱已存在', 'warning');
             $this->response->redirect('/admin/register.php');
         }
 
         // 插入数据
         $this->createUser($data['username'], $data['password'], $data['email']);
 
-        Notice::alloc()->set('注册成功', 'success');
+        Notice::factory()->set('注册成功', 'success');
         $this->response->redirect('/admin/login.php');
     }
 
@@ -287,17 +306,17 @@ class User extends Database
             $this->response->redirect('/admin/login.php');
         }
 
-        $uid = $this->params['uid'];
+        $uid = $this->params('uid');
 
         // 修改用户不存在
         if (!$this->db->has('users', ['uid' => $uid])) {
-            Notice::alloc()->set('未知用户', 'error');
+            Notice::factory()->set('未知用户', 'error');
             $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
         }
 
         // 不是修改当前登陆用户，那么必须是管理员权限
         if ($this->loginUserInfo['uid'] !== $uid && !$this->inRole(['0'])) {
-            Notice::alloc()->set('非法请求', 'error');
+            Notice::factory()->set('非法请求', 'error');
             $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
         }
 
@@ -313,7 +332,7 @@ class User extends Database
             ],
         ]);
         if (!$validate->run()) {
-            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/profile.php?uid=' . $uid);
         }
 
@@ -321,14 +340,14 @@ class User extends Database
 
         // 用户名是否存在
         if (null !== $userInfo && $userInfo['uid'] !== $uid) {
-            Notice::alloc()->set('用户名已存在', 'warning');
+            Notice::factory()->set('用户名已存在', 'warning');
             $this->response->redirect('/admin/profile.php?uid=' . $uid);
         }
 
         // 邮箱是否存在
         $userInfo = $this->db->get('users', ['uid'], ['email' => $data['email']]);
         if (null !== $userInfo && $userInfo['uid'] !== $uid) {
-            Notice::alloc()->set('邮箱已存在', 'warning');
+            Notice::factory()->set('邮箱已存在', 'warning');
             $this->response->redirect('/admin/profile.php?uid=' . $uid);
         }
 
@@ -339,7 +358,7 @@ class User extends Database
             'email' => $data['email'],
         ], ['uid' => $uid]);
 
-        Notice::alloc()->set('修改成功', 'success');
+        Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/profile.php?uid=' . $uid);
     }
 
@@ -355,17 +374,17 @@ class User extends Database
             $this->response->redirect('/admin/login.php');
         }
 
-        $uid = $this->params['uid'];
+        $uid = $this->params('uid');
 
         // 修改用户不存在
         if (!$this->db->has('users', ['uid' => $uid])) {
-            Notice::alloc()->set('未知用户', 'error');
+            Notice::factory()->set('未知用户', 'error');
             $this->response->redirect('/admin/profile.php?action=password&uid=' . $this->loginUserInfo['uid']);
         }
 
         // 不是修改当前登陆用户，那么必须是管理员权限
         if ($this->loginUserInfo['uid'] !== $uid && !$this->inRole(['0'])) {
-            Notice::alloc()->set('非法请求', 'error');
+            Notice::factory()->set('非法请求', 'error');
             $this->response->redirect('/admin/profile.php?action=password&uid=' . $this->loginUserInfo['uid']);
         }
 
@@ -382,7 +401,7 @@ class User extends Database
             ],
         ]);
         if (!$validate->run()) {
-            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/profile.php?action=password&uid=' . $uid);
         }
 
@@ -392,7 +411,7 @@ class User extends Database
             'token' => '',
         ], ['uid' => $uid]);
 
-        Notice::alloc()->set('修改成功', 'success');
+        Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/profile.php?action=password&uid=' . $uid);
     }
 
@@ -405,15 +424,15 @@ class User extends Database
     {
         // 是否是管理员
         if (!$this->inRole(['0'])) {
-            Notice::alloc()->set('非法请求', 'error');
+            Notice::factory()->set('非法请求', 'error');
             $this->response->redirect('/admin/profile.php?action=permission&uid=' . $this->loginUserInfo['uid']);
         }
 
-        $uid = $this->params['uid'];
+        $uid = $this->params('uid');
 
         // 修改用户不存在
         if (!$this->db->has('users', ['uid' => $uid])) {
-            Notice::alloc()->set('未知用户', 'error');
+            Notice::factory()->set('未知用户', 'error');
             $this->response->redirect('/admin/profile.php?action=permission&uid=' . $this->loginUserInfo['uid']);
         }
 
@@ -427,7 +446,7 @@ class User extends Database
             ],
         ]);
         if (!$validate->run()) {
-            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/profile.php?action=permission&uid=' . $uid);
         }
 
@@ -436,7 +455,7 @@ class User extends Database
             'role' => $data['role'],
         ], ['uid' => $uid]);
 
-        Notice::alloc()->set('修改成功', 'success');
+        Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/profile.php?action=permission&uid=' . $uid);
     }
 
@@ -470,27 +489,9 @@ class User extends Database
         }
 
         // 发送邮件
-        Mail::getInstance()->sendCaptcha($data['email']);
+        Mail::factory()->sendCaptcha($data['email']);
 
         $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
-    }
-
-    /**
-     * 获取用户列表
-     *
-     * @return array 用户列表
-     */
-    public function getUserList()
-    {
-        $keyword = trim($this->params['keyword']);
-        return $this->db->select('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], [
-            'OR' => [
-                'uid[~]' => $keyword,
-                'username[~]' => $keyword,
-                'email[~]' => $keyword,
-                'nickname[~]' => $keyword,
-            ],
-        ]);
     }
 
     /**
@@ -515,12 +516,10 @@ class User extends Database
 
     /**
      * 行动方法
-     *
-     * @return $this
      */
     public function action()
     {
-        $action = $this->params['action'];
+        $action = $this->params('action');
 
         // 登录
         $this->on($action === 'login')->login();
@@ -542,7 +541,5 @@ class User extends Database
 
         // 发送注册验证码
         $this->on($action === 'send-register-captcha')->sendRegisterCaptcha();
-
-        return $this;
     }
 }

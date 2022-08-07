@@ -1,14 +1,16 @@
 <?php
 
-namespace Nebula\Helpers;
+namespace Nebula\Widgets;
 
 use Nebula\Common;
-use Nebula\PHPMailer\Exception;
-use Nebula\PHPMailer\PHPMailer;
+use Nebula\Helpers\Cookie;
+use Nebula\Helpers\PHPMailer\Exception;
+use Nebula\Helpers\PHPMailer\PHPMailer;
 use Nebula\Response;
+use Nebula\Widget;
 use Nebula\Widgets\Option;
 
-class Mail
+class Mail extends Widget
 {
     /**
      * 连接对象
@@ -16,13 +18,6 @@ class Mail
      * @var PHPMailer
      */
     private $mail;
-
-    /**
-     * 单例实例
-     *
-     * @var Request
-     */
-    private static $instance;
 
     /**
      * 主机地址
@@ -70,16 +65,16 @@ class Mail
      * @param null|string $email
      * @return void
      */
-    public function __construct($host = null, $port = null, $username = null, $password = null, $name = null, $email = null)
+    public function execute()
     {
-        $smtpOption = Option::factory()->get('smtp');
+        $smtp = Option::factory()->get('smtp');
 
-        $this->host = null === $host ? $smtpOption['host'] : $host;
-        $this->port = null === $port ? $smtpOption['port'] : $port;
-        $this->username = null === $username ? $smtpOption['username'] : $username;
-        $this->password = null === $password ? $smtpOption['password'] : $password;
-        $this->name = null === $name ? $smtpOption['name'] : $name;
-        $this->email = null === $email ? $smtpOption['email'] : $email;
+        $this->host = null === $this->params('host', $smtp['host']);
+        $this->port = null === $this->params('port', $smtp['port']);
+        $this->username = null === $this->params('username', $smtp['username']);
+        $this->password = null === $this->params('password', $smtp['password']);
+        $this->name = null === $this->params('name', $smtp['name']);
+        $this->email = null === $this->params('email', $smtp['email']);
 
         // 初始化
         $this->mail = new PHPMailer(true);
@@ -146,24 +141,5 @@ class Mail
         $this->mail->Body = $html;
 
         $this->mail->send();
-    }
-
-    /**
-     * 获取单例实例
-     *
-     * @param null|string $host
-     * @param null|int $port
-     * @param null|string $username
-     * @param null|string $password
-     * @param null|string $name
-     * @return Mail
-     */
-    public static function getInstance($host = null, $port = null, $username = null, $password = null, $name = null)
-    {
-        if (!isset(self::$instance)) {
-            self::$instance = new self($host, $port, $username, $password, $name);
-        }
-
-        return self::$instance;
     }
 }

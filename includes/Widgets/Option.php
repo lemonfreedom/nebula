@@ -2,7 +2,6 @@
 
 namespace Nebula\Widgets;
 
-use Nebula\Helpers\Mail;
 use Nebula\Helpers\PHPMailer\Exception;
 use Nebula\Helpers\Validate;
 
@@ -123,8 +122,8 @@ class Option extends Database
     public function updateBasic()
     {
         // 是否是管理员
-        if (!User::alloc()->inRole(['0'])) {
-            Notice::alloc()->set('非法请求', 'error');
+        if (!User::factory()->inRole(['0'])) {
+            Notice::factory()->set('非法请求', 'error');
             $this->response->redirect('/admin');
         }
 
@@ -143,7 +142,7 @@ class Option extends Database
         ]);
 
         if (!$validate->run()) {
-            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/options.php');
         }
 
@@ -154,7 +153,7 @@ class Option extends Database
         // 是否允许注册
         $this->set('allowRegister', $data['allowRegister']);
 
-        Notice::alloc()->set('保存成功', 'success');
+        Notice::factory()->set('保存成功', 'success');
         $this->response->redirect('/admin/options.php');
     }
 
@@ -166,7 +165,7 @@ class Option extends Database
     private function sendTestMail()
     {
         // 是否是管理员
-        if (!User::alloc()->inRole(['0'])) {
+        if (!User::factory()->inRole(['0'])) {
             $this->response->sendJSON(['errorCode' => 1, 'type' => 'error', 'message' => '非法请求']);
         }
 
@@ -198,7 +197,14 @@ class Option extends Database
         }
 
         try {
-            Mail::getInstance($data['host'], $data['port'], $data['username'], $data['password'], $data['name'], $data['email'])->sendHTML(User::alloc()->get('email'), '测试邮件', '这是一封测试邮件');
+            Mail::factory([
+                'host' => $data['host'],
+                'port' => $data['port'],
+                'username' => $data['username'],
+                'password' => $data['password'],
+                'name' => $data['name'],
+                'email' => $data['email'],
+            ])->sendHTML(User::factory()->get('email'), '测试邮件', '这是一封测试邮件');
 
             $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
         } catch (Exception $e) {
@@ -214,8 +220,8 @@ class Option extends Database
     public function updateSMTP()
     {
         // 是否是管理员
-        if (!User::alloc()->inRole(['0'])) {
-            Notice::alloc()->set('非法请求', 'error');
+        if (!User::factory()->inRole(['0'])) {
+            Notice::factory()->set('非法请求', 'error');
             $this->response->redirect('/admin');
         }
 
@@ -243,7 +249,7 @@ class Option extends Database
         ]);
 
         if (!$validate->run()) {
-            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/options.php?action=smtp');
         }
 
@@ -257,18 +263,16 @@ class Option extends Database
             'email' => $data['email'],
         ]));
 
-        Notice::alloc()->set('保存成功', 'success');
+        Notice::factory()->set('保存成功', 'success');
         $this->response->redirect('/admin/options.php?action=smtp');
     }
 
     /**
      * 行动方法
-     *
-     * @return $this
      */
     public function action()
     {
-        $action = $this->params['action'];
+        $action = $this->params('action');
 
         // 更新基本选项
         $this->on($action === 'update-basic')->updateBasic();
@@ -278,7 +282,5 @@ class Option extends Database
 
         // 更新 SMTP 选项
         $this->on($action === 'update-smtp')->updateSMTP();
-
-        return $this;
     }
 }

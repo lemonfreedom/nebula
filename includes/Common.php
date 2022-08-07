@@ -48,10 +48,10 @@ namespace Nebula {
             }
 
             // 缓存初始化
-            Cache::alloc();
+            Cache::factory();
 
             // 选项初始化
-            $option = Option::alloc();
+            $option = Option::factory();
 
             // 插件初始化
             Plugin::init($option->get('plugins'));

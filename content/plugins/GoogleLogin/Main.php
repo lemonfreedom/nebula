@@ -21,7 +21,7 @@ class Main
      */
     public static function activate()
     {
-        Plugin::factory('admin/login.php')->btn = __CLASS__ . '::render';
+        Plugin::factory('admin/login.php')->button = __CLASS__ . '::render';
     }
 
     /**

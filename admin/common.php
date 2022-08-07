@@ -15,13 +15,13 @@ require NEBULA_ROOT_PATH . 'includes/Common.php';
 \Nebula\Common::init();
 
 // 缓存组件
-\Nebula\Widgets\Cache::alloc()->to($cache);
+\Nebula\Widgets\Cache::factory()->to($cache);
 
 // 配置组件
-\Nebula\Widgets\Option::alloc()->to($option);
+\Nebula\Widgets\Option::factory()->to($option);
 
 // 用户组件
-\Nebula\Widgets\User::alloc()->to($user);
+\Nebula\Widgets\User::factory()->to($user);
 
 // 请求对象
 $request = \Nebula\Request::getInstance();

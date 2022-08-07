@@ -11,27 +11,12 @@ class Router
      */
     private static $routerWidgetMap = [
         'index' => [
-            // 映射组件
             'widget' => '\Nebula\Widgets\Index',
             'action' => 'render',
-            // 映射参数键及默认值
             'params' => [],
-        ],
-        'user' => [
-            'widget' => '\Nebula\Widgets\User',
-            'params' => [
-                'action' => '',
-                'uid' => null,
-            ],
         ],
         'option' => [
             'widget' => '\Nebula\Widgets\Option',
-            'params' => [
-                'action' => '',
-            ],
-        ],
-        'post' => [
-            'widget' => '\Nebula\Widgets\Post',
             'params' => [
                 'action' => '',
             ],
@@ -48,6 +33,13 @@ class Router
             'params' => [
                 'action' => '',
                 'themeName' => '',
+            ],
+        ],
+        'user' => [
+            'widget' => '\Nebula\Widgets\User',
+            'params' => [
+                'action' => '',
+                'uid' => null,
             ],
         ],
     ];
@@ -77,11 +69,9 @@ class Router
 
             // 行动方法
             $action =  $actionOption['action'] ?? 'action';
+
             // 执行组件
-            Widget::factory(
-                $actionOption['widget'],
-                array_combine($paramkeys, $mergedValues)
-            )->$action();
+            $actionOption['widget']::factory(array_combine($paramkeys, $mergedValues), 'dispatch')->$action();
         } else {
             Response::getInstance()->render('404');
         }

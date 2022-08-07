@@ -32,73 +32,60 @@ class Widget
      *
      * @var array
      */
-    protected $params;
+    private $params;
 
     /**
      * 构造函数
      *
      * @param Request $request Request 对象
      * @param Response $response Response 对象
-     * @param array $params 参数
      * @return void
      */
-    public function __construct($params)
+    public function __construct()
     {
         $this->request = Request::getInstance();
         $this->response = Response::getInstance();
-        $this->params = $params;
-
-        // 初始化
-        $this->init();
-    }
-
-    /**
-     * 获取组件实例
-     *
-     * @param array $params 参数
-     * @return object 组件实例
-     */
-    public static function alloc($params = [])
-    {
-        return self::factory(static::class, $params);
-    }
-
-    /**
-     * 重新执行实例并写入别名实例
-     *
-     * @param string $alias 别名
-     * @param array $params 参数
-     * @return object 组件实例
-     */
-    public static function allocAlias($alias, $params = [])
-    {
-        return self::factory(static::class . '@' . $alias, $params);
     }
 
     /**
      * 工厂方法
      *
-     * @param string $alias 别名
      * @param array $params 参数
+     * @param null|string $alias 组件别名
      * @return object 组件实例
      */
-    public static function factory($alias, $params = [])
+    public static function factory($params = [], $alias = null)
     {
+        $alias = null === $alias ? static::class : static::class . '@' . $alias;
+
         // 判断组件池是否存在当前组件
         if (!isset(self::$widgetPool[$alias])) {
-            try {
-                $className = explode('@', $alias)[0];
-                $widget = new $className($params);
-                $widget->execute();
-            } catch (\Throwable $th) {
-                $widget = $widget ?? null;
-                throw $th;
-            }
+            $className = static::class;
+            $widget = new $className();
+
+            $widget->params = $params;
+            $widget->execute();
 
             self::$widgetPool[$alias] = $widget;
         }
 
         return self::$widgetPool[$alias];
+    }
+
+    /**
+     * 获取参数
+     *
+     * @param null|string $name 参数名
+     * @param null|string $defaultValue 默认值
+     * @return null|string|array
+     */
+    public function params($name = null, $defaultValue = null)
+    {
+        if (null === $name) {
+            return $this->params;
+        } else {
+            return $this->params[$name] ?? $defaultValue;
+        }
     }
 
     /**
@@ -133,15 +120,6 @@ class Widget
      * @return void
      */
     protected function execute()
-    {
-    }
-
-    /**
-     * 初始化方法
-     *
-     * @return void
-     */
-    protected function init()
     {
     }
 }

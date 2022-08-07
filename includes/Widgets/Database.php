@@ -12,8 +12,10 @@ class Database extends Widget
      */
     public $db;
 
-    public function init()
+    public function __construct()
     {
+        parent::__construct();
+
         // 初始化数据库对象
         $this->db = new Medoo(NEBULA_DB_CONFIG);
     }

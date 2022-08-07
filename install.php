@@ -40,7 +40,7 @@ function has_been_init()
 // 检查管理员是否存在
 function administrator_exists()
 {
-    return Database::alloc()->db->count('users', ['gid' => '0']) > 0;
+    return Database::factory()->db->count('users', ['gid' => '0']) > 0;
 }
 
 // 安装已完成跳出安装程序
@@ -172,7 +172,7 @@ function step2()
         ]);
         // 表单验证
         if (!$validate->run()) {
-            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             Response::getInstance()->redirect('/install.php?step=1');
         }
 
@@ -197,7 +197,7 @@ function step2()
                 'command' => ['SET SQL_MODE=ANSI_QUOTES'],
             ]);
         } catch (PDOException $e) {
-            Notice::alloc()->set('数据库连接失败：' . $e->getMessage(), 'warning');
+            Notice::factory()->set('数据库连接失败：' . $e->getMessage(), 'warning');
             Response::getInstance()->redirect('/install.php?step=1');
         }
         $configString = <<<EOT
@@ -261,20 +261,6 @@ EOT;
                     ['name' => 'theme', 'value' => 'a:2:{s:4:"name";s:7:"default";s:6:"config";a:0:{}}'],
                 ]);
 
-                // 创建分类表
-                $db->create('terms', [
-                    'tid' => ['TINYINT', 'UNSIGNED', 'NOT NULL', 'PRIMARY KEY'],
-                    'name' => ['VARCHAR(30)', 'NOT NULL'],
-                ]);
-
-                // 创建文章表
-                $db->create('posts', [
-                    'pid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
-                    'tid' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
-                    'title' => ['VARCHAR(60)', 'NOT NULL'],
-                    'content' => ['LONGTEXT', 'NOT NULL'],
-                ]);
-
                 // 创建缓存表
                 $db->create('caches', [
                     'name' => ['VARCHAR(200)', 'NOT NULL', 'PRIMARY KEY'],
@@ -283,7 +269,7 @@ EOT;
                 ]);
             });
         } catch (PDOException $e) {
-            Notice::alloc()->set('数据库初始化失败：' . $e->getMessage(), 'warning');
+            Notice::factory()->set('数据库初始化失败：' . $e->getMessage(), 'warning');
             Response::getInstance()->redirect('/install.php?step=1');
         }
 
@@ -363,15 +349,15 @@ function step3()
     ]);
     // 表单验证
     if (!$validate->run()) {
-        Notice::alloc()->set($validate->result[0]['message'], 'warning');
+        Notice::factory()->set($validate->result[0]['message'], 'warning');
         Response::getInstance()->redirect('/install.php?step=2');
     }
 
     // 修改选项
-    Option::alloc()->set('title', $data['title']);
+    Option::factory()->set('title', $data['title']);
 
     // 创建管理员
-    User::alloc()->createUser($data['username'], $data['password'], $data['email'], '0');
+    User::factory()->createUser($data['username'], $data['password'], $data['email'], '0');
 
     echo <<<EOT
 <div class="nebula-title">安装成功</div>

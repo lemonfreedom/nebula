@@ -10,12 +10,6 @@
                         <span class="text">仪表盘</span>
                     </a>
                 </li>
-                <li class="<?= $request->currentIndex === 'contents.php' ? 'active' : '' ?>">
-                    <a href="/admin/contents.php">
-                        <i class="bi bi-file-earmark-text"></i>
-                        <span class="text">内容</span>
-                    </a>
-                </li>
                 <?php if ($user->inRole(['0'])) : ?>
                     <li class="<?= $request->currentIndex === 'users.php' ? 'active' : '' ?>">
                         <a href="/admin/users.php">
@@ -45,9 +39,10 @@
             </ul>
             <ul class="menu">
                 <li class="<?= $request->currentIndex === 'profile.php' ? 'active' : '' ?>">
-                    <a href="/admin/profile.php?uid=<?= $user->get('uid') ?>">
-                        <img class="avatar" src="" alt="">
-                        <span class="text"><?= $user->get('nickname') ?></span>
+                    <a href="/admin/profile.php?uid=<?= $user->getUserInfo('uid') ?>">
+                        <!-- <img class="avatar" src="" alt=""> -->
+                        <i class="bi bi-person"></i>
+                        <span class="text"><?= $user->getUserInfo('nickname') ?></span>
                     </a>
                 </li>
                 <li>
