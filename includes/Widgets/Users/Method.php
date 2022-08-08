@@ -47,6 +47,7 @@ class Method extends Widget
 
             // cookie 是否存在
             if (null !== $uid && null !== $token) {
+                $this->mysql->getRow();
                 $loginUserInfo = $this->db->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
                 // 用户信息是否存在
                 if ($loginUserInfo) {

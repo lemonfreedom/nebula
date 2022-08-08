@@ -40,15 +40,9 @@ class Cache extends Widget
     public function init()
     {
         // 删除过期
-        $this->mysql
-            ->prepare("DELETE FROM {$this->mysql->tableParse('caches')} WHERE expires < :time")
-            ->execute(['time' => time()]);
+        $this->mysql->delete("DELETE FROM `{$this->mysql->tableParse('caches')}` WHERE `expires` < :time", [':time' => time()]);
 
-        $this->caches = Common::objectToArray(
-            $this->mysql
-                ->query("SELECT * FROM {$this->mysql->tableParse('caches')}")
-                ->fetchAll(PDO::FETCH_CLASS)
-        );
+        $this->caches = $this->mysql->getRows("SELECT `name`, `value`, `expires` FROM {$this->mysql->tableParse('caches')}");
 
         $cacheId = Cookie::get('cache_id');
 

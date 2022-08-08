@@ -51,7 +51,7 @@ namespace Nebula {
             Cache::factory();
 
             // 插件初始化
-            Plugin::init(OptionsMethod::factory()->get('plugins'));
+            // Plugin::init(OptionsMethod::factory()->get('plugins'));
         }
 
         /**

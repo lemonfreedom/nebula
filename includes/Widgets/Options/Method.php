@@ -2,18 +2,39 @@
 
 namespace Nebula\Widgets\Options;
 
+use Nebula\Common;
+use PDO;
 use Nebula\Widget;
+use Nebula\Widgets\MySQL;
 
 class Method extends Widget
 {
+    /**
+     * 数据库实例
+     *
+     * @var MySQL
+     */
+    private $mysql;
+
     /**
      * @var array
      */
     private $options = [];
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->mysql = MySQL::factory();
+    }
+
     public function init()
     {
-        $this->options = $this->db->select('options', ['name', 'value']);
+        $this->options = Common::objectToArray(
+            $this->mysql
+                ->query("SELECT `name`, `value` FROM `{$this->mysql->tableParse('options')}`")
+                ->fetchAll(PDO::FETCH_CLASS)
+        );
 
         foreach ($this->options as $index => $option) {
             // 布尔选项处理

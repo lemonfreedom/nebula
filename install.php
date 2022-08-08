@@ -1,9 +1,9 @@
 <?php
 
+use Nebula\Helpers\MySQL;
 use Nebula\Request;
 use Nebula\Response;
 use Nebula\Helpers\Validate;
-use Nebula\Widgets\MySQL;
 use Nebula\Widgets\Notice;
 use Nebula\Widgets\Users\Method as UsersMethod;
 use Nebula\Widgets\Options\Method as OptionsMethod;
@@ -25,26 +25,11 @@ function smtp_config()
     ];
 }
 
-// 检查是否初始化
-function has_been_init()
-{
-    if (!file_exists(NEBULA_ROOT_PATH . 'config.php')) {
-        return false;
-    }
-
-    include_once NEBULA_ROOT_PATH . 'config.php';
-    return true;
-}
-
 // 检查管理员是否存在
 function administrator_exists()
 {
-    return MySQL::factory()->count('users', ['gid' => '0']) > 0;
-}
-
-// 安装已完成跳出安装程序
-if (has_been_init() && administrator_exists()) {
-    Response::getInstance()->redirect('/');
+    // $mysql = MySQL::getInstance();
+    // echo $mysql->getCount("SELECT COUNT(*) FROM {$mysql->tableParse('users')}");
 }
 
 // 欢迎界面
@@ -87,11 +72,6 @@ EOT;
 // 步骤一
 function step1()
 {
-    // 如果已经初始化跳过此步
-    if (has_been_init()) {
-        Response::getInstance()->redirect('/install.php?step=2');
-    }
-
     echo <<<EOT
 <div class="nebula-title">数据库配置</div>
 <form class="nebula-form" action="/install.php?step=2" method="post">
@@ -132,124 +112,115 @@ EOT;
 // 步骤二
 function step2()
 {
-    // 未初始化，新增配置文件
-    if (!has_been_init()) {
-        $data = Request::getInstance()->post();
+    $data = Request::getInstance()->post();
 
-        $validate = new Validate($data, [
-            'dbname' => [
-                ['type' => 'required', 'message' => '数据库名不能为空'],
-            ],
-            'host' => [
-                ['type' => 'required', 'message' => '数据库地址不能为空'],
-            ],
-            'port' => [
-                ['type' => 'required', 'message' => '数据库端口不能为空'],
-            ],
-            'username' => [
-                ['type' => 'required', 'message' => '用户名不能为空'],
-            ],
-            'password' => [
-                ['type' => 'required', 'message' => '密码不能为空'],
-            ],
+    $validate = new Validate($data, [
+        'dbname' => [
+            ['type' => 'required', 'message' => '数据库名不能为空'],
+        ],
+        'host' => [
+            ['type' => 'required', 'message' => '数据库地址不能为空'],
+        ],
+        'port' => [
+            ['type' => 'required', 'message' => '数据库端口不能为空'],
+        ],
+        'username' => [
+            ['type' => 'required', 'message' => '用户名不能为空'],
+        ],
+        'password' => [
+            ['type' => 'required', 'message' => '密码不能为空'],
+        ],
+    ]);
+    // 表单验证
+    if (!$validate->run()) {
+        Notice::factory()->set($validate->result[0]['message'], 'warning');
+        Response::getInstance()->redirect('/install.php?step=1');
+    }
+
+    try {
+        // 数据库
+        $mysql = MySQL::getInstance();
+
+        // 初始化
+        $mysql->init([
+            'dbname' => $data['dbname'],
+            'host' => $data['host'],
+            'port' => $data['port'],
+            'username' => $data['username'],
+            'password' => $data['password'],
+            'prefix' => $data['prefix'],
         ]);
-        // 表单验证
-        if (!$validate->run()) {
-            Notice::factory()->set($validate->result[0]['message'], 'warning');
-            Response::getInstance()->redirect('/install.php?step=1');
-        }
+    } catch (PDOException $e) {
+        Notice::factory()->set('数据库连接失败：' . $e->getMessage(), 'warning');
+        Response::getInstance()->redirect('/install.php?step=1');
+    }
 
-        try {
-            // 连接数据库
-            $mysql = MySQL::factory([
-                'dbname' => $data['dbname'],
-                'host' => $data['host'],
-                'port' => $data['port'],
-                'username' => $data['username'],
-                'password' => $data['password'],
-                'prefix' => $data['prefix'],
-            ]);
-        } catch (PDOException $e) {
-            Notice::factory()->set('数据库连接失败：' . $e->getMessage(), 'warning');
-            Response::getInstance()->redirect('/install.php?step=1');
-        }
+    try {
+        // 删除表
+        $mysql->drop('users');
+        $mysql->drop('options');
+        $mysql->drop('terms');
+        $mysql->drop('posts');
+        $mysql->drop('caches');
 
-        try {
-            $mysql->action(function ($mysql) {
-                // 删除表
-                $mysql->drop('users');
-                $mysql->drop('options');
-                $mysql->drop('terms');
-                $mysql->drop('posts');
-                $mysql->drop('caches');
+        // 创建用户表
+        $mysql->create('users', [
+            'uid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
+            'role' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
+            'nickname' => ['VARCHAR(60)', 'NOT NULL'],
+            'username' => ['VARCHAR(60)', 'NOT NULL', 'UNIQUE'],
+            'password' => ['VARCHAR(64)', 'NOT NULL', 'UNIQUE'],
+            'email' => ['VARCHAR(100)', 'NOT NULL', 'UNIQUE'],
+            'token' => ['VARCHAR(32)', 'NOT NULL'],
+        ]);
 
-                // 创建用户表
-                $mysql->create('users', [
-                    'uid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
-                    'role' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
-                    'nickname' => ['VARCHAR(60)', 'NOT NULL'],
-                    'username' => ['VARCHAR(60)', 'NOT NULL', 'UNIQUE'],
-                    'password' => ['VARCHAR(64)', 'NOT NULL', 'UNIQUE'],
-                    'email' => ['VARCHAR(100)', 'NOT NULL', 'UNIQUE'],
-                    'token' => ['VARCHAR(32)', 'NOT NULL'],
-                ]);
+        // 创建配置表
+        $mysql->create('options', [
+            'name' => ['VARCHAR(30)', 'NOT NULL', 'PRIMARY KEY'],
+            'value' => ['LONGTEXT', 'NOT NULL'],
+        ]);
+        // 插入配置数据
+        $mysql->insert("options", [
+            ['name' => 'title', 'value' => ''],
+            ['name' => 'description', 'value' => '又一个博客网站诞生了'],
+            ['name' => 'allowRegister', 'value' => '0'],
+            ['name' => 'smtp', 'value' => serialize(smtp_config())],
+            ['name' => 'plugins', 'value' => 'a:0:{}'],
+            ['name' => 'theme', 'value' => 'a:2:{s:4:"name";s:7:"default";s:6:"config";a:0:{}}'],
+        ]);
 
-                // 创建配置表
-                $mysql->create('options', [
-                    'name' => ['VARCHAR(30)', 'NOT NULL', 'PRIMARY KEY'],
-                    'value' => ['LONGTEXT', 'NOT NULL'],
-                ]);
-                // 插入配置数据
-                $mysql->insert("options", [
-                    ['name' => 'title', 'value' => ''],
-                    ['name' => 'description', 'value' => '又一个博客网站诞生了'],
-                    ['name' => 'allowRegister', 'value' => '0'],
-                    ['name' => 'smtp', 'value' => serialize(smtp_config())],
-                    ['name' => 'plugins', 'value' => 'a:0:{}'],
-                    ['name' => 'theme', 'value' => 'a:2:{s:4:"name";s:7:"default";s:6:"config";a:0:{}}'],
-                ]);
+        // 创建缓存表
+        $mysql->create('caches', [
+            'name' => ['VARCHAR(200)', 'NOT NULL', 'PRIMARY KEY'],
+            'value' => ['LONGTEXT', 'NOT NULL'],
+            'expires' => ['int', 'UNSIGNED', 'NOT NULL'],
+        ]);
+    } catch (PDOException $e) {
+        Notice::factory()->set('数据库初始化失败：' . $e->getMessage(), 'warning');
+        Response::getInstance()->redirect('/install.php?step=1');
+    }
 
-                // 创建缓存表
-                $mysql->create('caches', [
-                    'name' => ['VARCHAR(200)', 'NOT NULL', 'PRIMARY KEY'],
-                    'value' => ['LONGTEXT', 'NOT NULL'],
-                    'expires' => ['int', 'UNSIGNED', 'NOT NULL'],
-                ]);
-            });
-        } catch (PDOException $e) {
-            Notice::factory()->set('数据库初始化失败：' . $e->getMessage(), 'warning');
-            Response::getInstance()->redirect('/install.php?step=1');
-        }
-
-        $configString = <<<EOT
+    $configString = <<<EOT
 <?php
 // 调试模式
 define('NEBULA_DEBUG', true);
 
-// 数据库配置
-define('NEBULA_DB_CONFIG', [
-    // 必填
-    'type' => 'mysql',
-    'host' => '{$data['host']}',
-    'database' => '{$data['database']}',
-    'username' => '{$data['username']}',
-    'password' => '{$data['password']}',
+// 加载公共文件
+include NEBULA_ROOT_PATH . 'includes/Common.php';
 
-    // 可选
-    'charset' => '{$data['charset']}',
-    'collation' => '{$data['collation']}',
-    'port' => {$data['port']},
-    'prefix' => '{$data['prefix']}',
-    'logging' => false,
-    'error' => PDO::ERRMODE_SILENT,
-    'option' => [PDO::ATTR_CASE => PDO::CASE_NATURAL],
-    'command' => ['SET SQL_MODE=ANSI_QUOTES'],
+// 数据库初始化
+\Nebula\Helpers\MySQL::getInstance()->init([
+'dbname' => '{$data['dbname']}',
+'host' => '{$data['host']}',
+'port' => '{$data['port']}',
+'username' => '{$data['username']}',
+'password' => '{$data['password']}',
+'prefix' => '{$data['prefix']}',
 ]);\n
 EOT;
 
-        // 写入配置文件
-        file_put_contents(NEBULA_ROOT_PATH . 'config.php', $configString);
-    }
+    // 写入配置文件
+    file_put_contents(NEBULA_ROOT_PATH . 'config.php', $configString);
 
     echo <<<EOT
 <div class="nebula-title">站点设置</div>
@@ -284,16 +255,6 @@ EOT;
 // 步骤三
 function step3()
 {
-    // 未初始化跳到步骤一
-    if (!has_been_init()) {
-        Response::getInstance()->redirect('/install.php?step=1');
-    }
-
-    // 存在管理员退出安装程序
-    if (administrator_exists()) {
-        Response::getInstance()->redirect('/');
-    }
-
     $data = Request::getInstance()->post();
 
     $validate = new Validate($data, [

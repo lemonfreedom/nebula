@@ -14,6 +14,10 @@ class Response
      */
     private static $instance;
 
+    private function __construct()
+    {
+    }
+
     /**
      * 设置 cookie
      *

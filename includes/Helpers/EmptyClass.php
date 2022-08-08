@@ -11,6 +11,19 @@ class EmptyClass
      */
     private static $instance;
 
+    private function __construct()
+    {
+    }
+
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return void
+     */
+    public function __call($name, $arguments)
+    {
+    }
+
     /**
      * 获取单例实例
      *
@@ -23,14 +36,5 @@ class EmptyClass
         }
 
         return self::$instance;
-    }
-
-    /**
-     * @param string $name
-     * @param array $arguments
-     * @return void
-     */
-    public function __call($name, $arguments)
-    {
     }
 }

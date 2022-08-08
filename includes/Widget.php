@@ -2,6 +2,7 @@
 
 namespace Nebula;
 
+use Nebula\Helpers\MySQL;
 use Nebula\Helpers\EmptyClass;
 
 class Widget
@@ -41,6 +42,7 @@ class Widget
      */
     public function __construct()
     {
+        $this->mysql = MySQL::getInstance();
         $this->request = Request::getInstance();
         $this->response = Response::getInstance();
     }

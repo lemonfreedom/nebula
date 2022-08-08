@@ -42,7 +42,7 @@ class Request
     /**
      * @return void
      */
-    public function __construct()
+    private function __construct()
     {
         $this->requestURI = $_SERVER['REQUEST_URI'];
         $this->method = $_SERVER['REQUEST_METHOD'];

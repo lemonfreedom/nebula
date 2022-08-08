@@ -3,15 +3,15 @@
 namespace Nebula\Widgets\Users;
 
 use Nebula\Common;
-use Nebula\Widget;
 use Nebula\Helpers\Cookie;
 use Nebula\Helpers\Validate;
 use Nebula\Widgets\Cache;
 use Nebula\Widgets\Notice;
 use Nebula\Widgets\Mails\Method as MailsMethod;
 
-class Handle extends Widget
+class Handle extends Method
 {
+
     /**
      * 登陆
      *
@@ -34,6 +34,7 @@ class Handle extends Widget
                 ['type' => 'required', 'message' => '密码不能为空'],
             ],
         ]);
+
         // 表单验证
         if (!$validate->run()) {
             Cache::factory()->set('loginAccount', $this->request->post('account', ''));
@@ -42,12 +43,14 @@ class Handle extends Widget
             $this->response->redirect('/admin/login.php');
         }
 
-        $userInfo = $this->db->get('users', ['uid', 'password'], [
-            'OR' => [
+        $userInfo = $this->mysql->getRow(
+            "SELECT `uid`, `password` FROM `{$this->mysql->tableParse('users')}`
+            WHERE `username` = :username OR `email` = :email",
+            [
                 'username' => $this->request->post('account'),
-                "email" => $this->request->post('account'),
-            ],
-        ]);
+                'email' => $this->request->post('email'),
+            ]
+        );
 
         // 验证密码
         if ($userInfo && Common::hashValidate($this->request->post('password'), $userInfo['password'])) {
@@ -56,7 +59,18 @@ class Handle extends Widget
             $tokenHash = Common::hash($token);
 
             // 更新 token
-            $this->db->update('users', ['token' => $token], ['uid' => $userInfo['uid']]);
+            // $this->db->update('users', ['token' => $token], ['uid' => $userInfo['uid']]);
+            $sth = $this->mysql->prepare(
+                "UPDATE `{$this->mysql->tableParse('users')}`
+                SET `token` = :token
+                WHERE `uid` = :uid"
+            );
+
+            $sth->execute([
+                ':username' => $this->request->post('account'),
+                ':email' => $this->request->post('email'),
+            ]);
+
 
             Cookie::set('uid', $userInfo['uid']);
             Cookie::set('token', $tokenHash);
