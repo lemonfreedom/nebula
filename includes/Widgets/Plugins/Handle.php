@@ -1,74 +1,15 @@
 <?php
 
-namespace Nebula\Widgets;
+namespace Nebula\Widgets\Plugins;
 
-use Nebula\Common;
+use Nebula\Plugin;
 use Nebula\Helpers\Renderer;
 use Nebula\Helpers\Validate;
-use Nebula\Plugin as NebulaPlugin;
+use Nebula\Widgets\Database;
+use Nebula\Widgets\Notice;
 
-class Plugin extends Database
+class Handle extends Database
 {
-    /**
-     * 插件列表
-     *
-     * @var null|array
-     */
-    private $pluginList = null;
-
-    /**
-     * 获取插件类名
-     *
-     * @param string 插件名
-     * @return string 类名
-     */
-    public function getPluginClassName($pluginName)
-    {
-        return 'Content\Plugins\\' . $pluginName . '\Main';
-    }
-
-    /**
-     * 获取插件列表
-     *
-     * @return array 插件列表
-     */
-    public function getPluginList()
-    {
-        if (null === $this->pluginList) {
-            // 已启用插件列表
-            $plugins = NebulaPlugin::export();
-
-            // 插件目录列表
-            $pluginDirs = glob(NEBULA_ROOT_PATH . 'content/plugins/*/');
-
-            // 插件列表初始化
-            $this->pluginList = array_map(function ($pluginDir) use ($plugins) {
-                $pluginInfo = [];
-
-                // 插件目录
-                $pluginInfo['dir'] = basename($pluginDir);
-
-                // 插件类名
-                $pluginClassName =  $this->getPluginClassName($pluginInfo['dir']);
-
-                // 修改启用状态
-                $pluginInfo['is_activated'] = in_array($pluginClassName, array_keys($plugins));
-
-                // 插件是否可配置
-                $pluginInfo['is_config'] = $pluginInfo['is_activated'] && [] !== $plugins[$pluginClassName]['config'];
-
-                $pluginIndexPath = $pluginDir . '/Main.php';
-
-                // 判断插件是否完整
-                $pluginInfo['is_complete'] = file_exists($pluginIndexPath);
-
-                return array_merge($pluginInfo, Common::parseDoc($pluginIndexPath));
-            }, $pluginDirs);
-        }
-
-        return $this->pluginList;
-    }
-
     /**
      * 启用插件
      *
@@ -76,10 +17,10 @@ class Plugin extends Database
      */
     private function enable()
     {
-        $pluginName = $this->getPluginClassName($this->params('pluginName'));
+        $pluginName = Method::factory()->getPluginClassName($this->params('pluginName'));
 
         // 已启用插件列表
-        $plugins = NebulaPlugin::export();
+        $plugins = Plugin::export();
 
         // 判断组件是否已启用
         if (array_key_exists($pluginName, $plugins)) {
@@ -100,10 +41,10 @@ class Plugin extends Database
 
         // 获取插件选项
         call_user_func([$pluginName, 'activate']);
-        NebulaPlugin::activate($pluginName, $pluginConfig);
+        Plugin::activate($pluginName, $pluginConfig);
 
         // 提交修改
-        $this->db->update('options', ['value' => serialize(NebulaPlugin::export())], ['name' => 'plugins']);
+        $this->db->update('options', ['value' => serialize(Plugin::export())], ['name' => 'plugins']);
 
         Notice::factory()->set('启用成功', 'success');
         $this->response->redirect('/admin/plugins.php');
@@ -117,10 +58,10 @@ class Plugin extends Database
     private function disabled()
     {
         // 插件类名
-        $pluginClassName = $this->getPluginClassName($this->params('pluginName'));
+        $pluginClassName = Method::factory()->getPluginClassName($this->params('pluginName'));
 
         // 已启用插件列表
-        $plugins = NebulaPlugin::export();
+        $plugins = Plugin::export();
 
         // 判断组件是否已停用
         if (!isset($plugins[$pluginClassName])) {
@@ -136,22 +77,27 @@ class Plugin extends Database
 
         // 获取插件选项
         call_user_func([$pluginClassName, 'deactivate']);
-        NebulaPlugin::deactivate($pluginClassName);
+        Plugin::deactivate($pluginClassName);
 
         // 提交修改
-        $this->db->update('options', ['value' => serialize(NebulaPlugin::export())], ['name' => 'plugins']);
+        $this->db->update('options', ['value' => serialize(Plugin::export())], ['name' => 'plugins']);
 
         Notice::factory()->set('禁用成功', 'success');
         $this->response->redirect('/admin/plugins.php');
     }
 
+    /**
+     * 更新插件配置
+     *
+     * @return void
+     */
     private function updateConfig()
     {
         // 已启用插件列表
-        $plugins = NebulaPlugin::export();
+        $plugins = Plugin::export();
 
         // 插件类名
-        $pluginClassName = $this->getPluginClassName($this->request->post('pluginName'));
+        $pluginClassName = Method::factory()->getPluginClassName($this->request->post('pluginName'));
 
         if (null === $pluginClassName) {
             Notice::factory()->set('插件名不能为空', 'warning');
@@ -178,44 +124,19 @@ class Plugin extends Database
         }
 
         // 更新
-        NebulaPlugin::updateConfig($pluginClassName, $data);
+        Plugin::updateConfig($pluginClassName, $data);
 
         // 提交修改
-        $this->db->update('options', ['value' => serialize(NebulaPlugin::export())], ['name' => 'plugins']);
+        $this->db->update('options', ['value' => serialize(Plugin::export())], ['name' => 'plugins']);
 
         Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/plugins.php');
     }
 
     /**
-     * 插件配置
-     */
-    public function config()
-    {
-        // 插件类名
-        $pluginClassName = $this->getPluginClassName($this->params('pluginName'));
-
-        // 已启用插件列表
-        $plugins = NebulaPlugin::export();
-
-        if (!array_key_exists($pluginClassName, $plugins)) {
-            Notice::factory()->set('插件未启用', 'warning');
-            $this->response->redirect('/admin/plugins.php');
-        }
-
-        // 判断插件是否具备配置功能
-        if ([] === $plugins[$pluginClassName]['config']) {
-            Notice::factory()->set('配置功能不存在', 'warning');
-            $this->response->redirect('/admin/plugins.php');
-        }
-
-        $renderer = new Renderer();
-        call_user_func([$pluginClassName, 'config'], $renderer);
-        $renderer->render($plugins[$pluginClassName]['config']);
-    }
-
-    /**
      * 行动方法
+     *
+     * @return void
      */
     public function action()
     {

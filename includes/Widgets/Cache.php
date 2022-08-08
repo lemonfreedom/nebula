@@ -8,18 +8,20 @@ use Nebula\Helpers\Cookie;
 class Cache extends Database
 {
     /**
-     * 缓存 id
+     * 用户缓存 id
      *
      * @var string
      */
     private $cacheId;
 
     /**
+     * 缓存列表
+     *
      * @var array
      */
     private $caches = [];
 
-    public function execute()
+    public function init()
     {
         // 删除过期
         $this->db->delete('caches', [
@@ -29,6 +31,7 @@ class Cache extends Database
         $this->caches = $this->db->select('caches', ['name', 'value']);
 
         $cacheId = Cookie::get('cache_id');
+
         if (null === $cacheId) {
             $cacheId = Common::hash(uniqid());
             Cookie::set('cache_id', $cacheId);

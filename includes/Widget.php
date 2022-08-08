@@ -64,7 +64,7 @@ class Widget
             $widget = new $className();
 
             $widget->params = $params;
-            $widget->execute();
+            $widget->init();
 
             self::$widgetPool[$alias] = $widget;
         }
@@ -115,11 +115,11 @@ class Widget
     }
 
     /**
-     * 执行方法
+     * 初始化
      *
      * @return void
      */
-    protected function execute()
+    protected function init()
     {
     }
 }

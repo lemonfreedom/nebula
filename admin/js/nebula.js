@@ -65,7 +65,7 @@
     if (sendTestMailEl) {
         sendTestMailEl.addEventListener('click', function (event) {
             this.innerText = '发送中...';
-            fetch('/option/send-test-mail', {
+            fetch('/email/send-test-mail', {
                 method: 'POST',
                 body: new FormData(document.querySelector('#smtpOptionForm')),
             }).then(res => res.json()).then(res => {

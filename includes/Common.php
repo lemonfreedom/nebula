@@ -29,7 +29,7 @@ namespace {
 namespace Nebula {
 
     use Nebula\Widgets\Cache;
-    use Nebula\Widgets\Option;
+    use Nebula\Widgets\Options\Method as OptionsMethod;
 
     class Common
     {
@@ -50,11 +50,8 @@ namespace Nebula {
             // 缓存初始化
             Cache::factory();
 
-            // 选项初始化
-            $option = Option::factory();
-
             // 插件初始化
-            Plugin::init($option->get('plugins'));
+            Plugin::init(OptionsMethod::factory()->get('plugins'));
         }
 
         /**

@@ -2,8 +2,8 @@
 
 namespace Nebula\Widgets;
 
-use Nebula\Helpers\Medoo;
 use Nebula\Widget;
+use Nebula\Helpers\Medoo;
 
 class Database extends Widget
 {

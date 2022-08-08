@@ -1,8 +1,8 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
+<?php \Nebula\Widgets\Users\Method::factory()->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
-<?php $themeList = \Nebula\Widgets\Theme::factory()->getThemeList(); ?>
+<?php $themeList = \Nebula\Widgets\Themes\Method::factory()->getThemeList(); ?>
 <div class="container theme">
     <div class="nebula-title">主题</div>
     <div class="nebula-table">

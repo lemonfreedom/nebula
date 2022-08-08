@@ -10,7 +10,7 @@
                         <span class="text">仪表盘</span>
                     </a>
                 </li>
-                <?php if ($user->inRole(['0'])) : ?>
+                <?php if (\Nebula\Widgets\Users\Method::factory()->inRole(['0'])) : ?>
                     <li class="<?= $request->currentIndex === 'users.php' ? 'active' : '' ?>">
                         <a href="/admin/users.php">
                             <i class="bi bi-people"></i>
@@ -39,10 +39,10 @@
             </ul>
             <ul class="menu">
                 <li class="<?= $request->currentIndex === 'profile.php' ? 'active' : '' ?>">
-                    <a href="/admin/profile.php?uid=<?= $user->getUserInfo('uid') ?>">
+                    <a href="/admin/profile.php?uid=<?= \Nebula\Widgets\Users\Method::factory()->getUserInfo('uid') ?>">
                         <!-- <img class="avatar" src="" alt=""> -->
                         <i class="bi bi-person"></i>
-                        <span class="text"><?= $user->getUserInfo('nickname') ?></span>
+                        <span class="text"><?= \Nebula\Widgets\Users\Method::factory()->getUserInfo('nickname') ?></span>
                     </a>
                 </li>
                 <li>

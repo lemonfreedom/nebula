@@ -1,13 +1,13 @@
 <?php
 
-use Nebula\Helpers\Medoo;
-use Nebula\Helpers\Validate;
 use Nebula\Request;
 use Nebula\Response;
-use Nebula\Widgets\Database;
+use Nebula\Helpers\Medoo;
+use Nebula\Helpers\Validate;
 use Nebula\Widgets\Notice;
-use Nebula\Widgets\Option;
-use Nebula\Widgets\User;
+use Nebula\Widgets\Database;
+use Nebula\Widgets\Options\Method as OptionsMethod;
+use Nebula\Widgets\Users\Method as UsersMethod;
 
 define('NEBULA_ROOT_PATH', __DIR__ . '/');
 
@@ -354,10 +354,10 @@ function step3()
     }
 
     // 修改选项
-    Option::factory()->set('title', $data['title']);
+    OptionsMethod::factory()->set('title', $data['title']);
 
     // 创建管理员
-    User::factory()->createUser($data['username'], $data['password'], $data['email'], '0');
+    UsersMethod::factory()->createUser($data['username'], $data['password'], $data['email'], '0');
 
     echo <<<EOT
 <div class="nebula-title">安装成功</div>

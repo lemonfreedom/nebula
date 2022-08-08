@@ -1,16 +1,16 @@
 <?php
 
-namespace Nebula\Widgets;
+namespace Nebula\Widgets\Mails;
 
+use Nebula\Widget;
 use Nebula\Common;
+use Nebula\Response;
 use Nebula\Helpers\Cookie;
 use Nebula\Helpers\PHPMailer\Exception;
 use Nebula\Helpers\PHPMailer\PHPMailer;
-use Nebula\Response;
-use Nebula\Widget;
-use Nebula\Widgets\Option;
+use Nebula\Widgets\Options\Method as OptionsMethod;
 
-class Mail extends Widget
+class Method extends Widget
 {
     /**
      * 连接对象
@@ -54,20 +54,9 @@ class Mail extends Widget
      */
     private $name;
 
-    /**
-     * 构造函数
-     *
-     * @param null|string $host
-     * @param null|int $port
-     * @param null|string $username
-     * @param null|string $password
-     * @param null|string $name
-     * @param null|string $email
-     * @return void
-     */
-    public function execute()
+    public function init()
     {
-        $smtp = Option::factory()->get('smtp');
+        $smtp = OptionsMethod::factory()->get('smtp');
 
         $this->host = null === $this->params('host', $smtp['host']);
         $this->port = null === $this->params('port', $smtp['port']);
@@ -105,7 +94,7 @@ class Mail extends Widget
 
             $this->mail->addAddress($address);
             $this->mail->isHTML(true);
-            $this->mail->Subject = Option::factory()->get('title') . ' 验证码';
+            $this->mail->Subject = OptionsMethod::factory()->get('title') . ' 验证码';
 
             $this->mail->Body = '您的验证码是：' . $code;
 

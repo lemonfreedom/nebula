@@ -10,37 +10,43 @@ class Router
      * @var array
      */
     private static $routerWidgetMap = [
-        'index' => [
-            'widget' => '\Nebula\Widgets\Index',
-            'action' => 'render',
-            'params' => [],
-        ],
         'option' => [
-            'widget' => '\Nebula\Widgets\Option',
+            'widget' => '\Nebula\Widgets\Options\Handle',
             'params' => [
                 'action' => '',
             ],
         ],
         'plugin' => [
-            'widget' => '\Nebula\Widgets\Plugin',
+            'widget' => '\Nebula\Widgets\Plugins\Handle',
             'params' => [
                 'action' => '',
                 'pluginName' => '',
             ],
         ],
         'theme' => [
-            'widget' => '\Nebula\Widgets\Theme',
+            'widget' => '\Nebula\Widgets\Themes\Handle',
             'params' => [
                 'action' => '',
                 'themeName' => '',
             ],
         ],
         'user' => [
-            'widget' => '\Nebula\Widgets\User',
+            'widget' => '\Nebula\Widgets\Users\Handle',
             'params' => [
                 'action' => '',
                 'uid' => null,
             ],
+        ],
+        'mail' => [
+            'widget' => '\Nebula\Widgets\Mails\Handle',
+            'params' => [
+                'action' => '',
+            ],
+        ],
+        'index' => [
+            'widget' => '\Nebula\Widgets\Index',
+            'action' => 'render',
+            'params' => [],
         ],
     ];
 

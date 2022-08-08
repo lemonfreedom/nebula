@@ -1,9 +1,9 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php $user->hasLogin() || $response->redirect('/admin/login.php'); ?>
+<?php \Nebula\Widgets\Users\Method::factory()->hasLogin() || $response->redirect('/admin/login.php'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $action = $request->get('action'); ?>
-<?php $userInfo = \Nebula\Widgets\User::factory(['uid' => $request->get('uid')], 'render')->getUserInfo(); ?>
+<?php $userInfo = \Nebula\Widgets\Users\Method::factory(['uid' => $request->get('uid')], 'render')->getUserInfo(); ?>
 <?php null === $userInfo && $response->redirect('/admin'); ?>
 <div class="container">
     <div class="nebula-tabs">
@@ -34,13 +34,13 @@
                 <button type="submit" class="nebula-button">保存设置</button>
             </div>
         </form>
-    <?php elseif ($action === 'permission' && $user->inRole(['0'])) : ?>
+    <?php elseif ($action === 'permission' && \Nebula\Widgets\Users\Method::factory()->inRole(['0'])) : ?>
         <!-- 权限控制 -->
         <form class="nebula-form" action="/user/update-permission/<?= $userInfo['uid'] ?>" method="POST">
             <div class="form-item">
                 <label class="form-label" for="role">用户角色</label>
                 <select class="nebula-select" id="role" name="role">
-                    <?php foreach ($user->roleList as $role) : ?>
+                    <?php foreach (\Nebula\Widgets\Users\Method::factory()->roleList as $role) : ?>
                         <option value="<?= $role['value'] ?>" <?= $userInfo['role'] === $role['value'] ? 'selected' : '' ?>><?= $role['name'] ?></option>
                     <?php endforeach; ?>
                 </select>

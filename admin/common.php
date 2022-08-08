@@ -18,10 +18,7 @@ require NEBULA_ROOT_PATH . 'includes/Common.php';
 \Nebula\Widgets\Cache::factory()->to($cache);
 
 // 配置组件
-\Nebula\Widgets\Option::factory()->to($option);
-
-// 用户组件
-\Nebula\Widgets\User::factory()->to($user);
+\Nebula\Widgets\Options\Method::factory()->to($option);
 
 // 请求对象
 $request = \Nebula\Request::getInstance();
