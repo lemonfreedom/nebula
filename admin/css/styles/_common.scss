@@ -15,6 +15,7 @@ a {
     color: $color-primary;
     text-decoration: none;
     outline: none;
+    transition: color .2s linear;
 
     &:hover,
     &:focus {
@@ -39,7 +40,7 @@ a {
 
 .container {
     width: 100%;
-    max-width: 1000px;
+    max-width: 900px;
     padding: 0 1rem;
     margin: 0 auto;
     box-sizing: border-box;
@@ -84,6 +85,7 @@ a {
 
         a {
             color: #404040;
+            transition: color .2s linear;
         }
 
         &::after {
@@ -94,6 +96,7 @@ a {
             position: absolute;
             left: 0;
             bottom: 0px;
+            transition: background-color .2s linear;
         }
 
         &:hover::after {
@@ -312,6 +315,7 @@ a {
 }
 
 .nebula-input,
+.nebula-textarea,
 .nebula-select {
     display: inline-block;
     width: 100%;
@@ -323,14 +327,19 @@ a {
     border: 0;
     border-radius: .2rem;
     appearance: none;
-}
-
-.nebula-input {
-    padding: 0 .8rem;
 
     &:focus {
         background-color: #e0e0e0;
     }
+}
+
+.nebula-input {
+    padding: 0 .8rem;
+}
+
+.nebula-textarea {
+    padding: .6rem .8rem;
+    min-height: 10rem;
 }
 
 .nebula-select {
@@ -339,10 +348,6 @@ a {
     background-repeat: no-repeat;
     background-position: right 0.8rem center;
     background-size: 16px 12px;
-
-    &:focus {
-        background-color: #e0e0e0;
-    }
 }
 
 .nebula-switch {

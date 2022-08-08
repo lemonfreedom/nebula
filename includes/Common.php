@@ -27,13 +27,12 @@ namespace {
 }
 
 namespace Nebula {
+
+    use Nebula\Widgets\Cache;
+    use Nebula\Widgets\Option;
+
     class Common
     {
-        /**
-         * 初始化
-         *
-         * @return void
-         */
         public static function init()
         {
             // 初始化异常处理
@@ -48,8 +47,14 @@ namespace Nebula {
                 });
             }
 
+            // 缓存初始化
+            Cache::factory();
+
+            // 选项初始化
+            $option = Option::factory();
+
             // 插件初始化
-            Plugin::init(\Nebula\Widgets\Option::alloc()->plugins);
+            Plugin::init($option->get('plugins'));
         }
 
         /**
@@ -58,6 +63,7 @@ namespace Nebula {
          * @param int $length 字符串长度
          * @param bool $mixedCase 混合大小写
          * @param bool $specialChars 是否有特殊字符
+         * @return string
          */
         public static function randString($length, $mixedCase = false, $specialChars = false)
         {
@@ -75,6 +81,7 @@ namespace Nebula {
             for ($i = 0; $i < $length; $i++) {
                 $result .= $chars[rand(0, $max)];
             }
+
             return $result;
         }
 

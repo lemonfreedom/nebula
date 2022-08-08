@@ -7,7 +7,7 @@ use Nebula\Helpers\Renderer;
 use Nebula\Helpers\Validate;
 use Nebula\Plugin as NebulaPlugin;
 
-class Plugin extends Base
+class Plugin extends Database
 {
     /**
      * 插件列表
@@ -76,20 +76,20 @@ class Plugin extends Base
      */
     private function enable()
     {
-        $pluginName = $this->getPluginClassName($this->params['pluginName']);
+        $pluginName = $this->getPluginClassName($this->params('pluginName'));
 
         // 已启用插件列表
         $plugins = NebulaPlugin::export();
 
         // 判断组件是否已启用
         if (array_key_exists($pluginName, $plugins)) {
-            Notice::alloc()->set('不能重复启用插件', 'warning');
+            Notice::factory()->set('不能重复启用插件', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
 
         // 判断插件是否存在异常
         if (!class_exists($pluginName) || !method_exists($pluginName, 'activate')) {
-            Notice::alloc()->set('无法启用插件', 'warning');
+            Notice::factory()->set('无法启用插件', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
 
@@ -105,7 +105,7 @@ class Plugin extends Base
         // 提交修改
         $this->db->update('options', ['value' => serialize(NebulaPlugin::export())], ['name' => 'plugins']);
 
-        Notice::alloc()->set('启用成功', 'success');
+        Notice::factory()->set('启用成功', 'success');
         $this->response->redirect('/admin/plugins.php');
     }
 
@@ -117,20 +117,20 @@ class Plugin extends Base
     private function disabled()
     {
         // 插件类名
-        $pluginClassName = $this->getPluginClassName($this->params['pluginName']);
+        $pluginClassName = $this->getPluginClassName($this->params('pluginName'));
 
         // 已启用插件列表
         $plugins = NebulaPlugin::export();
 
         // 判断组件是否已停用
         if (!isset($plugins[$pluginClassName])) {
-            Notice::alloc()->set('不能重复停用插件', 'warning');
+            Notice::factory()->set('不能重复停用插件', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
 
         // 判断插件是否存在异常
         if (!class_exists($pluginClassName) || !method_exists($pluginClassName, 'activate')) {
-            Notice::alloc()->set('无法停用插件', 'warning');
+            Notice::factory()->set('无法停用插件', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
 
@@ -141,7 +141,7 @@ class Plugin extends Base
         // 提交修改
         $this->db->update('options', ['value' => serialize(NebulaPlugin::export())], ['name' => 'plugins']);
 
-        Notice::alloc()->set('禁用成功', 'success');
+        Notice::factory()->set('禁用成功', 'success');
         $this->response->redirect('/admin/plugins.php');
     }
 
@@ -154,12 +154,12 @@ class Plugin extends Base
         $pluginClassName = $this->getPluginClassName($this->request->post('pluginName'));
 
         if (null === $pluginClassName) {
-            Notice::alloc()->set('插件名不能为空', 'warning');
+            Notice::factory()->set('插件名不能为空', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
 
         if (!array_key_exists($pluginClassName, $plugins)) {
-            Notice::alloc()->set('插件未启用', 'warning');
+            Notice::factory()->set('插件未启用', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
 
@@ -173,7 +173,7 @@ class Plugin extends Base
         }
         $validate = new Validate($data, $rules);
         if (!$validate->run()) {
-            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/plugin-config.php?name=' . $data['pluginName']);
         }
 
@@ -183,7 +183,7 @@ class Plugin extends Base
         // 提交修改
         $this->db->update('options', ['value' => serialize(NebulaPlugin::export())], ['name' => 'plugins']);
 
-        Notice::alloc()->set('修改成功', 'success');
+        Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/plugins.php');
     }
 
@@ -193,19 +193,19 @@ class Plugin extends Base
     public function config()
     {
         // 插件类名
-        $pluginClassName = $this->getPluginClassName($this->params['pluginName']);
+        $pluginClassName = $this->getPluginClassName($this->params('pluginName'));
 
         // 已启用插件列表
         $plugins = NebulaPlugin::export();
 
         if (!array_key_exists($pluginClassName, $plugins)) {
-            Notice::alloc()->set('插件未启用', 'warning');
+            Notice::factory()->set('插件未启用', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
 
         // 判断插件是否具备配置功能
         if ([] === $plugins[$pluginClassName]['config']) {
-            Notice::alloc()->set('配置功能不存在', 'warning');
+            Notice::factory()->set('配置功能不存在', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
 
@@ -216,12 +216,10 @@ class Plugin extends Base
 
     /**
      * 行动方法
-     *
-     * @return $this
      */
     public function action()
     {
-        $action = $this->params['action'];
+        $action = $this->params('action');
 
         // 启用插件
         $this->on($action === 'enable')->enable();
@@ -231,7 +229,5 @@ class Plugin extends Base
 
         // 更新插件配置
         $this->on($action === 'update-config')->updateConfig();
-
-        return $this;
     }
 }

@@ -2,7 +2,7 @@
 <?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
-<?php $pluginList = \Nebula\Widgets\Plugin::alloc()->getPluginList(); ?>
+<?php $pluginList = \Nebula\Widgets\Plugin::factory()->getPluginList(); ?>
 <div class="container">
     <div class="nebula-title">插件</div>
     <div class="nebula-table">

@@ -13,5 +13,13 @@ require NEBULA_ROOT_PATH . 'includes/Common.php';
 // 初始化
 \Nebula\Common::init();
 
+// 注册一个开始插件
+\Nebula\Plugin::factory('index.php')->begin();
+
 // 路由分发
 \Nebula\Router::dispatch();
+
+// 注册一个结束插件
+\Nebula\Plugin::factory('index.php')->end();
+
+

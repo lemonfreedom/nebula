@@ -6,7 +6,7 @@ use Nebula\Common;
 use Nebula\Helpers\Renderer;
 use Nebula\Helpers\Validate;
 
-class Theme extends Base
+class Theme extends Database
 {
     /**
      * 插件列表
@@ -24,7 +24,7 @@ class Theme extends Base
     {
         if (null === $this->themeList) {
             // 已启用主题
-            $theme = Option::alloc()->theme;
+            $theme = Option::factory()->get('theme');
 
             // 主题目录列表
             $themeDirs = glob(NEBULA_ROOT_PATH . 'content/themes/*/');
@@ -63,12 +63,12 @@ class Theme extends Base
     private function enable()
     {
         // 已启用主题
-        $theme = Option::alloc()->theme;
+        $theme = Option::factory()->get('theme');
 
-        $themeName = $this->params['themeName'];
+        $themeName = $this->params('themeName');
 
         if ($themeName === $theme['name']) {
-            Notice::alloc()->set('不能重复启用', 'warning');
+            Notice::factory()->set('不能重复启用', 'warning');
             $this->response->redirect('/admin/themes.php');
         }
 
@@ -88,7 +88,7 @@ class Theme extends Base
         // 提交修改
         $this->db->update('options', ['value' => serialize(['name' => $themeName, 'config' => $themeConfig])], ['name' => 'theme']);
 
-        Notice::alloc()->set('启用成功', 'success');
+        Notice::factory()->set('启用成功', 'success');
         $this->response->redirect('/admin/themes.php');
     }
 
@@ -96,7 +96,7 @@ class Theme extends Base
     private function updateConfig()
     {
         // 已启用主题
-        $theme = Option::alloc()->theme;
+        $theme = Option::factory()->get('theme');
 
         $data = $this->request->post();
 
@@ -106,7 +106,7 @@ class Theme extends Base
         }
         $validate = new Validate($data, $rules);
         if (!$validate->run()) {
-            Notice::alloc()->set($validate->result[0]['message'], 'warning');
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/theme-config.php');
         }
 
@@ -117,7 +117,7 @@ class Theme extends Base
         // 提交修改
         $this->db->update('options', ['value' => serialize($theme)], ['name' => 'theme']);
 
-        Notice::alloc()->set('修改成功', 'success');
+        Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/themes.php');
     }
 
@@ -127,11 +127,11 @@ class Theme extends Base
     public function config()
     {
         // 启用主题信息
-        $theme = Option::alloc()->theme;
+        $theme = Option::factory()->get('theme');
 
         // 是否具备配置功能
         if ([] === $theme['config']) {
-            Notice::alloc()->set('配置功能不存在', 'warning');
+            Notice::factory()->set('配置功能不存在', 'warning');
             $this->response->redirect('/admin/themes.php');
         }
 
@@ -144,19 +144,15 @@ class Theme extends Base
 
     /**
      * 行动方法
-     *
-     * @return $this
      */
     public function action()
     {
-        $action = $this->params['action'];
+        $action = $this->params('action');
 
         // 启用主题
         $this->on($action === 'enable')->enable();
 
         // 更新主题配置
         $this->on($action === 'update-config')->updateConfig();
-
-        return $this;
     }
 }

@@ -2,7 +2,7 @@
 <?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
-<?php $userList = \Nebula\Widgets\User::allocAlias('userList', ['keyword' => $request->get('keyword', '')])->getUserList() ?>
+<?php $userList = \Nebula\Widgets\User::factory(['keyword' => $request->get('keyword', '')], 'render')->getUserList() ?>
 <div class="container">
     <div class="nebula-title">用户</div>
     <div class="nebula-tools">

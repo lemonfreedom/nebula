@@ -1,9 +1,9 @@
-<?php \Nebula\Widgets\User::alloc()->to($user); ?>
+<?php \Nebula\Widgets\User::factory()->to($user); ?>
 <?php $this->render('header'); ?>
 <div class="container">
     <div>这是主题 default</div>
     <?php if ($user->hasLogin()) : ?>
-        欢迎：<?= $user->get('username') ?>
+        欢迎：<?= $user->getUserInfo('username') ?>
         <a href="/user/logout">退出登录</a>
         <a href="/admin">后台管理</a>
     <?php else : ?>

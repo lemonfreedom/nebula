@@ -1,19 +1,13 @@
 <?php defined('NEBULA_ROOT_PATH') || exit; ?>
 <div class="nebula-navbar">
     <div class="container">
-        <h1 class="logo"><?= $options->title ?></h1>
+        <h1 class="logo"><?= $option->get('title') ?></h1>
         <div class="main">
             <ul class="menu">
                 <li class="<?= $request->currentIndex === 'index.php' ? 'active' : '' ?>">
                     <a href="/admin/index.php">
                         <i class="bi bi-speedometer2"></i>
                         <span class="text">仪表盘</span>
-                    </a>
-                </li>
-                <li class="<?= $request->currentIndex === 'contents.php' ? 'active' : '' ?>">
-                    <a href="/admin/contents.php">
-                        <i class="bi bi-file-earmark-text"></i>
-                        <span class="text">内容</span>
                     </a>
                 </li>
                 <?php if ($user->inRole(['0'])) : ?>
@@ -44,10 +38,11 @@
                 <?php endif; ?>
             </ul>
             <ul class="menu">
-                <li>
-                    <a href="/admin/profile.php?uid=<?= $user->get('uid') ?>">
+                <li class="<?= $request->currentIndex === 'profile.php' ? 'active' : '' ?>">
+                    <a href="/admin/profile.php?uid=<?= $user->getUserInfo('uid') ?>">
+                        <!-- <img class="avatar" src="" alt=""> -->
                         <i class="bi bi-person"></i>
-                        <span class="text">您好，<?= $user->get('nickname') ?></span>
+                        <span class="text"><?= $user->getUserInfo('nickname') ?></span>
                     </a>
                 </li>
                 <li>

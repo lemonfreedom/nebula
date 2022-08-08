@@ -2,6 +2,6 @@
 
 namespace Nebula\Widgets;
 
-class Index extends Base
+class Index extends Database
 {
 }

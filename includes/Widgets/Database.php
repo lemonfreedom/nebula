@@ -5,13 +5,17 @@ namespace Nebula\Widgets;
 use Nebula\Helpers\Medoo;
 use Nebula\Widget;
 
-abstract class Base extends Widget
+class Database extends Widget
 {
     /**
-     * 初始化
+     * @var Medoo
      */
-    public function init()
+    public $db;
+
+    public function __construct()
     {
+        parent::__construct();
+
         // 初始化数据库对象
         $this->db = new Medoo(NEBULA_DB_CONFIG);
     }
