@@ -2,9 +2,9 @@
 
 namespace Nebula\Widgets\Options;
 
-use Nebula\Widgets\Database;
+use Nebula\Widget;
 
-class Method extends Database
+class Method extends Widget
 {
     /**
      * @var array

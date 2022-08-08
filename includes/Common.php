@@ -178,5 +178,16 @@ namespace Nebula {
 
             return $info;
         }
+
+        /**
+         * 对象转数组
+         *
+         * @param object $object
+         * @return array
+         */
+        public static function objectToArray($object)
+        {
+            return json_decode(json_encode($object), true);
+        }
     }
 }

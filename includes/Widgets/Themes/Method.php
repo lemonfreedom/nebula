@@ -3,12 +3,12 @@
 namespace Nebula\Widgets\Themes;
 
 use Nebula\Common;
+use Nebula\Widget;
 use Nebula\Helpers\Renderer;
-use Nebula\Widgets\Database;
 use Nebula\Widgets\Notice;
 use Nebula\Widgets\Options\Method as OptionsMethod;
 
-class Method extends Database
+class Method extends Widget
 {
     /**
      * 已启用列表

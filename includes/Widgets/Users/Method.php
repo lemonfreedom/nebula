@@ -3,10 +3,10 @@
 namespace Nebula\Widgets\Users;
 
 use Nebula\Common;
+use Nebula\Widget;
 use Nebula\Helpers\Cookie;
-use Nebula\Widgets\Database;
 
-class Method extends Database
+class Method extends Widget
 {
     /**
      * 是否已登陆

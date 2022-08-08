@@ -3,14 +3,14 @@
 namespace Nebula\Widgets\Users;
 
 use Nebula\Common;
+use Nebula\Widget;
 use Nebula\Helpers\Cookie;
 use Nebula\Helpers\Validate;
 use Nebula\Widgets\Cache;
-use Nebula\Widgets\Database;
 use Nebula\Widgets\Notice;
 use Nebula\Widgets\Mails\Method as MailsMethod;
 
-class Handle extends Database
+class Handle extends Widget
 {
     /**
      * 登陆

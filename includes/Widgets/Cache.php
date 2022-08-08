@@ -3,10 +3,19 @@
 namespace Nebula\Widgets;
 
 use Nebula\Common;
+use Nebula\Widget;
 use Nebula\Helpers\Cookie;
+use PDO;
 
-class Cache extends Database
+class Cache extends Widget
 {
+    /**
+     * 数据库实例
+     *
+     * @var MySQL
+     */
+    private $mysql;
+
     /**
      * 用户缓存 id
      *
@@ -21,14 +30,25 @@ class Cache extends Database
      */
     private $caches = [];
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->mysql = MySQL::factory();
+    }
+
     public function init()
     {
         // 删除过期
-        $this->db->delete('caches', [
-            'expires[<]' => time(),
-        ]);
+        $this->mysql
+            ->prepare("DELETE FROM {$this->mysql->tableParse('caches')} WHERE expires < :time")
+            ->execute(['time' => time()]);
 
-        $this->caches = $this->db->select('caches', ['name', 'value']);
+        $this->caches = Common::objectToArray(
+            $this->mysql
+                ->query("SELECT * FROM {$this->mysql->tableParse('caches')}")
+                ->fetchAll(PDO::FETCH_CLASS)
+        );
 
         $cacheId = Cookie::get('cache_id');
 
@@ -76,7 +96,7 @@ class Cache extends Database
         }, $this->caches));
 
         if (false === $index) {
-            $this->db->insert('caches', [
+            $this->mysql->insert('caches', [
                 'name' => $name,
                 'value' => $value,
                 'expires' => time() + $expires
@@ -84,7 +104,7 @@ class Cache extends Database
             array_push($this->caches, ['name' => $name, 'value' => $value]);
         } else {
             if ($this->caches[$index]['value'] !== $value) {
-                $this->db->update('caches', [
+                $this->mysql->update('caches', [
                     'value' => $value,
                     'expires' => time() + $expires
                 ], ['name' => $name]);

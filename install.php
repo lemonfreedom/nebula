@@ -2,12 +2,11 @@
 
 use Nebula\Request;
 use Nebula\Response;
-use Nebula\Helpers\Medoo;
 use Nebula\Helpers\Validate;
+use Nebula\Widgets\MySQL;
 use Nebula\Widgets\Notice;
-use Nebula\Widgets\Database;
-use Nebula\Widgets\Options\Method as OptionsMethod;
 use Nebula\Widgets\Users\Method as UsersMethod;
+use Nebula\Widgets\Options\Method as OptionsMethod;
 
 define('NEBULA_ROOT_PATH', __DIR__ . '/');
 
@@ -40,7 +39,7 @@ function has_been_init()
 // 检查管理员是否存在
 function administrator_exists()
 {
-    return Database::factory()->db->count('users', ['gid' => '0']) > 0;
+    return MySQL::factory()->count('users', ['gid' => '0']) > 0;
 }
 
 // 安装已完成跳出安装程序
@@ -97,6 +96,10 @@ function step1()
 <div class="nebula-title">数据库配置</div>
 <form class="nebula-form" action="/install.php?step=2" method="post">
     <div class="form-item">
+        <label class="form-label" for="dbname">数据库名</label>
+        <input class="nebula-input" id="dbname" name="dbname" value="nebula">
+    </div>
+    <div class="form-item">
         <label class="form-label" for="host">数据库地址</label>
         <input class="nebula-input" id="host" name="host" value="localhost">
     </div>
@@ -104,10 +107,6 @@ function step1()
         <label class="form-label" for="port">数据库端口</label>
         <input class="nebula-input" id="port" name="port" value="3306">
         <label class="form-sublabel">MySQL 端口默认 3306</label>
-    </div>
-    <div class="form-item">
-        <label class="form-label" for="database">数据库名</label>
-        <input class="nebula-input" id="database" name="database" value="nebula">
     </div>
     <div class="form-item">
         <label class="form-label" for="username">用户名</label>
@@ -121,16 +120,6 @@ function step1()
         <label class="form-label" for="prefix">表前缀</label>
         <input class="nebula-input" id="prefix" name="prefix" value="nebula_">
         <label class="form-sublabel">同数据库多程序请设置前缀</label>
-    </div>
-    <div class="form-item">
-        <label class="form-label" for="charset">字符集</label>
-        <input class="nebula-input" id="charset" name="charset" value="utf8mb4">
-        <label class="form-sublabel">如不了解，默认即可</label>
-    </div>
-    <div class="form-item">
-        <label class="form-label" for="collation">整理类型</label>
-        <input class="nebula-input" id="collation" name="collation" value="utf8mb4_general_ci">
-        <label class="form-sublabel">如不了解，默认即可</label>
     </div>
     <button class="nebula-button" type="submit">
         <span>开始安装</span>
@@ -148,26 +137,20 @@ function step2()
         $data = Request::getInstance()->post();
 
         $validate = new Validate($data, [
+            'dbname' => [
+                ['type' => 'required', 'message' => '数据库名不能为空'],
+            ],
             'host' => [
                 ['type' => 'required', 'message' => '数据库地址不能为空'],
             ],
             'port' => [
                 ['type' => 'required', 'message' => '数据库端口不能为空'],
             ],
-            'database' => [
-                ['type' => 'required', 'message' => '数据库名不能为空'],
-            ],
             'username' => [
                 ['type' => 'required', 'message' => '用户名不能为空'],
             ],
             'password' => [
                 ['type' => 'required', 'message' => '密码不能为空'],
-            ],
-            'charset' => [
-                ['type' => 'required', 'message' => '字符集不能为空'],
-            ],
-            'collation' => [
-                ['type' => 'required', 'message' => '整理类型不能为空'],
             ],
         ]);
         // 表单验证
@@ -178,23 +161,13 @@ function step2()
 
         try {
             // 连接数据库
-            $db = new Medoo([
-                // 必填
-                'type' => 'mysql',
+            $mysql = MySQL::factory([
+                'dbname' => $data['dbname'],
                 'host' => $data['host'],
-                'database' => $data['database'],
+                'port' => $data['port'],
                 'username' => $data['username'],
                 'password' => $data['password'],
-
-                // 可选
-                'charset' => $data['charset'],
-                'collation' => $data['collation'],
-                'port' => $data['port'],
                 'prefix' => $data['prefix'],
-                'logging' => false,
-                'error' => PDO::ERRMODE_SILENT,
-                'option' => [PDO::ATTR_CASE => PDO::CASE_NATURAL],
-                'command' => ['SET SQL_MODE=ANSI_QUOTES'],
             ]);
         } catch (PDOException $e) {
             Notice::factory()->set('数据库连接失败：' . $e->getMessage(), 'warning');
@@ -202,16 +175,16 @@ function step2()
         }
 
         try {
-            $db->action(function ($db) {
+            $mysql->action(function ($mysql) {
                 // 删除表
-                $db->drop('users');
-                $db->drop('options');
-                $db->drop('terms');
-                $db->drop('posts');
-                $db->drop('caches');
+                $mysql->drop('users');
+                $mysql->drop('options');
+                $mysql->drop('terms');
+                $mysql->drop('posts');
+                $mysql->drop('caches');
 
                 // 创建用户表
-                $db->create('users', [
+                $mysql->create('users', [
                     'uid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
                     'role' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
                     'nickname' => ['VARCHAR(60)', 'NOT NULL'],
@@ -222,12 +195,12 @@ function step2()
                 ]);
 
                 // 创建配置表
-                $db->create('options', [
+                $mysql->create('options', [
                     'name' => ['VARCHAR(30)', 'NOT NULL', 'PRIMARY KEY'],
                     'value' => ['LONGTEXT', 'NOT NULL'],
                 ]);
                 // 插入配置数据
-                $db->insert("options", [
+                $mysql->insert("options", [
                     ['name' => 'title', 'value' => ''],
                     ['name' => 'description', 'value' => '又一个博客网站诞生了'],
                     ['name' => 'allowRegister', 'value' => '0'],
@@ -237,7 +210,7 @@ function step2()
                 ]);
 
                 // 创建缓存表
-                $db->create('caches', [
+                $mysql->create('caches', [
                     'name' => ['VARCHAR(200)', 'NOT NULL', 'PRIMARY KEY'],
                     'value' => ['LONGTEXT', 'NOT NULL'],
                     'expires' => ['int', 'UNSIGNED', 'NOT NULL'],

@@ -3,12 +3,12 @@
 namespace Nebula\Widgets\Plugins;
 
 use Nebula\Plugin;
+use Nebula\Widget;
 use Nebula\Helpers\Renderer;
 use Nebula\Helpers\Validate;
-use Nebula\Widgets\Database;
 use Nebula\Widgets\Notice;
 
-class Handle extends Database
+class Handle extends Widget
 {
     /**
      * 已启用列表

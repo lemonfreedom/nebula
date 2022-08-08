@@ -8,9 +8,6 @@ if (!@include NEBULA_ROOT_PATH . '/config.php') {
     exit;
 }
 
-// 加载公共文件
-require NEBULA_ROOT_PATH . 'includes/Common.php';
-
 // 初始化
 \Nebula\Common::init();
 
