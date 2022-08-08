@@ -1,10 +1,4 @@
-<?php $pluginName = Nebula\Request::getInstance()->get('name'); ?>
-<div class="nebula-title">
-    <div>
-        <span>插件配置「<?= $pluginName ?>」</span>
-        <a href="/admin/plugins.php">返回</a>
-    </div>
-</div>
+<?php $pluginName = \Nebula\Request::getInstance()->get('name'); ?>
 <form class="nebula-form" action="/plugin/update-config" method="post">
     <input type="text" hidden name="pluginName" value="<?= $pluginName ?>">
     <div class="form-item">

@@ -1,6 +1,6 @@
 <div class="nebula-title">
     <div>
-        <span>主题配置「<?= \Nebula\Widgets\Option::factory()->get('theme')['name'] ?>」</span>
+        <span>主题配置「<?= \Nebula\Widgets\Options\Method::factory()->get('theme')['name'] ?>」</span>
         <a href="/admin/themes.php">返回</a>
     </div>
 </div>

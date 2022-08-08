@@ -305,8 +305,6 @@ class Handle extends Database
             $this->response->redirect('/admin/profile.php?action=permission&uid=' . $this->loginUserInfo['uid']);
         }
 
-
-
         $data = $this->request->post();
 
         $validate = new Validate($data, [

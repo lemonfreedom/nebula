@@ -11,6 +11,18 @@ use Nebula\Widgets\Notice;
 class Handle extends Database
 {
     /**
+     * 已启用列表
+     *
+     * @var array
+     */
+    private $enabledList = [];
+
+    public function init()
+    {
+        $this->enabledList = Plugin::export();
+    }
+
+    /**
      * 启用插件
      *
      * @return void
@@ -19,11 +31,8 @@ class Handle extends Database
     {
         $pluginName = Method::factory()->getPluginClassName($this->params('pluginName'));
 
-        // 已启用插件列表
-        $plugins = Plugin::export();
-
         // 判断组件是否已启用
-        if (array_key_exists($pluginName, $plugins)) {
+        if (array_key_exists($pluginName, $this->enabledList)) {
             Notice::factory()->set('不能重复启用插件', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
@@ -60,11 +69,8 @@ class Handle extends Database
         // 插件类名
         $pluginClassName = Method::factory()->getPluginClassName($this->params('pluginName'));
 
-        // 已启用插件列表
-        $plugins = Plugin::export();
-
         // 判断组件是否已停用
-        if (!isset($plugins[$pluginClassName])) {
+        if (!isset($this->enabledList[$pluginClassName])) {
             Notice::factory()->set('不能重复停用插件', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
@@ -93,8 +99,6 @@ class Handle extends Database
      */
     private function updateConfig()
     {
-        // 已启用插件列表
-        $plugins = Plugin::export();
 
         // 插件类名
         $pluginClassName = Method::factory()->getPluginClassName($this->request->post('pluginName'));
@@ -104,14 +108,14 @@ class Handle extends Database
             $this->response->redirect('/admin/plugins.php');
         }
 
-        if (!array_key_exists($pluginClassName, $plugins)) {
+        if (!array_key_exists($pluginClassName, $this->enabledList)) {
             Notice::factory()->set('插件未启用', 'warning');
             $this->response->redirect('/admin/plugins.php');
         }
 
         $data = $this->request->post();
 
-        $pluginConfig = $plugins[$pluginClassName]['config'];
+        $pluginConfig = $this->enabledList[$pluginClassName]['config'];
 
         $rules = [];
         foreach (array_keys($pluginConfig) as $value) {

@@ -39,6 +39,9 @@ class Request
      */
     public $currentIndex;
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         $this->requestURI = $_SERVER['REQUEST_URI'];

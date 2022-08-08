@@ -12,6 +12,9 @@ class Database extends Widget
      */
     public $db;
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();

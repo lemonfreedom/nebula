@@ -69,26 +69,25 @@ class Method extends Database
     /**
      * 获取指定用户信息，若参数为空，则查询登陆用户信息
      *
-     * @param null｜string $key 字段名
+     * @param null|string $name 字段名
      * @param string $defaultValue 默认值
-     * @return mixed
+     * @return null|string|array
      */
-    public function getUserInfo($key = null, $defaultValue = '')
+    public function get($name = null, $defaultValue = '')
     {
-        $userInfo = null;
-
         $uid = $this->params('uid');
 
+        $userInfo = null;
         if (null === $uid) {
             $userInfo = $this->loginUserInfo;
         } else {
             $userInfo = $this->db->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
         }
 
-        if (null === $key) {
+        if (null === $name) {
             return $userInfo;
         } else {
-            return $userInfo[$key] ?? $defaultValue;
+            return $userInfo[$name] ?? $defaultValue;
         }
     }
 
@@ -137,7 +136,7 @@ class Method extends Database
     public function inRole($roles)
     {
         if ($this->hasLogin()) {
-            return in_array($this->getUserInfo('role'), $roles);
+            return in_array($this->get('role'), $roles);
         } else {
             return false;
         }

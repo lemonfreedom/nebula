@@ -39,10 +39,10 @@
             </ul>
             <ul class="menu">
                 <li class="<?= $request->currentIndex === 'profile.php' ? 'active' : '' ?>">
-                    <a href="/admin/profile.php?uid=<?= \Nebula\Widgets\Users\Method::factory()->getUserInfo('uid') ?>">
+                    <a href="/admin/profile.php?uid=<?= \Nebula\Widgets\Users\Method::factory()->get('uid') ?>">
                         <!-- <img class="avatar" src="" alt=""> -->
                         <i class="bi bi-person"></i>
-                        <span class="text"><?= \Nebula\Widgets\Users\Method::factory()->getUserInfo('nickname') ?></span>
+                        <span class="text"><?= \Nebula\Widgets\Users\Method::factory()->get('nickname') ?></span>
                     </a>
                 </li>
                 <li>

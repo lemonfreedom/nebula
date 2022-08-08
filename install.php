@@ -200,31 +200,6 @@ function step2()
             Notice::factory()->set('数据库连接失败：' . $e->getMessage(), 'warning');
             Response::getInstance()->redirect('/install.php?step=1');
         }
-        $configString = <<<EOT
-<?php
-// 调试模式
-define('NEBULA_DEBUG', true);
-
-// 数据库配置
-define('NEBULA_DB_CONFIG', [
-    // 必填
-    'type' => 'mysql',
-    'host' => '{$data['host']}',
-    'database' => '{$data['database']}',
-    'username' => '{$data['username']}',
-    'password' => '{$data['password']}',
-
-    // 可选
-    'charset' => '{$data['charset']}',
-    'collation' => '{$data['collation']}',
-    'port' => {$data['port']},
-    'prefix' => '{$data['prefix']}',
-    'logging' => false,
-    'error' => PDO::ERRMODE_SILENT,
-    'option' => [PDO::ATTR_CASE => PDO::CASE_NATURAL],
-    'command' => ['SET SQL_MODE=ANSI_QUOTES'],
-]);\n
-EOT;
 
         try {
             $db->action(function ($db) {
@@ -273,18 +248,34 @@ EOT;
             Response::getInstance()->redirect('/install.php?step=1');
         }
 
+        $configString = <<<EOT
+<?php
+// 调试模式
+define('NEBULA_DEBUG', true);
+
+// 数据库配置
+define('NEBULA_DB_CONFIG', [
+    // 必填
+    'type' => 'mysql',
+    'host' => '{$data['host']}',
+    'database' => '{$data['database']}',
+    'username' => '{$data['username']}',
+    'password' => '{$data['password']}',
+
+    // 可选
+    'charset' => '{$data['charset']}',
+    'collation' => '{$data['collation']}',
+    'port' => {$data['port']},
+    'prefix' => '{$data['prefix']}',
+    'logging' => false,
+    'error' => PDO::ERRMODE_SILENT,
+    'option' => [PDO::ATTR_CASE => PDO::CASE_NATURAL],
+    'command' => ['SET SQL_MODE=ANSI_QUOTES'],
+]);\n
+EOT;
+
         // 写入配置文件
         file_put_contents(NEBULA_ROOT_PATH . 'config.php', $configString);
-    }
-
-    // 未初始化跳到步骤一
-    if (!has_been_init()) {
-        Response::getInstance()->redirect('/install.php?step=1');
-    }
-
-    // 存在管理员退出安装程序
-    if (administrator_exists()) {
-        Response::getInstance()->redirect('/');
     }
 
     echo <<<EOT

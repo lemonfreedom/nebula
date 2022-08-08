@@ -47,7 +47,7 @@ namespace Nebula {
                 });
             }
 
-            // 缓存初始化
+            // 开启缓存
             Cache::factory();
 
             // 插件初始化

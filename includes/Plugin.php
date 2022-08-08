@@ -40,8 +40,6 @@ class Plugin
     private static $tmp = [];
 
     /**
-     * 构造函数
-     *
      * @param string $handle 句柄
      * @return void
      */

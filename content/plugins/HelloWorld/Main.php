@@ -5,7 +5,7 @@ namespace Content\Plugins\HelloWorld;
 use Nebula\Plugin;
 
 /**
- * name: HelloWorld
+ * name: 你好世界
  * url: https://www.nebulaio.com/
  * version: 1.0
  * author: Noah Zhang

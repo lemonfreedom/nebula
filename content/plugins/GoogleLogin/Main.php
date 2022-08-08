@@ -5,7 +5,7 @@ namespace Content\Plugins\GoogleLogin;
 use Nebula\Plugin;
 
 /**
- * name: GoogleLogin
+ * name: 谷歌登录
  * url: https://www.nbacms.com/
  * version: 1.0
  * author: Noah Zhang

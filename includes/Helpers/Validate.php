@@ -26,8 +26,6 @@ class Validate
     public $result = [];
 
     /**
-     * 构造函数
-     *
      * @param array $data 待验证数据
      * @param array $rules 验证规则
      * @return void

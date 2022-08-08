@@ -7,14 +7,14 @@ class EmptyClass
     /**
      * 单例实例
      *
-     * @var Request
+     * @var EmptyClass
      */
     private static $instance;
 
     /**
      * 获取单例实例
      *
-     * @return Response
+     * @return EmptyClass
      */
     public static function getInstance()
     {
@@ -25,7 +25,12 @@ class EmptyClass
         return self::$instance;
     }
 
-    function __call($name, $arguments)
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return void
+     */
+    public function __call($name, $arguments)
     {
     }
 }

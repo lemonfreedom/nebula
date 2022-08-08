@@ -35,8 +35,6 @@ class Widget
     private $params;
 
     /**
-     * 构造函数
-     *
      * @param Request $request Request 对象
      * @param Response $response Response 对象
      * @return void
