@@ -24,14 +24,41 @@ class MySQL
      */
     private $prefix;
 
+    /**
+     * 操作类型
+     *
+     * @var string
+     */
+    private $type;
+
+    /**
+     * SQL 语句
+     *
+     * @var string
+     */
+    private $query = '';
+
+    /**
+     * SQL 参数
+     *
+     * @var array
+     */
+    private $params = [];
+
     private function __construct()
     {
     }
 
+    /**
+     * 初始化
+     *
+     * @param array $config 数据库配置
+     * @return void
+     */
     public function init($config)
     {
         try {
-            $this->mysql = new PDO("mysql:dbname={$config['dbname']};host={$config['host']};port={$config['port']}", $config['username'], $config['password'], [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8']);
+            $this->mysql = new PDO('mysql:dbname=' . $config['dbname'] . ';host=' . $config['host'] . ';port=' . $config['port'], $config['username'], $config['password'], [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8']);
         } catch (PDOException $e) {
             throw $e;
         }
@@ -40,61 +67,138 @@ class MySQL
     }
 
     /**
-     * 表名格式化
+     * 表名解析
      *
      * @param string $table 表名
      * @return string
      */
-    public function tableParse($table)
+    private function tableParse($table)
     {
-        return $this->prefix . $table;
+        return '`' . $this->prefix . $table . '`';
     }
 
     /**
-     * 获取一行数据
+     * 列名解析
      *
-     * @param string $query SQL 语句
-     * @param array $params 参数
-     * @return array 结果集
+     * @param string $column
+     * @return string
      */
-    public function getRow($query, $params = [])
+    private function columnParse($column)
     {
-        $sth = $this->mysql->prepare($query);
-        $sth->execute($params);
-        return $sth->fetch(PDO::FETCH_ASSOC);
+        $columnArray = explode('.', $column);
+        array_walk($columnArray, function (&$part) {
+            $part = '`' . $part . '`';
+        });
+
+        return implode('.', $columnArray);
     }
 
     /**
-     * 获取全部数据
+     * 多项列名解析
      *
-     * @param string $query SQL 语句
-     * @param array $params 参数
-     * @return array 结果集
+     * @param string $column
+     * @return string
      */
-    public function getRows($query, $params = [])
+    private function columnsParse($columns)
     {
-        $sth = $this->mysql->prepare($query);
-        $sth->execute($params);
-        return $sth->fetchAll(PDO::FETCH_CLASS);
+        array_walk($columns, function (&$column) {
+            $column = $this->columnParse($column);
+        });
+
+        return implode(', ', $columns);
     }
 
     /**
-     * 获取数据条数
+     * where 格式化
      *
-     * @param string $query SQL 语句
-     * @return int
+     * @param array $wheres
+     * @param string $separator
+     * @return string
      */
-    public function getCount($query)
+    private function whereParse($wheres, $separator = 'AND')
     {
-        $sth = $this->mysql->query($query);
-        $sth->fetchAll();
+        $where = '';
+
+        foreach ($wheres as $key => $value) {
+            if ($key === 'AND' || $key === 'OR') {
+                end($wheres);
+                if ($key === key($wheres)) {
+                    $where .= '(' . $this->whereParse($value, $key) . ')';
+                } else {
+                    $where .= '(' . $this->whereParse($value, $key) . ') ' . $separator . ' ';
+                }
+            } else {
+                preg_match('/^(.*)\[(.*)\]$/', $key, $matches);
+                $column = $this->columnParse($matches[1] ?? $key);
+                $operator = $matches[2] ?? '=';
+                $where .=  $column . ' ' . $operator . ' ? ' . $separator . ' ';
+
+                array_push($this->params, $value);
+            }
+        }
+
+        return rtrim($where, ' ' . $separator . ' ');
+    }
+
+    /**
+     * 查询构造器
+     *
+     * @param string $table 表名
+     * @param array $columns
+     * @return $this
+     */
+    public function select($table, $columns)
+    {
+        $this->type = 'SELECT';
+
+        $this->query = 'SELECT ' . $this->columnsParse($columns) . ' FROM ' . $this->tableParse($table);
+
+        return $this;
+    }
+
+    /**
+     * 只获取一条数据
+     *
+     * @param string $table 表名
+     * @param array $columns
+     * @return $this
+     */
+    public function get($table, $columns)
+    {
+        $this->type = 'GET';
+
+        $this->query = 'SELECT ' . $this->columnsParse($columns) . ' FROM ' . $this->tableParse($table);
+
+        return $this;
+    }
+
+    /**
+     * 更新数据
+     *
+     * @param string $table 表名
+     * @param array $values 数据
+     * @return $this
+     */
+    public function update($table, $values)
+    {
+        $this->type = 'UPDATE';
+
+        $stack = [];
+        foreach ($values as $key => $value) {
+            array_push($stack, $this->columnParse($key) . ' = ?');
+            array_push($this->params, $value);
+        }
+
+        $this->query = 'UPDATE ' . $this->tableParse($table) . ' SET ' . implode(', ', $stack);
+
+        return $this;
     }
 
     /**
      * 插入数据
      *
      * @param string $table 表名
-     * @param array $data 数据
+     * @param array $values 数据
      * @return bool
      */
     public function insert($table, $values)
@@ -103,7 +207,7 @@ class MySQL
             $values = [$values];
         }
 
-        $columns = array_keys($values[0]);
+        $columns = $this->columnsParse(array_keys($values[0]));
         $stack = [];
         $params = [];
 
@@ -117,32 +221,23 @@ class MySQL
             $params = array_merge($params, array_values($value));
         }
 
-        $sth = $this->mysql->prepare("INSERT INTO `{$this->tableParse($table)}` (`" . implode('`, `', $columns) . "`) VALUES " . implode(', ', $stack));
+        $sth = $this->mysql->prepare('INSERT INTO ' . $this->tableParse($table) . ' (' . $columns . ') VALUES ' . implode(', ', $stack));
+
         return $sth->execute($params);
     }
 
     /**
      * 删除数据
      *
-     * @param string $query SQL 语句
-     * @param array $params 参数
-     * @return bool 操作结果
-     */
-    public function delete($query, $params = [])
-    {
-        $sth = $this->mysql->prepare($query);
-        return $sth->execute($params);
-    }
-
-    /**
-     * 删除表
-     *
      * @param string $table 表名
-     * @return bool
+     * @return $this
      */
-    public function drop($table)
+    public function delete($table)
     {
-        return false !== $this->mysql->exec("DROP TABLE `{$this->tableParse($table)}`");
+        $this->type = 'DELETE';
+        $this->query = 'DELETE FROM ' . $this->tableParse($table);
+
+        return $this;
     }
 
     /**
@@ -155,24 +250,61 @@ class MySQL
     public function create($table, $columns)
     {
         $options = [];
-        foreach ($columns as $columnName => $option) {
-            array_push($options, "`{$columnName}` " . implode(' ', $option));
+        foreach ($columns as $column => $option) {
+            array_push($options, $this->columnParse($column) . ' ' . implode(' ', $option));
         }
 
-        return false !== $this->mysql->exec("CREATE TABLE `{$this->tableParse($table)}` (" . implode(', ', $options) . ')');
+        $table = $this->tableParse($table);
+
+        return false !== $this->mysql->exec('CREATE TABLE ' . $table . ' (' . implode(', ', $options) . ')');
     }
 
     /**
-     * @param string $name
-     * @param array $arguments
+     * 删除表
+     *
+     * @param string $table 表名
+     * @return bool
+     */
+    public function drop($table)
+    {
+        $table = $this->tableParse($table);
+
+        return false !== $this->mysql->exec('DROP TABLE ' . $table);
+    }
+
+    /**
+     * where 构造
+     *
+     * @param array $wheres 条件列表
+     * @param string $rel 关系
+     * @return $this
+     */
+    public function where($wheres)
+    {
+        $this->query .= ' WHERE ' . $this->whereParse($wheres);
+
+        return $this;
+    }
+
+    /**
+     * 执行
+     *
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function execute()
     {
-        if (method_exists($this, $name)) {
-            return call_user_func_array([$this, $name], $arguments);
+        $sth = $this->mysql->prepare($this->query);
+        $result = $sth->execute($this->params);
+
+        $this->query = '';
+        $this->params = [];
+
+        if ($this->type === 'SELECT') {
+            return json_decode(json_encode($sth->fetchAll(PDO::FETCH_CLASS)), true);
+        } else if ($this->type === 'GET') {
+            return json_decode(json_encode($sth->fetchAll(PDO::FETCH_CLASS)), true)[0] ?? [];
         } else {
-            return call_user_func_array([$this->mysql, $name], $arguments);
+            return $result;
         }
     }
 

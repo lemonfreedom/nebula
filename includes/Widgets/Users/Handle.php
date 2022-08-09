@@ -11,7 +11,6 @@ use Nebula\Widgets\Mails\Method as MailsMethod;
 
 class Handle extends Method
 {
-
     /**
      * 登陆
      *
@@ -43,14 +42,15 @@ class Handle extends Method
             $this->response->redirect('/admin/login.php');
         }
 
-        $userInfo = $this->mysql->getRow(
-            "SELECT `uid`, `password` FROM `{$this->mysql->tableParse('users')}`
-            WHERE `username` = :username OR `email` = :email",
-            [
-                'username' => $this->request->post('account'),
-                'email' => $this->request->post('email'),
-            ]
-        );
+        $userInfo = $this->db
+            ->get('users', ['uid', 'password'])
+            ->where([
+                'OR' => [
+                    'username' => $this->request->post('account'),
+                    'email' => $this->request->post('account'),
+                ]
+            ])
+            ->execute();
 
         // 验证密码
         if ($userInfo && Common::hashValidate($this->request->post('password'), $userInfo['password'])) {
@@ -59,18 +59,10 @@ class Handle extends Method
             $tokenHash = Common::hash($token);
 
             // 更新 token
-            // $this->db->update('users', ['token' => $token], ['uid' => $userInfo['uid']]);
-            $sth = $this->mysql->prepare(
-                "UPDATE `{$this->mysql->tableParse('users')}`
-                SET `token` = :token
-                WHERE `uid` = :uid"
-            );
-
-            $sth->execute([
-                ':username' => $this->request->post('account'),
-                ':email' => $this->request->post('email'),
-            ]);
-
+            $this->db
+                ->update('users', ['token' => $token])
+                ->where(['uid' => $userInfo['uid']])
+                ->execute();
 
             Cookie::set('uid', $userInfo['uid']);
             Cookie::set('token', $tokenHash);
@@ -169,7 +161,10 @@ class Handle extends Method
         // 清空登陆用户信息
         $this->loginUserInfo = null;
         // 清空 token
-        $this->db->update('users', ['token' => ''], ['uid' => Cookie::get('uid', '')]);
+        $this->db
+            ->update('users', ['token' => ''])
+            ->where(['uid' => Cookie::get('uid', '')])
+            ->execute();
         // 清除用户 cookie
         Cookie::delete('uid');
         Cookie::delete('token');
@@ -219,7 +214,10 @@ class Handle extends Method
             $this->response->redirect('/admin/profile.php?uid=' . $uid);
         }
 
-        $userInfo = $this->db->get('users', ['uid'], ['username' => $data['username']]);
+        $userInfo = $this->db
+            ->get('users', ['uid'])
+            ->where(['username' => $data['username']])
+            ->execute();
 
         // 用户名是否存在
         if (null !== $userInfo && $userInfo['uid'] !== $uid) {
@@ -228,18 +226,24 @@ class Handle extends Method
         }
 
         // 邮箱是否存在
-        $userInfo = $this->db->get('users', ['uid'], ['email' => $data['email']]);
+        $userInfo = $this->db
+            ->get('users', ['uid'])
+            ->where(['email' => $data['email']])
+            ->execute();
         if (null !== $userInfo && $userInfo['uid'] !== $uid) {
             Notice::factory()->set('邮箱已存在', 'warning');
             $this->response->redirect('/admin/profile.php?uid=' . $uid);
         }
 
         // 修改数据
-        $this->db->update('users', [
-            'username' => $data['username'],
-            'nickname' => $data['nickname'],
-            'email' => $data['email'],
-        ], ['uid' => $uid]);
+        $this->db
+            ->update('users', [
+                'username' => $data['username'],
+                'nickname' => $data['nickname'],
+                'email' => $data['email'],
+            ])
+            ->where(['uid' => $uid])
+            ->execute();
 
         Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/profile.php?uid=' . $uid);
@@ -289,10 +293,13 @@ class Handle extends Method
         }
 
         // 修改数据
-        $this->db->update('users', [
-            'password' => Common::hash($data['password']),
-            'token' => '',
-        ], ['uid' => $uid]);
+        $this->db
+            ->update('users', [
+                'password' => Common::hash($data['password']),
+                'token' => '',
+            ])
+            ->where(['uid' => $uid])
+            ->execute();
 
         Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/profile.php?action=password&uid=' . $uid);
@@ -332,9 +339,12 @@ class Handle extends Method
         }
 
         // 修改数据
-        $this->db->update('users', [
-            'role' => $data['role'],
-        ], ['uid' => $uid]);
+        $this->db
+            ->update('users', [
+                'role' => $data['role'],
+            ])
+            ->where(['uid' => $uid])
+            ->execute();
 
         Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/profile.php?action=permission&uid=' . $uid);

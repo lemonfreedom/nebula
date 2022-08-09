@@ -1,8 +1,8 @@
 <?php
 
-use Nebula\Helpers\MySQL;
 use Nebula\Request;
 use Nebula\Response;
+use Nebula\Helpers\MySQL;
 use Nebula\Helpers\Validate;
 use Nebula\Widgets\Notice;
 use Nebula\Widgets\Users\Method as UsersMethod;
@@ -10,7 +10,7 @@ use Nebula\Widgets\Options\Method as OptionsMethod;
 
 define('NEBULA_ROOT_PATH', __DIR__ . '/');
 
-include NEBULA_ROOT_PATH . 'includes/Common.php';
+include_once NEBULA_ROOT_PATH . 'includes/Common.php';
 
 // SMTP 配置
 function smtp_config()
@@ -169,9 +169,9 @@ function step2()
             'role' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
             'nickname' => ['VARCHAR(60)', 'NOT NULL'],
             'username' => ['VARCHAR(60)', 'NOT NULL', 'UNIQUE'],
-            'password' => ['VARCHAR(64)', 'NOT NULL', 'UNIQUE'],
+            'password' => ['VARCHAR(64)', 'NOT NULL'],
             'email' => ['VARCHAR(100)', 'NOT NULL', 'UNIQUE'],
-            'token' => ['VARCHAR(32)', 'NOT NULL'],
+            'token' => ['VARCHAR(32)'],
         ]);
 
         // 创建配置表
@@ -206,7 +206,7 @@ function step2()
 define('NEBULA_DEBUG', true);
 
 // 加载公共文件
-include NEBULA_ROOT_PATH . 'includes/Common.php';
+include_once NEBULA_ROOT_PATH . 'includes/Common.php';
 
 // 数据库初始化
 \Nebula\Helpers\MySQL::getInstance()->init([
@@ -255,6 +255,8 @@ EOT;
 // 步骤三
 function step3()
 {
+    include_once NEBULA_ROOT_PATH . 'config.php';
+
     $data = Request::getInstance()->post();
 
     $validate = new Validate($data, [

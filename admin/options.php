@@ -12,6 +12,7 @@
             <div class="tab<?= $action === 'smtp' ? ' active' : '' ?>">
                 <a href="/admin/options.php?action=smtp">SMTP 设置</a>
             </div>
+            <?php \Nebula\Plugin::factory('admin/options.php')->tab(); ?>
         </div>
     </div>
     <?php if ($action === 'smtp') : ?>
@@ -83,6 +84,7 @@
             </div>
         </form>
     <?php endif; ?>
+    <?php \Nebula\Plugin::factory('admin/options.php')->tabContent(); ?>
 </div>
 <?php require __DIR__ . '/copyright.php'; ?>
 <?php require __DIR__ . '/common-js.php'; ?>

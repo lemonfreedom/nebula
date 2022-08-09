@@ -17,11 +17,29 @@ $mysql->init([
     'prefix' => 'nebula_',
 ]);
 
-// 创建配置表
-$mysql->create('options', [
-    'name' => ['VARCHAR(30)', 'NOT NULL', 'PRIMARY KEY'],
-    'value' => ['LONGTEXT', 'NOT NULL'],
-]);
+$result = $mysql->select('users', ['password'])->where([
+    'OR' => [
+        'uid' => 1,
+        'email' => 1,
+    ]
+])->execute();
 
-// 插入配置数据
-$mysql->insert("options", ['name' => 'description', 'value' => '又一个博客网站诞生了']);
+// 创建配置表
+// $mysql->create('options', [
+//     'name' => ['VARCHAR(30)', 'NOT NULL', 'PRIMARY KEY'],
+//     'value' => ['LONGTEXT', 'NOT NULL'],
+// ]);
+
+// // 插入配置数据
+// $result = $mysql
+//     ->update("options", ['value' => '222'])
+//     ->where(['name' => 'theme'])
+//     ->execute();
+
+// $result = $mysql->delete('users', ['username'])
+//     ->where([
+//         'usern1ame' => 'admi1n'
+//     ])->execute();
+// echo "<pre>";
+
+print_r($result);

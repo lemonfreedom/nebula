@@ -30,19 +30,14 @@ class Cache extends Widget
      */
     private $caches = [];
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->mysql = MySQL::factory();
-    }
-
     public function init()
     {
         // 删除过期
-        $this->mysql->delete("DELETE FROM `{$this->mysql->tableParse('caches')}` WHERE `expires` < :time", [':time' => time()]);
+        $this->db->delete('caches', ['expires[<]' => time()]);
 
-        $this->caches = $this->mysql->getRows("SELECT `name`, `value`, `expires` FROM {$this->mysql->tableParse('caches')}");
+        $this->caches = $this->db
+            ->select('caches', ['name', 'value', 'expires'])
+            ->execute();
 
         $cacheId = Cookie::get('cache_id');
 
@@ -90,7 +85,7 @@ class Cache extends Widget
         }, $this->caches));
 
         if (false === $index) {
-            $this->mysql->insert('caches', [
+            $this->db->insert('caches', [
                 'name' => $name,
                 'value' => $value,
                 'expires' => time() + $expires
@@ -98,10 +93,12 @@ class Cache extends Widget
             array_push($this->caches, ['name' => $name, 'value' => $value]);
         } else {
             if ($this->caches[$index]['value'] !== $value) {
-                $this->mysql->update('caches', [
-                    'value' => $value,
-                    'expires' => time() + $expires
-                ], ['name' => $name]);
+                $this->db
+                    ->update('caches', [
+                        'value' => $value,
+                        'expires' => time() + $expires
+                    ])
+                    ->where(['name' => $name]);
                 $this->caches[$index]['value'] = $value;
             }
         }

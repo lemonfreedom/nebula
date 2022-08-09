@@ -15,7 +15,7 @@ class Method extends Widget
      *
      * @var array
      */
-    private $enabledList = [];
+    private $enabled = [];
 
     /**
      * 插件列表
@@ -26,7 +26,7 @@ class Method extends Widget
 
     public function init()
     {
-        $this->enabledList = OptionsMethod::factory()->get('theme');
+        $this->enabled = OptionsMethod::factory()->get('theme');
     }
 
     /**
@@ -49,10 +49,10 @@ class Method extends Widget
                 $themeInfo['screenshot_url'] = '/content/themes/' . $themeInfo['dir'] . '/screenshot.png';
 
                 // 修改启用状态
-                $themeInfo['is_activated'] = $themeInfo['dir'] === $this->enabledList['name'];
+                $themeInfo['is_activated'] = $themeInfo['dir'] === $this->enabled['name'];
 
                 // 主题是否可配置
-                $themeInfo['is_config'] = $themeInfo['is_activated'] && [] !== $this->enabledList['config'];
+                $themeInfo['is_config'] = $themeInfo['is_activated'] && [] !== $this->enabled['config'];
 
                 $themeIndexPath = $themeDirs . '/functions.php';
 
@@ -72,15 +72,15 @@ class Method extends Widget
     public function config()
     {
         // 是否具备配置功能
-        if ([] === $this->enabledList['config']) {
+        if ([] === $this->enabled['config']) {
             Notice::factory()->set('配置功能不存在', 'warning');
             $this->response->redirect('/admin/themes.php');
         }
 
-        include NEBULA_ROOT_PATH . 'content/themes/' . $this->enabledList['name'] . '/functions.php';
+        include NEBULA_ROOT_PATH . 'content/themes/' . $this->enabled['name'] . '/functions.php';
 
         $renderer = new Renderer();
         theme_config($renderer);
-        $renderer->render($theme['config']);
+        $renderer->render($this->enabled['config']);
     }
 }

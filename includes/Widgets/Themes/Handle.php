@@ -15,11 +15,11 @@ class Handle extends Widget
      *
      * @var array
      */
-    private $enabledList = [];
+    private $enabled = [];
 
     public function init()
     {
-        $this->enabledList = OptionsMethod::factory()->get('theme');
+        $this->enabled = OptionsMethod::factory()->get('theme');
     }
 
     /**
@@ -31,7 +31,7 @@ class Handle extends Widget
     {
         $themeName = $this->params('themeName');
 
-        if ($themeName === $this->enabledList['name']) {
+        if ($themeName === $this->enabled['name']) {
             Notice::factory()->set('不能重复启用', 'warning');
             $this->response->redirect('/admin/themes.php');
         }
@@ -50,7 +50,10 @@ class Handle extends Widget
         }
 
         // 提交修改
-        $this->db->update('options', ['value' => serialize(['name' => $themeName, 'config' => $themeConfig])], ['name' => 'theme']);
+        $this->db
+            ->update('options', ['value' => serialize(['name' => $themeName, 'config' => $themeConfig])])
+            ->where(['name' => 'theme'])
+            ->execute();
 
         Notice::factory()->set('启用成功', 'success');
         $this->response->redirect('/admin/themes.php');
@@ -66,7 +69,7 @@ class Handle extends Widget
         $data = $this->request->post();
 
         $rules = [];
-        foreach (array_keys($this->enabledList['config']) as $value) {
+        foreach (array_keys($this->enabled['config']) as $value) {
             $rules[$value] = [['type' => 'required', 'message' => '「' . $value . '」不能为空']];
         }
         $validate = new Validate($data, $rules);
@@ -75,12 +78,15 @@ class Handle extends Widget
             $this->response->redirect('/admin/theme-config.php');
         }
 
-        foreach (array_keys($this->enabledList['config']) as $value) {
-            $theme['config'][$value] = $data[$value];
+        foreach (array_keys($this->enabled['config']) as $value) {
+            $this->enabled['config'][$value] = $data[$value];
         }
 
         // 提交修改
-        $this->db->update('options', ['value' => serialize($theme)], ['name' => 'theme']);
+        $this->db
+            ->update('options', ['value' => serialize($this->enabled)])
+            ->where(['name' => 'theme'])
+            ->execute();
 
         Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/themes.php');

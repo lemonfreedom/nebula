@@ -53,7 +53,9 @@ class Handle extends Widget
         Plugin::activate($pluginName, $pluginConfig);
 
         // 提交修改
-        $this->db->update('options', ['value' => serialize(Plugin::export())], ['name' => 'plugins']);
+        $this->db
+            ->update('options', ['value' => serialize(Plugin::export())])
+            ->where(['name' => 'plugins'])->execute();
 
         Notice::factory()->set('启用成功', 'success');
         $this->response->redirect('/admin/plugins.php');
@@ -86,7 +88,10 @@ class Handle extends Widget
         Plugin::deactivate($pluginClassName);
 
         // 提交修改
-        $this->db->update('options', ['value' => serialize(Plugin::export())], ['name' => 'plugins']);
+        $this->db
+            ->update('options', ['value' => serialize(Plugin::export())])
+            ->where(['name' => 'plugins'])
+            ->execute();
 
         Notice::factory()->set('禁用成功', 'success');
         $this->response->redirect('/admin/plugins.php');
@@ -131,7 +136,10 @@ class Handle extends Widget
         Plugin::updateConfig($pluginClassName, $data);
 
         // 提交修改
-        $this->db->update('options', ['value' => serialize(Plugin::export())], ['name' => 'plugins']);
+        $this->db
+            ->update('options', ['value' => serialize(Plugin::export())])
+            ->where(['name' => 'plugins'])
+            ->execute();
 
         Notice::factory()->set('修改成功', 'success');
         $this->response->redirect('/admin/plugins.php');

@@ -2,39 +2,20 @@
 
 namespace Nebula\Widgets\Options;
 
-use Nebula\Common;
-use PDO;
 use Nebula\Widget;
-use Nebula\Widgets\MySQL;
 
 class Method extends Widget
 {
-    /**
-     * 数据库实例
-     *
-     * @var MySQL
-     */
-    private $mysql;
-
     /**
      * @var array
      */
     private $options = [];
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->mysql = MySQL::factory();
-    }
-
     public function init()
     {
-        $this->options = Common::objectToArray(
-            $this->mysql
-                ->query("SELECT `name`, `value` FROM `{$this->mysql->tableParse('options')}`")
-                ->fetchAll(PDO::FETCH_CLASS)
-        );
+        $this->options = $this->db
+            ->select('options', ['name', 'value'])
+            ->execute();
 
         foreach ($this->options as $index => $option) {
             // 布尔选项处理
@@ -88,9 +69,12 @@ class Method extends Widget
             array_push($this->options, ['name' => $name, 'value' => $value]);
         } else {
             if ($this->options[$index]['value'] !== $value) {
-                $this->db->update('options', [
-                    'value' => $value,
-                ], ['name' => $name]);
+                $this->db
+                    ->update('options', [
+                        'value' => $value,
+                    ])
+                    ->where(['name' => $name])
+                    ->execute();
                 $this->options[$index]['value'] = $value;
             }
         }
@@ -118,7 +102,10 @@ class Method extends Widget
      */
     public function deleteOption($name)
     {
-        $this->db->delete('options', ['name' => $name]);
+        $this->db
+            ->delete('options')
+            ->where(['name' => $name])
+            ->execute();
     }
 
     /**

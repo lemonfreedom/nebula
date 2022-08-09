@@ -42,7 +42,7 @@ class Widget
      */
     public function __construct()
     {
-        $this->mysql = MySQL::getInstance();
+        $this->db = MySQL::getInstance();
         $this->request = Request::getInstance();
         $this->response = Response::getInstance();
     }

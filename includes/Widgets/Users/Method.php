@@ -47,8 +47,10 @@ class Method extends Widget
 
             // cookie 是否存在
             if (null !== $uid && null !== $token) {
-                $this->mysql->getRow();
-                $loginUserInfo = $this->db->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
+                $loginUserInfo = $this->db
+                    ->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'])
+                    ->where(['uid' => $uid])
+                    ->execute();
                 // 用户信息是否存在
                 if ($loginUserInfo) {
                     // token 有效性
@@ -82,7 +84,10 @@ class Method extends Widget
         if (null === $uid) {
             $userInfo = $this->loginUserInfo;
         } else {
-            $userInfo = $this->db->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], ['uid' => $uid]);
+            $userInfo = $this->db
+                ->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'])
+                ->where(['uid' => $uid])
+                ->execute();
         }
 
         if (null === $name) {
@@ -118,14 +123,17 @@ class Method extends Widget
     {
         $keyword = trim($this->params('keyword'));
 
-        return $this->db->select('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'], [
-            'OR' => [
-                'uid[~]' => $keyword,
-                'username[~]' => $keyword,
-                'email[~]' => $keyword,
-                'nickname[~]' => $keyword,
-            ],
-        ]);
+        return $this->db
+            ->select('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'])
+            ->where([
+                'OR' => [
+                    'uid[~]' => $keyword,
+                    'username[~]' => $keyword,
+                    'email[~]' => $keyword,
+                    'nickname[~]' => $keyword,
+                ],
+            ])
+            ->execute();
     }
 
     /**
