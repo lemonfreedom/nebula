@@ -1,8 +1,8 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php \Nebula\Widgets\Users\Method::factory()->inRole(['0']) || $response->redirect('/admin'); ?>
+<?php \Nebula\Widgets\User::factory()->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
-<?php $pluginList = \Nebula\Widgets\Plugins\Method::factory()->getPluginList(); ?>
+<?php $pluginList = \Nebula\Widgets\Plugin::factory()->getPluginList(); ?>
 <div class="container">
     <div class="nebula-title">插件</div>
     <div class="nebula-table">

@@ -5,8 +5,8 @@ use Nebula\Response;
 use Nebula\Helpers\MySQL;
 use Nebula\Helpers\Validate;
 use Nebula\Widgets\Notice;
-use Nebula\Widgets\Users\Method as UsersMethod;
-use Nebula\Widgets\Options\Method as OptionsMethod;
+use Nebula\Widgets\User;
+use Nebula\Widgets\Option;
 
 define('NEBULA_ROOT_PATH', __DIR__ . '/');
 
@@ -281,10 +281,10 @@ function step3()
     }
 
     // 修改选项
-    OptionsMethod::factory()->set('title', $data['title']);
+    Option::factory()->set('title', $data['title']);
 
     // 创建管理员
-    UsersMethod::factory()->createUser($data['username'], $data['password'], $data['email'], '0');
+    User::factory()->createUser($data['username'], $data['password'], $data['email'], '0');
 
     echo <<<EOT
 <div class="nebula-title">安装成功</div>

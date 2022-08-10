@@ -7,8 +7,7 @@ use Nebula\Plugin;
 use Nebula\Response;
 use Nebula\Widgets\Cache;
 use Nebula\Widgets\Notice;
-use Nebula\Widgets\Options\Method as OptionsMethod;
-use Nebula\Widgets\Users\Method as UsersMethod;
+use Nebula\Widgets\Option;
 
 /**
  * name: SMTP 邮件
@@ -34,10 +33,10 @@ class Main
         \Nebula\Plugin::factory('admin/register.php')->emailFormItem =  __CLASS__ . '::emailFormItemRender';
 
         // 更新配置
-        Plugin::factory('includes/Widgets/Options/Handle.php')->update = __CLASS__ . '::update';
+        Plugin::factory('includes/Widgets/Option.php')->update = __CLASS__ . '::update';
 
         // 数据初始化
-        OptionsMethod::factory()->set('smtp', serialize([
+        Option::factory()->set('smtp', serialize([
             'host' => '',
             'port' => '',
             'username' => '',
@@ -55,7 +54,7 @@ class Main
     public static function deactivate()
     {
         // 删除数据
-        OptionsMethod::factory()->delete('smtp');
+        Option::factory()->delete('smtp');
     }
 
     /**
@@ -82,7 +81,7 @@ class Main
      */
     public static function tabContentRender($data)
     {
-        $option = OptionsMethod::factory();
+        $option = Option::factory();
         $action = $data['action'];
         include __DIR__ . '/views/tab-content.php';
     }
@@ -137,7 +136,7 @@ class Main
             }
 
             // 更新
-            OptionsMethod::factory()->set('smtp', serialize([
+            Option::factory()->set('smtp', serialize([
                 'host' => $data['host'],
                 'username' => $data['username'],
                 'password' => $data['password'],

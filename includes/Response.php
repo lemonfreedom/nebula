@@ -3,7 +3,7 @@
 namespace Nebula;
 
 use Exception;
-use Nebula\Widgets\Options\Method as OptionsMethod;
+use Nebula\Widgets\Option;
 
 class Response
 {
@@ -46,7 +46,7 @@ class Response
     public function render($fileName, $data = [])
     {
         // 当前主题
-        $theme = OptionsMethod::factory()->get('theme');
+        $theme = Option::factory()->get('theme');
         $data['theme_config'] = $theme['config'];
 
         header('Content-Type: text/html; charset=utf-8');

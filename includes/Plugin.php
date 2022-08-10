@@ -167,11 +167,12 @@ class Plugin
      */
     public function __set($name, $value)
     {
-        $name = $this->handle . ':' . $name;
-        if (isset(self::$tmp) && isset(self::$tmp[$name])) {
-            array_push(self::$tmp[$name], $value);
+        $pluginHandle = $this->handle . ':' . $name;
+
+        if (isset(self::$tmp) && isset(self::$tmp[$pluginHandle])) {
+            array_push(self::$tmp[$pluginHandle], $value);
         } else {
-            self::$tmp[$name] = [$value];
+            self::$tmp[$pluginHandle] = [$value];
         }
     }
 }

@@ -1,4 +1,4 @@
-<?php \Nebula\Widgets\Users\Method::factory()->to($user); ?>
+<?php \Nebula\Widgets\User::factory()->to($user); ?>
 <?php $this->render('header'); ?>
 <div class="container">
     <div>这是主题 nebula</div>

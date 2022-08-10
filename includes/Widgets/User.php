@@ -1,16 +1,178 @@
 <?php
 
-namespace Nebula\Widgets\Users;
+namespace Nebula\Widgets;
 
 use Nebula\Common;
+use Nebula\Widget;
 use Nebula\Helpers\Cookie;
 use Nebula\Helpers\Validate;
-use Nebula\Widgets\Cache;
-use Nebula\Widgets\Notice;
-use Nebula\Widgets\Mails\Method as MailsMethod;
+use Nebula\Widgets\Mail;
 
-class Handle extends Method
+class User extends Widget
 {
+    /**
+     * 是否已登陆
+     *
+     * @var null|bool
+     */
+    private $hasLogin = null;
+
+    /**
+     * 登陆用户信息
+     *
+     * @var null|array
+     */
+    private $loginUserInfo = null;
+
+    /**
+     * 角色列表
+     *
+     * @var array
+     */
+    public $roleList = [
+        ['name' => '管理员', 'value' => '0'],
+        ['name' => '普通用户', 'value' => '1'],
+        ['name' => '访客', 'value' => '2'],
+        ['name' => '封禁', 'value' => '255'],
+    ];
+
+    /**
+     * 获取登陆状态
+     *
+     * @return bool 是否已登陆
+     */
+    public function hasLogin()
+    {
+        if (null === $this->hasLogin) {
+            $uid = Cookie::get('uid');
+            $token = Cookie::get('token');
+
+            // cookie 是否存在
+            if (null !== $uid && null !== $token) {
+                $loginUserInfo = $this->db
+                    ->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'])
+                    ->where(['uid' => $uid])
+                    ->execute();
+                // 用户信息是否存在
+                if ($loginUserInfo) {
+                    // token 有效性
+                    $this->hasLogin = Common::hashValidate($loginUserInfo['token'], $token);
+                    if ($this->hasLogin) {
+                        $this->loginUserInfo = $loginUserInfo;
+                    }
+                } else {
+                    $this->hasLogin = false;
+                }
+            } else {
+                $this->hasLogin = false;
+            }
+        }
+
+        return $this->hasLogin;
+    }
+
+    /**
+     * 获取指定用户信息，若参数为空，则查询登陆用户信息
+     *
+     * @param null|string $name 字段名
+     * @param string $defaultValue 默认值
+     * @return null|string|array
+     */
+    public function get($name = null, $defaultValue = '')
+    {
+        $uid = $this->params('uid');
+
+        $userInfo = null;
+        if (null === $uid) {
+            $userInfo = $this->loginUserInfo;
+        } else {
+            $userInfo = $this->db
+                ->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'])
+                ->where(['uid' => $uid])
+                ->execute();
+        }
+
+        if (null === $name) {
+            return $userInfo;
+        } else {
+            return $userInfo[$name] ?? $defaultValue;
+        }
+    }
+
+    /**
+     * 通过角色值返回角色名
+     *
+     * @param string $value 角色值
+     * @return string 角色名
+     */
+    public function getRoleName($value)
+    {
+        foreach ($this->roleList as $role) {
+            if ($role['value'] === $value) {
+                return $role['name'];
+            }
+        }
+
+        return '未知';
+    }
+
+    /**
+     * 获取用户列表
+     *
+     * @return array 用户列表
+     */
+    public function getUserList()
+    {
+        $keyword = trim($this->params('keyword'));
+
+        return $this->db
+            ->select('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'])
+            ->where([
+                'OR' => [
+                    'uid[~]' => $keyword,
+                    'username[~]' => $keyword,
+                    'email[~]' => $keyword,
+                    'nickname[~]' => $keyword,
+                ],
+            ])
+            ->execute();
+    }
+
+    /**
+     * 判断用户角色是否存在某角色列表中
+     *
+     * @param array $roles 角色列表
+     * @return bool
+     */
+    public function inRole($roles)
+    {
+        if ($this->hasLogin()) {
+            return in_array($this->get('role'), $roles);
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 创建用户
+     *
+     * @param string $username 用户名
+     * @param string $password 密码
+     * @param string $email 邮箱
+     * @param string $role 角色
+     * @return void
+     */
+    public function createUser($username, $password, $email, $role = 1)
+    {
+        $this->db->insert('users', [
+            'nickname' => $username,
+            'username' => $username,
+            'password' => Common::hash($password),
+            'email' => $email,
+            'role' => $role,
+        ]);
+    }
+
     /**
      * 登陆
      *
@@ -19,7 +181,7 @@ class Handle extends Method
     private function login()
     {
         // 权限验证，避免重复登陆
-        if (Method::factory()->hasLogin()) {
+        if ($this->hasLogin()) {
             $this->response->redirect('/admin');
         }
 
@@ -84,7 +246,7 @@ class Handle extends Method
     private function register()
     {
         // 权限验证，避免登陆注册
-        if (Method::factory()->hasLogin()) {
+        if ($this->hasLogin()) {
             $this->response->redirect('/admin');
         }
 
@@ -145,7 +307,7 @@ class Handle extends Method
         }
 
         // 插入数据
-        Method::factory()->createUser($data['username'], $data['password'], $data['email']);
+        $this->createUser($data['username'], $data['password'], $data['email']);
 
         Notice::factory()->set('注册成功', 'success');
         $this->response->redirect('/admin/login.php');
@@ -180,7 +342,7 @@ class Handle extends Method
     private function update()
     {
         // 判断用户权限
-        if (!Method::factory()->hasLogin()) {
+        if (!$this->hasLogin()) {
             $this->response->redirect('/admin/login.php');
         }
 
@@ -193,7 +355,7 @@ class Handle extends Method
         }
 
         // 不是修改当前登陆用户，那么必须是管理员权限
-        if ($this->loginUserInfo['uid'] !== $uid && !Method::factory()->inRole(['0'])) {
+        if ($this->loginUserInfo['uid'] !== $uid && !$this->inRole(['0'])) {
             Notice::factory()->set('非法请求', 'error');
             $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
         }
@@ -257,7 +419,7 @@ class Handle extends Method
     private function updatePassword()
     {
         // 未登陆
-        if (!Method::factory()->hasLogin()) {
+        if (!$this->hasLogin()) {
             $this->response->redirect('/admin/login.php');
         }
 
@@ -270,7 +432,7 @@ class Handle extends Method
         }
 
         // 不是修改当前登陆用户，那么必须是管理员权限
-        if ($this->loginUserInfo['uid'] !== $uid && !Method::factory()->inRole(['0'])) {
+        if ($this->loginUserInfo['uid'] !== $uid && !$this->inRole(['0'])) {
             Notice::factory()->set('非法请求', 'error');
             $this->response->redirect('/admin/profile.php?action=password&uid=' . $this->loginUserInfo['uid']);
         }
@@ -313,7 +475,7 @@ class Handle extends Method
     private function updatePermission()
     {
         // 是否是管理员
-        if (!Method::factory()->inRole(['0'])) {
+        if (!$this->inRole(['0'])) {
             Notice::factory()->set('非法请求', 'error');
             $this->response->redirect('/admin/profile.php?action=permission&uid=' . $this->loginUserInfo['uid']);
         }
@@ -358,7 +520,7 @@ class Handle extends Method
     private function sendRegisterCaptcha()
     {
         // 已登陆限制
-        if (Method::factory()->hasLogin()) {
+        if ($this->hasLogin()) {
             $this->response->sendJSON(['errorCode' => 1, 'type' => 'error', 'message' => '非法请求']);
         }
 
@@ -380,7 +542,7 @@ class Handle extends Method
         }
 
         // 验证码邮件
-        MailsMethod::factory()->sendCaptcha($data['email']);
+        Mail::factory()->sendCaptcha($data['email']);
 
         $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
     }

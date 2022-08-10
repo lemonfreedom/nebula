@@ -15,7 +15,7 @@ if (!@include NEBULA_ROOT_PATH . '/config.php') {
 \Nebula\Widgets\Cache::factory()->to($cache);
 
 // 配置组件
-\Nebula\Widgets\Options\Method::factory()->to($option);
+\Nebula\Widgets\Option::factory()->to($option);
 
 // 请求对象
 $request = \Nebula\Request::getInstance();

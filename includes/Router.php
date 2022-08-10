@@ -11,35 +11,35 @@ class Router
      */
     private static $routerWidgetMap = [
         'option' => [
-            'widget' => '\Nebula\Widgets\Options\Handle',
+            'widget' => '\Nebula\Widgets\Option',
             'params' => [
                 'action' => '',
                 'optionName' => ''
             ],
         ],
         'plugin' => [
-            'widget' => '\Nebula\Widgets\Plugins\Handle',
+            'widget' => '\Nebula\Widgets\Plugin',
             'params' => [
                 'action' => '',
                 'pluginName' => '',
             ],
         ],
         'theme' => [
-            'widget' => '\Nebula\Widgets\Themes\Handle',
+            'widget' => '\Nebula\Widgets\Theme',
             'params' => [
                 'action' => '',
                 'themeName' => '',
             ],
         ],
         'user' => [
-            'widget' => '\Nebula\Widgets\Users\Handle',
+            'widget' => '\Nebula\Widgets\User',
             'params' => [
                 'action' => '',
                 'uid' => null,
             ],
         ],
         'mail' => [
-            'widget' => '\Nebula\Widgets\Mails\Handle',
+            'widget' => '\Nebula\Widgets\Mail',
             'params' => [
                 'action' => '',
             ],

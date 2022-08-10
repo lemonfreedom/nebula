@@ -1,5 +1,5 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php \Nebula\Widgets\Users\Method::factory()->hasLogin() || $response->redirect('/admin/login.php'); ?>
+<?php \Nebula\Widgets\User::factory()->hasLogin() || $response->redirect('/admin/login.php'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <div class="container">
