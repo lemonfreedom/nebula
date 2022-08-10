@@ -11,7 +11,7 @@ use Nebula\Widgets\Options\Method as OptionsMethod;
 use Nebula\Widgets\Users\Method as UsersMethod;
 
 /**
- * name: SMTP 邮件服务
+ * name: SMTP 邮件
  * url: https://www.nebulaio.com/
  * version: 1.0
  * author: Noah Zhang
