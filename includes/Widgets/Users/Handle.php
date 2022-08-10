@@ -379,7 +379,7 @@ class Handle extends Method
             $this->response->sendJSON(['errorCode' => 3, 'type' => 'warning', 'message' => '邮箱已存在']);
         }
 
-        // 发送邮件
+        // 验证码邮件
         MailsMethod::factory()->sendCaptcha($data['email']);
 
         $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);

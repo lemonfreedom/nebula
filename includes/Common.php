@@ -58,17 +58,28 @@ namespace Nebula {
          * 生成随机字符串
          *
          * @param int $length 字符串长度
-         * @param bool $mixedCase 混合大小写
+         * @param bool $number 是否有数字
+         * @param bool $lowerCase 是否有小写字母
+         * @param bool $mixedCase 是否有大写字母
          * @param bool $specialChars 是否有特殊字符
          * @return string
          */
-        public static function randString($length, $mixedCase = false, $specialChars = false)
+        public static function randString($length,  $number = true, $lowerCase = true, $mixedCase = false, $specialChars = false)
         {
-            $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            $chars = '';
+
+            if ($number) {
+                $chars .= '0123456789';
+            }
+
+            if ($lowerCase) {
+                $chars .= 'abcdefghijklmnopqrstuvwxyz';
+            }
 
             if ($mixedCase) {
                 $chars .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             }
+
             if ($specialChars) {
                 $chars .= '.!@#$%^&*()';
             }

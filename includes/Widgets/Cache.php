@@ -98,7 +98,8 @@ class Cache extends Widget
                         'value' => $value,
                         'expires' => time() + $expires
                     ])
-                    ->where(['name' => $name]);
+                    ->where(['name' => $name])
+                    ->execute();
                 $this->caches[$index]['value'] = $value;
             }
         }

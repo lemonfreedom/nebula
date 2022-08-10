@@ -56,7 +56,7 @@ class Handle extends Widget
                 'password' => $data['password'],
                 'name' => $data['name'],
                 'email' => $data['email'],
-            ])->sendHTML(UsersMethod::factory()->get('email'), '测试邮件', '这是一封测试邮件');
+            ], 'sendTestMail')->sendHTML(UsersMethod::factory()->get('email'), '测试邮件', '这是一封测试邮件');
 
             $this->response->sendJSON(['errorCode' => 0, 'type' => 'success', 'message' => '发送成功']);
         } catch (Exception $e) {

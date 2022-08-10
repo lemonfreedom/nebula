@@ -2,12 +2,12 @@
 
 namespace Nebula\Widgets\Mails;
 
+use Exception;
 use Nebula\Widget;
 use Nebula\Common;
 use Nebula\Response;
+use Nebula\Helpers\SMTP;
 use Nebula\Helpers\Cookie;
-use Nebula\Helpers\PHPMailer\Exception;
-use Nebula\Helpers\PHPMailer\PHPMailer;
 use Nebula\Widgets\Options\Method as OptionsMethod;
 
 class Method extends Widget
@@ -15,9 +15,9 @@ class Method extends Widget
     /**
      * 连接对象
      *
-     * @var PHPMailer
+     * @var SMTP
      */
-    private $mail;
+    private $smtp;
 
     /**
      * 主机地址
@@ -65,19 +65,16 @@ class Method extends Widget
         $this->name = null === $this->params('name', $smtp['name']);
         $this->email = null === $this->params('email', $smtp['email']);
 
-        // 初始化
-        $this->mail = new PHPMailer(true);
-        $this->mail->isSMTP();
-        $this->mail->Host = $this->host;
-        $this->mail->Port = $this->port;
-        $this->mail->SMTPAuth = true;
-        $this->mail->Username = $this->username;
-        $this->mail->Password = $this->password;
-        $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $this->mail->CharSet = 'UTF-8';
-
-        // 设置发送人信息
-        $this->mail->setFrom($this->email, $this->name);
+        $this->smtp = SMTP::getInstance()
+            // 初始化
+            ->init([
+                'host' => $this->host,
+                'port' => $this->port,
+                'username' => $this->username,
+                'password' => $this->password,
+            ])
+            // 设置发件人
+            ->setFrom($this->email, $this->name);
     }
 
     /**
@@ -89,21 +86,16 @@ class Method extends Widget
     public function sendCaptcha($address)
     {
         try {
-            $code = Common::randString(5);
+            $code = Common::randString(5, true, false);
 
-
-            $this->mail->addAddress($address);
-            $this->mail->isHTML(true);
-            $this->mail->Subject = OptionsMethod::factory()->get('title') . ' 验证码';
-
-            $this->mail->Body = '您的验证码是：' . $code;
-
-            $this->mail->send();
+            $this->smtp
+                ->addAddress($address)
+                ->send(OptionsMethod::factory()->get('title') . ' 验证码', '您的验证码是：' . $code);
 
             // 将验证码 hash 存入 cookie，将过期时间设置为 10 分钟
             Cookie::set('code_hash', Common::hash($address . $code), time() + 600);
         } catch (Exception $e) {
-            Response::getInstance()->sendJSON(['errorCode' => 1, 'message' => $this->mail->ErrorInfo]);
+            Response::getInstance()->sendJSON(['errorCode' => 1, 'message' => $e->getMessage()]);
         }
     }
 
@@ -117,12 +109,8 @@ class Method extends Widget
      */
     public function sendHTML($address, $title, $html)
     {
-        $this->mail->addAddress($address);
-        $this->mail->isHTML(true);
-        $this->mail->Subject = $title;
-
-        $this->mail->Body = $html;
-
-        $this->mail->send();
+        $this->smtp
+            ->addAddress($address)
+            ->send($title, $html);
     }
 }

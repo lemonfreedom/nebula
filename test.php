@@ -41,5 +41,3 @@ $result = $mysql->select('users', ['password'])->where([
 //         'usern1ame' => 'admi1n'
 //     ])->execute();
 // echo "<pre>";
-
-print_r($result);

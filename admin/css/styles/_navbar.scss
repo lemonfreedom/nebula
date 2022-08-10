@@ -49,6 +49,11 @@
                         border-radius: .4rem;
                         transition: background-color .2s linear;
 
+                        .icon {
+                            width: 1.2rem;
+                            height: 1.2rem;
+                        }
+
                         .avatar {
                             width: 1.8rem;
                             height: 1.8rem;
@@ -100,10 +105,14 @@
                     li {
                         a {
                             padding: 0;
-                            font-size: 1.6rem;
                             width: 3rem;
                             height: 3rem;
                             justify-content: center;
+
+                            .icon {
+                                width: 1.6rem;
+                                height: 1.6rem;
+                            }
 
                             .text {
                                 display: none;
@@ -123,7 +132,6 @@
                 cursor: pointer;
                 color: #fff;
                 background-color: transparent;
-                font-size: 1.6rem;
                 width: 3rem;
                 height: 3rem;
                 display: flex;
@@ -131,6 +139,11 @@
                 justify-content: center;
                 border-radius: .4rem;
                 margin-right: .3rem;
+
+                .icon {
+                    width: 1.6rem;
+                    height: 1.6rem;
+                }
 
                 &:hover {
                     background-color: rgba(0, 0, 1, .1);

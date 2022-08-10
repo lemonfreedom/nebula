@@ -52,18 +52,18 @@ class MySQL
     /**
      * 初始化
      *
-     * @param array $config 数据库配置
+     * @param array $options 数据库选项
      * @return void
      */
-    public function init($config)
+    public function init($options)
     {
         try {
-            $this->mysql = new PDO('mysql:dbname=' . $config['dbname'] . ';host=' . $config['host'] . ';port=' . $config['port'], $config['username'], $config['password'], [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8']);
+            $this->mysql = new PDO('mysql:dbname=' . $options['dbname'] . ';host=' . $options['host'] . ';port=' . $options['port'], $options['username'], $options['password'], [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8']);
         } catch (PDOException $e) {
             throw $e;
         }
 
-        $this->prefix = $config['prefix'];
+        $this->prefix = $options['prefix'];
     }
 
     /**
@@ -86,6 +86,11 @@ class MySQL
     private function columnParse($column)
     {
         $columnArray = explode('.', $column);
+
+        if (2 === count($columnArray)) {
+            $columnArray[0] = $this->tableParse($columnArray[0]);
+        }
+
         array_walk($columnArray, function (&$part) {
             $part = '`' . $part . '`';
         });
