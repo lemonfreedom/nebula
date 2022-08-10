@@ -144,6 +144,7 @@ namespace Nebula {
             $info = [
                 'name' => '未知',
                 'url' => '',
+                'description' => '',
                 'version' => '未知',
                 'author' => '未知',
                 'author_url' => '',

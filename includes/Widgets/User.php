@@ -105,7 +105,7 @@ class User extends Widget
      * @param string $value 角色值
      * @return string 角色名
      */
-    public function getRoleName($value)
+    public function roleParse($value)
     {
         foreach ($this->roleList as $role) {
             if ($role['value'] === $value) {
@@ -162,7 +162,7 @@ class User extends Widget
      * @param string $role 角色
      * @return void
      */
-    public function createUser($username, $password, $email, $role = 1)
+    public function set($username, $password, $email, $role = 1)
     {
         $this->db->insert('users', [
             'nickname' => $username,
@@ -307,7 +307,7 @@ class User extends Widget
         }
 
         // 插入数据
-        $this->createUser($data['username'], $data['password'], $data['email']);
+        $this->set($data['username'], $data['password'], $data['email']);
 
         Notice::factory()->set('注册成功', 'success');
         $this->response->redirect('/admin/login.php');
@@ -557,24 +557,24 @@ class User extends Widget
         $action = $this->params('action');
 
         // 登录
-        $this->on($action === 'login')->login();
+        $this->on('login' === $action)->login();
 
         // 注册
-        $this->on($action === 'register')->register();
+        $this->on('register' === $action)->register();
 
         // 退出登陆
-        $this->on($action === 'logout')->logout();
+        $this->on('logout' === $action)->logout();
 
         // 更新用户信息
-        $this->on($action === 'update')->update();
+        $this->on('update' === $action)->update();
 
         // 更新用户密码
-        $this->on($action === 'update-password')->updatePassword();
+        $this->on('update-password' === $action)->updatePassword();
 
         // 更新用户权限
-        $this->on($action === 'update-permission')->updatePermission();
+        $this->on('update-permission' === $action)->updatePermission();
 
         // 发送注册验证码
-        $this->on($action === 'send-register-captcha')->sendRegisterCaptcha();
+        $this->on('send-register-captcha' === $action)->sendRegisterCaptcha();
     }
 }

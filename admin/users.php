@@ -1,5 +1,5 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php \Nebula\Widgets\User::factory()->inRole(['0']) || $response->redirect('/admin'); ?>
+<?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $userList = \Nebula\Widgets\User::factory(['keyword' => $request->get('keyword', '')], 'render')->getUserList() ?>
@@ -48,7 +48,7 @@
                         <td><a href="/admin/profile.php?uid=<?= $userInfo['uid'] ?>"><?= $userInfo['username'] ?></a></td>
                         <td><?= $userInfo['nickname'] ?></td>
                         <td><?= $userInfo['email'] ?></td>
-                        <td><?= \Nebula\Widgets\User::factory()->getRoleName($userInfo['role']) ?></td>
+                        <td><?= $user->roleParse($userInfo['role']) ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

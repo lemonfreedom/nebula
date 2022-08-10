@@ -1,3 +1,3 @@
-<div class="tab<?= $action === 'smtp' ? ' active' : '' ?>">
+<div class="tab<?= 'smtp' === $action ? ' active' : '' ?>">
     <a href="/admin/options.php?action=smtp">SMTP 设置</a>
 </div>

@@ -3,6 +3,7 @@
 /**
  * name: Default
  * url: https://www.nebulaio.com/
+ * description: 这是默认主题
  * version: 1.0
  * author: Noah Zhang
  * author_url: http://www.nebulaio.com/

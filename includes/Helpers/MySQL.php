@@ -125,7 +125,7 @@ class MySQL
         $where = '';
 
         foreach ($wheres as $key => $value) {
-            if ($key === 'AND' || $key === 'OR') {
+            if ('AND' === $key || 'OR' === $key) {
                 end($wheres);
                 if ($key === key($wheres)) {
                     $where .= '(' . $this->whereParse($value, $key) . ')';
@@ -304,9 +304,9 @@ class MySQL
         $this->query = '';
         $this->params = [];
 
-        if ($this->type === 'SELECT') {
+        if ('SELECT' === $this->type) {
             return json_decode(json_encode($sth->fetchAll(PDO::FETCH_CLASS)), true);
-        } else if ($this->type === 'GET') {
+        } else if ('GET' === $this->type) {
             return json_decode(json_encode($sth->fetchAll(PDO::FETCH_CLASS)), true)[0] ?? [];
         } else {
             return $result;

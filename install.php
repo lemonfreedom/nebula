@@ -8,28 +8,16 @@ use Nebula\Widgets\Notice;
 use Nebula\Widgets\User;
 use Nebula\Widgets\Option;
 
+// 定义根路径
 define('NEBULA_ROOT_PATH', __DIR__ . '/');
 
+// 加载公共文件
 include_once NEBULA_ROOT_PATH . 'includes/Common.php';
 
-// SMTP 配置
-function smtp_config()
+// 是否初始化配置文件
+function is_install()
 {
-    return [
-        'host' => '',
-        'username' => '',
-        'password' => '',
-        'port' => '',
-        'name' => '',
-        'email' => ''
-    ];
-}
-
-// 检查管理员是否存在
-function administrator_exists()
-{
-    // $mysql = MySQL::getInstance();
-    // echo $mysql->getCount("SELECT COUNT(*) FROM {$mysql->tableParse('users')}");
+    return file_exists(NEBULA_ROOT_PATH . 'config.php');
 }
 
 // 欢迎界面
@@ -184,7 +172,6 @@ function step2()
             ['name' => 'title', 'value' => ''],
             ['name' => 'description', 'value' => '又一个博客网站诞生了'],
             ['name' => 'allowRegister', 'value' => '0'],
-            ['name' => 'smtp', 'value' => serialize(smtp_config())],
             ['name' => 'plugins', 'value' => 'a:0:{}'],
             ['name' => 'theme', 'value' => 'a:2:{s:4:"name";s:7:"default";s:6:"config";a:0:{}}'],
         ]);
@@ -204,9 +191,6 @@ function step2()
 <?php
 // 调试模式
 define('NEBULA_DEBUG', true);
-
-// 加载公共文件
-include_once NEBULA_ROOT_PATH . 'includes/Common.php';
 
 // 数据库初始化
 \Nebula\Helpers\MySQL::getInstance()->init([
@@ -284,7 +268,7 @@ function step3()
     Option::factory()->set('title', $data['title']);
 
     // 创建管理员
-    User::factory()->createUser($data['username'], $data['password'], $data['email'], '0');
+    User::factory()->set($data['username'], $data['password'], $data['email'], '0');
 
     echo <<<EOT
 <div class="nebula-title">安装成功</div>

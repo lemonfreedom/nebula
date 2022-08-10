@@ -1,12 +1,12 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php \Nebula\Widgets\User::factory()->inRole(['0']) || $response->redirect('/admin'); ?>
+<?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $action = $request->get('action'); ?>
 <div class="container">
     <div class="nebula-tabs">
         <div class="scroll">
-            <div class="tab<?= $action !== 'smtp' ? ' active' : '' ?>">
+            <div class="tab<?= 'smtp' !== $action ? ' active' : '' ?>">
                 <a href="/admin/options.php">基本设置</a>
             </div>
             <?php \Nebula\Plugin::factory('admin/options.php')->tab(['action' => $action]); ?>

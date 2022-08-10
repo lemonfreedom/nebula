@@ -1,5 +1,5 @@
-<?php \Nebula\Widgets\User::factory()->to($user); ?>
 <?php $this->render('header'); ?>
+<?php $user = \Nebula\Widgets\User::factory(); ?>
 <div class="container">
     <div>这是主题 default</div>
     <?php if ($user->hasLogin()) : ?>

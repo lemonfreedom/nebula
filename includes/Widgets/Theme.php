@@ -164,9 +164,9 @@ class Theme extends Widget
         $action = $this->params('action');
 
         // 启用主题
-        $this->on($action === 'enable')->enable();
+        $this->on('enable' === $action)->enable();
 
         // 更新主题配置
-        $this->on($action === 'update-config')->updateConfig();
+        $this->on('update-config' === $action)->updateConfig();
     }
 }

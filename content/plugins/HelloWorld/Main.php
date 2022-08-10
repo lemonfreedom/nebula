@@ -7,6 +7,7 @@ use Nebula\Plugin;
 /**
  * name: 你好世界
  * url: https://www.nebulaio.com/
+ * description: 这是默认插件，用于在底部输出一行文字，你可以删除它
  * version: 1.0
  * author: Noah Zhang
  * author_url: http://www.nebulaio.com/

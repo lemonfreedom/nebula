@@ -3,6 +3,7 @@
 /**
  * name: Nebula 主题
  * url: https://www.nebulaio.com/
+ * description: nebula 测试主题
  * version: 1.0
  * author: Noah Zhang
  * author_url: http://www.nebulaio.com/

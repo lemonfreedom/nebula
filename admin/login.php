@@ -1,5 +1,5 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php \Nebula\Widgets\User::factory()->hasLogin() && $response->redirect('/'); ?>
+<?php $user->hasLogin() && $response->redirect('/'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <div class="nebula-account">
     <div class="board">

@@ -12,6 +12,7 @@ use Nebula\Widgets\Option;
 /**
  * name: SMTP 邮件
  * url: https://www.nebulaio.com/
+ * description: 让系统支持邮件通知，具体功能有：注册邮件验证
  * version: 1.0
  * author: Noah Zhang
  * author_url: http://www.nebulaio.com/
@@ -69,6 +70,8 @@ class Main
 
     /**
      * tab 渲染
+     * @param $data 数据
+     * @return void
      */
     public static function tabRender($data)
     {
@@ -99,6 +102,7 @@ class Main
      * 更新配置
      *
      * @param $data 数据
+     * @return void
      */
     public static function update($data)
     {

@@ -29,7 +29,7 @@ class Widget
     public $response;
 
     /**
-     * 参数
+     * 组件参数
      *
      * @var array
      */
@@ -101,17 +101,6 @@ class Widget
         } else {
             return EmptyClass::getInstance();
         }
-    }
-
-    /**
-     * 类赋值
-     *
-     * @param mixed $variable 变量
-     * @return $this
-     */
-    public function to(&$variable)
-    {
-        return $variable = $this;
     }
 
     /**

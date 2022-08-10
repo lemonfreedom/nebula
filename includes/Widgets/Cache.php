@@ -5,17 +5,9 @@ namespace Nebula\Widgets;
 use Nebula\Common;
 use Nebula\Widget;
 use Nebula\Helpers\Cookie;
-use PDO;
 
 class Cache extends Widget
 {
-    /**
-     * 数据库实例
-     *
-     * @var MySQL
-     */
-    private $mysql;
-
     /**
      * 用户缓存 id
      *

@@ -1,5 +1,5 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php \Nebula\Widgets\User::factory()->hasLogin() || $response->redirect('/admin/login.php'); ?>
+<?php $user->hasLogin() || $response->redirect('/admin/login.php'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $action = $request->get('action'); ?>
@@ -8,18 +8,18 @@
 <div class="container">
     <div class="nebula-tabs">
         <div class="scroll">
-            <div class="tab<?= $action !== 'password' && $action !== 'permission' ? ' active' : '' ?>">
+            <div class="tab<?= 'password' !== $action && 'permission' !== $action ? ' active' : '' ?>">
                 <a href="/admin/profile.php?uid=<?= $request->get('uid') ?>">用户资料</a>
             </div>
-            <div class="tab<?= $action === 'password' ? ' active' : '' ?>">
+            <div class="tab<?= 'password' === $action ? ' active' : '' ?>">
                 <a href="/admin/profile.php?action=password&uid=<?= $request->get('uid') ?>">修改密码</a>
             </div>
-            <div class="tab<?= $action === 'permission' ? ' active' : '' ?>">
+            <div class="tab<?= 'permission' === $action ? ' active' : '' ?>">
                 <a href="/admin/profile.php?action=permission&uid=<?= $request->get('uid') ?>">权限控制</a>
             </div>
         </div>
     </div>
-    <?php if ($action === 'password') : ?>
+    <?php if ('password' === $action) : ?>
         <!-- 修改密码 -->
         <form class="nebula-form" action="/user/update-password/<?= $userInfo['uid'] ?>" method="POST">
             <div class="form-item">
@@ -34,14 +34,14 @@
                 <button type="submit" class="nebula-button">保存设置</button>
             </div>
         </form>
-    <?php elseif ($action === 'permission' && \Nebula\Widgets\User::factory()->inRole(['0'])) : ?>
+    <?php elseif ('permission' === $action && \Nebula\Widgets\User::factory()->inRole(['0'])) : ?>
         <!-- 权限控制 -->
         <form class="nebula-form" action="/user/update-permission/<?= $userInfo['uid'] ?>" method="POST">
             <div class="form-item">
                 <label class="form-label" for="role">用户角色</label>
                 <select class="nebula-select" id="role" name="role">
                     <?php foreach (\Nebula\Widgets\User::factory()->roleList as $role) : ?>
-                        <option value="<?= $role['value'] ?>" <?= $userInfo['role'] === $role['value'] ? 'selected' : '' ?>><?= $role['name'] ?></option>
+                        <option value="<?= $role['value'] ?>" <?= $role['value'] === $userInfo['role'] ? 'selected' : '' ?>><?= $role['name'] ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

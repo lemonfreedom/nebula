@@ -68,7 +68,7 @@ class Validate
      */
     public function required($value)
     {
-        return $value !== '';
+        return '' !== $value;
     }
 
     /**
@@ -83,7 +83,7 @@ class Validate
         foreach ($this->rules as $key => $rule) {
             foreach ($rule as $ruleItem) {
                 $value = $this->data[$key] ?? '';
-                if ($ruleItem['type'] === 'confirm') {
+                if ('confirm' === $ruleItem['type']) {
                     if (!$this->{$ruleItem['type']}($value, $ruleItem['key'])) {
                         array_push($this->result, [
                             'key' => $key,

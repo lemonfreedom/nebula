@@ -1,5 +1,5 @@
 <?php require __DIR__ . '/common.php'; ?>
-<?php \Nebula\Widgets\User::factory()->inRole(['0']) || $response->redirect('/admin'); ?>
+<?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php require __DIR__ . '/header.php'; ?>
 <?php require __DIR__ . '/navbar.php'; ?>
 <?php $themeList = \Nebula\Widgets\Theme::factory()->getThemeList(); ?>
@@ -29,6 +29,9 @@
                             <div class="theme-title">
                                 <span>名称：</span>
                                 <a href="<?= $theme['url'] ?>"><?= $theme['name'] ?></a>
+                            </div>
+                            <div class="theme-info-row">
+                                <?= $theme['description'] ?>
                             </div>
                             <div class="theme-info-row">
                                 <div>

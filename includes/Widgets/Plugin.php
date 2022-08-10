@@ -263,12 +263,12 @@ class Plugin extends Widget
         $action = $this->params('action');
 
         // 启用插件
-        $this->on($action === 'enable')->enable();
+        $this->on('enable' === $action)->enable();
 
         // 禁用插件
-        $this->on($action === 'disabled')->disabled();
+        $this->on('disabled' === $action)->disabled();
 
         // 更新插件配置
-        $this->on($action === 'update-config')->updateConfig();
+        $this->on('update-config' === $action)->updateConfig();
     }
 }

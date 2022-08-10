@@ -179,6 +179,6 @@ class Mail extends Widget
         $action = $this->params('action');
 
         // 发送测试邮件
-        $this->on($action === 'send-test-mail')->sendTestMail();
+        $this->on('send-test-mail' === $action)->sendTestMail();
     }
 }

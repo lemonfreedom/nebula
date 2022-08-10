@@ -188,6 +188,6 @@ class Option extends Widget
         $action = $this->params('action');
 
         // 更新选项
-        $this->on($action === 'update')->update();
+        $this->on('update' === $action)->update();
     }
 }
