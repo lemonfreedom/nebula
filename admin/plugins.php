@@ -29,7 +29,9 @@
                         <td><a href="<?= $plugin['author_url'] ?>"><?= $plugin['author'] ?></a></td>
                         <td>
                             <?php if ($plugin['is_activated']) : ?>
-                                <a href="/admin/plugin-config.php?name=<?= $plugin['dir'] ?>">设置</a>
+                                <?php if ($plugin['is_config']) : ?>
+                                    <a href="/admin/plugin-config.php?name=<?= $plugin['dir'] ?>">设置</a>
+                                <?php endif; ?>
                                 <a href="/plugin/disabled/<?= $plugin['dir'] ?>">禁用</a>
                             <?php else : ?>
                                 <a href="/plugin/enable/<?= $plugin['dir'] ?>">启用</a>

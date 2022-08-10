@@ -100,7 +100,7 @@ class Method extends Widget
      * @param string $name 选项名称
      * @return void
      */
-    public function deleteOption($name)
+    public function delete($name)
     {
         $this->db
             ->delete('options')
@@ -114,10 +114,10 @@ class Method extends Widget
      * @param array $names 选项名称列表
      * @return void
      */
-    public function deleteOptions($names)
+    public function deletes($names)
     {
         foreach ($names as $name) {
-            $this->deleteOption($name);
+            $this->delete($name);
         }
     }
 }

@@ -1,11 +1,17 @@
 <?php
 
-namespace Content\Plugins\HelloWorld;
+namespace Content\Plugins\SMTP;
 
+use Nebula\Helpers\Validate;
 use Nebula\Plugin;
+use Nebula\Response;
+use Nebula\Widgets\Cache;
+use Nebula\Widgets\Notice;
+use Nebula\Widgets\Options\Method as OptionsMethod;
+use Nebula\Widgets\Users\Method as UsersMethod;
 
 /**
- * name: 你好世界
+ * name: SMTP 邮件服务
  * url: https://www.nebulaio.com/
  * version: 1.0
  * author: Noah Zhang
@@ -20,8 +26,25 @@ class Main
      */
     public static function activate()
     {
-        Plugin::factory('admin/options.php')->tab = __CLASS__ . '::tab';
-        Plugin::factory('admin/options.php')->tabContent = __CLASS__ . '::tabContent';
+        // 选项配置
+        Plugin::factory('admin/options.php')->tab = __CLASS__ . '::tabRender';
+        Plugin::factory('admin/options.php')->tabContent = __CLASS__ . '::tabContentRender';
+
+        // 注册表单
+        \Nebula\Plugin::factory('admin/register.php')->emailFormItem =  __CLASS__ . '::emailFormItemRender';
+
+        // 更新配置
+        Plugin::factory('includes/Widgets/Options/Handle.php')->update = __CLASS__ . '::update';
+
+        // 数据初始化
+        OptionsMethod::factory()->set('smtp', serialize([
+            'host' => '',
+            'port' => '',
+            'username' => '',
+            'password' => '',
+            'name' => '',
+            'email' => '',
+        ]));
     }
 
     /**
@@ -31,6 +54,8 @@ class Main
      */
     public static function deactivate()
     {
+        // 删除数据
+        OptionsMethod::factory()->delete('smtp');
     }
 
     /**
@@ -44,22 +69,85 @@ class Main
     }
 
     /**
-     * tab 页面
-     *
-     * @param $data 数据
+     * tab 渲染
      */
-    public static function tab($data)
+    public static function tabRender($data)
     {
+        $action = $data['action'];
         include __DIR__ . '/views/tab.php';
     }
 
     /**
-     * tab 内容页面
+     * tab 内容渲染
+     */
+    public static function tabContentRender($data)
+    {
+        $option = OptionsMethod::factory();
+        $action = $data['action'];
+        include __DIR__ . '/views/tab-content.php';
+    }
+
+    /**
+     * 注册邮箱表单渲染
+     */
+    public static function emailFormItemRender()
+    {
+        $cache = Cache::factory();
+        include __DIR__ . '/views/register-email-form.php';
+    }
+
+    /**
+     * 更新配置
      *
      * @param $data 数据
      */
-    public static function tabContent($data)
+    public static function update($data)
     {
-        include __DIR__ . '/views/tabContent.php';
+        $optionName = $data['optionName'];
+
+        if ('smtp' === $optionName) {
+            $response = Response::getInstance();
+
+            $data = $data['data'];
+
+            $validate = new Validate($data, [
+                'host' => [
+                    ['type' => 'required', 'message' => '主机名不能为空'],
+                ],
+                'port' => [
+                    ['type' => 'required', 'message' => '端口不能为空'],
+                ],
+                'username' => [
+                    ['type' => 'required', 'message' => '用户名不能为空'],
+                ],
+                'password' => [
+                    ['type' => 'required', 'message' => '密码不能为空'],
+                ],
+                'name' => [
+                    ['type' => 'required', 'message' => '发件人名称不能为空'],
+                ],
+                'email' => [
+                    ['type' => 'required', 'message' => '发件人邮箱不能为空'],
+                ],
+            ]);
+
+            if (!$validate->run()) {
+                Notice::factory()->set($validate->result[0]['message'], 'warning');
+                $response->redirect('/admin/options.php?action=smtp');
+            }
+
+            // 更新
+            OptionsMethod::factory()->set('smtp', serialize([
+                'host' => $data['host'],
+                'username' => $data['username'],
+                'password' => $data['password'],
+                'port' => $data['port'],
+                'name' => $data['name'],
+                'email' => $data['email'],
+            ]));
+
+            Notice::factory()->set('保存成功', 'success');
+            $response->redirect('/admin/options.php?action=smtp');
+        }
     }
 }

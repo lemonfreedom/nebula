@@ -125,6 +125,20 @@ class Plugin
     }
 
     /**
+     * 此钩子是否存在插件
+     *
+     * @param string $name 钩子名
+     * @return bool
+     */
+    public function is($name)
+    {
+        // 插件句柄名称
+        $pluginHandle = $this->handle . ':' . $name;
+
+        return isset(self::$handles[$pluginHandle]);
+    }
+
+    /**
      * 执行插件方法
      *
      * @param string $name 钩子名

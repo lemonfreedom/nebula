@@ -91,9 +91,8 @@ class Method extends Widget
 
                 // 修改启用状态
                 $pluginInfo['is_activated'] = in_array($pluginClassName, array_keys($this->enabledList));
-
                 // 插件是否可配置
-                $pluginInfo['is_config'] = $pluginInfo['is_activated'] && [] !== $this->enabledList[$pluginClassName]['config'];
+                $pluginInfo['is_config'] = $pluginInfo['is_activated'] && isset($this->enabledList[$pluginClassName]) && [] !== $this->enabledList[$pluginClassName]['config'];
 
                 $pluginIndexPath = $pluginDir . '/Main.php';
 
