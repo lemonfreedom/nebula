@@ -1,7 +1,7 @@
-<?php require __DIR__ . '/common.php'; ?>
+<?php include __DIR__ . '/common.php'; ?>
 <?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
-<?php require __DIR__ . '/header.php'; ?>
-<?php require __DIR__ . '/navbar.php'; ?>
+<?php include __DIR__ . '/header.php'; ?>
+<?php include __DIR__ . '/navbar.php'; ?>
 <?php $action = $request->get('action'); ?>
 <div class="container">
     <div class="nebula-tabs">
@@ -48,6 +48,6 @@
     <?php endif; ?>
     <?php \Nebula\Plugin::factory('admin/options.php')->tabContent(['action' => $action]); ?>
 </div>
-<?php require __DIR__ . '/copyright.php'; ?>
-<?php require __DIR__ . '/common-js.php'; ?>
-<?php require __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . '/copyright.php'; ?>
+<?php include __DIR__ . '/common-js.php'; ?>
+<?php include __DIR__ . '/footer.php'; ?>

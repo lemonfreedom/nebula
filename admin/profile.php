@@ -1,7 +1,7 @@
-<?php require __DIR__ . '/common.php'; ?>
+<?php include __DIR__ . '/common.php'; ?>
 <?php $user->hasLogin() || $response->redirect('/admin/login.php'); ?>
-<?php require __DIR__ . '/header.php'; ?>
-<?php require __DIR__ . '/navbar.php'; ?>
+<?php include __DIR__ . '/header.php'; ?>
+<?php include __DIR__ . '/navbar.php'; ?>
 <?php $action = $request->get('action'); ?>
 <?php $userInfo = \Nebula\Widgets\User::factory(['uid' => $request->get('uid')], 'render')->get(); ?>
 <?php null === $userInfo && $response->redirect('/admin'); ?>
@@ -72,6 +72,6 @@
         </form>
     <?php endif; ?>
 </div>
-<?php require __DIR__ . '/copyright.php'; ?>
-<?php require __DIR__ . '/common-js.php'; ?>
-<?php require __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . '/copyright.php'; ?>
+<?php include __DIR__ . '/common-js.php'; ?>
+<?php include __DIR__ . '/footer.php'; ?>

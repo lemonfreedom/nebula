@@ -21,7 +21,7 @@ use Nebula\Widgets\Option;
 define('NEBULA_ROOT_PATH', __DIR__ . '/');
 
 // 加载公共文件
-include_once NEBULA_ROOT_PATH . 'includes/Common.php';
+include NEBULA_ROOT_PATH . 'includes/Common.php';
 
 // 是否初始化配置文件
 function is_install()
@@ -248,7 +248,7 @@ EOT;
 // 步骤三
 function step3()
 {
-    include_once NEBULA_ROOT_PATH . 'config.php';
+    include NEBULA_ROOT_PATH . 'config.php';
 
     $data = Request::getInstance()->post();
 

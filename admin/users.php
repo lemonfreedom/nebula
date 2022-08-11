@@ -1,7 +1,7 @@
-<?php require __DIR__ . '/common.php'; ?>
+<?php include __DIR__ . '/common.php'; ?>
 <?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
-<?php require __DIR__ . '/header.php'; ?>
-<?php require __DIR__ . '/navbar.php'; ?>
+<?php include __DIR__ . '/header.php'; ?>
+<?php include __DIR__ . '/navbar.php'; ?>
 <?php $userList = \Nebula\Widgets\User::factory(['keyword' => $request->get('keyword', '')], 'render')->getUserList() ?>
 <div class="container">
     <div class="nebula-title">用户</div>
@@ -72,6 +72,6 @@
         </label>
     </div>
 </div>
-<?php require __DIR__ . '/copyright.php'; ?>
-<?php require __DIR__ . '/common-js.php'; ?>
-<?php require __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . '/copyright.php'; ?>
+<?php include __DIR__ . '/common-js.php'; ?>
+<?php include __DIR__ . '/footer.php'; ?>
