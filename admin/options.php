@@ -13,7 +13,6 @@
         </div>
     </div>
     <?php if (null === $action) : ?>
-        <!-- 基本设置 -->
         <form class="nebula-form" action="/option/update/basic" method="POST">
             <div class="form-item">
                 <label class="form-label" for="title">站点名称</label>

@@ -54,7 +54,7 @@ class Plugin extends Widget
      *
      * @param null|string $name 字段名
      * @param string $defaultValue 默认值
-     * @return null|string|array
+     * @return mixed
      */
     public function get($name = null, $defaultValue = '')
     {
@@ -117,6 +117,8 @@ class Plugin extends Widget
 
     /**
      * 插件配置
+     *
+     * @return void
      */
     public function config()
     {

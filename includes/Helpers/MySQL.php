@@ -194,6 +194,21 @@ class MySQL
     }
 
     /**
+     * 验证数据是否存在
+     *
+     * @param string $table 表名
+     * @return $this
+     */
+    public function has($table)
+    {
+        $this->type = 'HAS';
+
+        $this->query = 'SELECT COUNT(*) AS `count` FROM ' . $this->tableParse($table);
+
+        return $this;
+    }
+
+    /**
      * 更新数据
      *
      * @param string $table 表名
@@ -323,11 +338,12 @@ class MySQL
      */
     public function execute()
     {
-        array_push($this->sqls, $this->query);
-
         $sth = $this->mysql->prepare($this->query);
+
         $result = $sth->execute($this->params);
 
+        array_push($this->sqls, $this->query);
+        // 清空上次查询条件
         $this->query = '';
         $this->params = [];
 
@@ -335,6 +351,8 @@ class MySQL
             return json_decode(json_encode($sth->fetchAll(PDO::FETCH_CLASS)), true);
         } else if ('GET' === $this->type) {
             return json_decode(json_encode($sth->fetchAll(PDO::FETCH_CLASS)), true)[0] ?? [];
+        } else if ('HAS' === $this->type) {
+            return 0 < $sth->fetch(PDO::FETCH_ASSOC)['count'];
         } else {
             return $result;
         }

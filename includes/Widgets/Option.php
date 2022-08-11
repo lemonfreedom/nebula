@@ -139,7 +139,7 @@ class Option extends Widget
      *
      * @return void
      */
-    private function update()
+    private function updateBasic()
     {
         // 是否是管理员
         if (!User::factory()->inRole(['0'])) {
@@ -149,42 +149,32 @@ class Option extends Widget
 
         $data = $this->request->post();
 
-        $optionName = $this->params('optionName');
-
-        // 注册表单验证插件
-        Plugin::factory('includes/Widgets/Option.php')->update([
-            'optionName' => $optionName,
-            'data' => $data,
+        $validate = new Validate($data, [
+            'title' => [
+                ['type' => 'required', 'message' => '站点名称不能为空'],
+            ],
+            'description' => [
+                ['type' => 'required', 'message' => '站点描述不能为空'],
+            ],
+            'allowRegister' => [
+                ['type' => 'required', 'message' => '是否允许注册不能为空'],
+            ],
         ]);
 
-        if ('basic' === $optionName) {
-            $validate = new Validate($data, [
-                'title' => [
-                    ['type' => 'required', 'message' => '站点名称不能为空'],
-                ],
-                'description' => [
-                    ['type' => 'required', 'message' => '站点描述不能为空'],
-                ],
-                'allowRegister' => [
-                    ['type' => 'required', 'message' => '是否允许注册不能为空'],
-                ],
-            ]);
-
-            if (!$validate->run()) {
-                Notice::factory()->set($validate->result[0]['message'], 'warning');
-                $this->response->redirect('/admin/options.php');
-            }
-
-            // 站点名称
-            $this->set('title', $data['title'] ?? $this->title);
-            // 站点描述
-            $this->set('description', $data['description'] ?? $this->description);
-            // 是否允许注册
-            $this->set('allowRegister', $data['allowRegister']);
-
-            Notice::factory()->set('保存成功', 'success');
+        if (!$validate->run()) {
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/options.php');
         }
+
+        // 站点名称
+        $this->set('title', $data['title'] ?? $this->title);
+        // 站点描述
+        $this->set('description', $data['description'] ?? $this->description);
+        // 是否允许注册
+        $this->set('allowRegister', $data['allowRegister']);
+
+        Notice::factory()->set('保存成功', 'success');
+        $this->response->redirect('/admin/options.php');
     }
 
     /**
@@ -197,6 +187,6 @@ class Option extends Widget
         $action = $this->params('action');
 
         // 更新选项
-        $this->on('update' === $action)->update();
+        $this->on('update' === $action)->updateBasic();
     }
 }

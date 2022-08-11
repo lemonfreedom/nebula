@@ -81,11 +81,28 @@ class User extends Widget
     }
 
     /**
+     * 通过角色值返回角色名
+     *
+     * @param string $value 角色值
+     * @return string 角色名
+     */
+    public function roleParse($value)
+    {
+        foreach ($this->roleList as $role) {
+            if ($role['value'] === $value) {
+                return $role['name'];
+            }
+        }
+
+        return '未知';
+    }
+
+    /**
      * 获取指定用户信息，若参数为空，则查询登陆用户信息
      *
      * @param null|string $name 字段名
      * @param string $defaultValue 默认值
-     * @return null|string|array
+     * @return mixed
      */
     public function get($name = null, $defaultValue = '')
     {
@@ -106,23 +123,6 @@ class User extends Widget
         } else {
             return $userInfo[$name] ?? $defaultValue;
         }
-    }
-
-    /**
-     * 通过角色值返回角色名
-     *
-     * @param string $value 角色值
-     * @return string 角色名
-     */
-    public function roleParse($value)
-    {
-        foreach ($this->roleList as $role) {
-            if ($role['value'] === $value) {
-                return $role['name'];
-            }
-        }
-
-        return '未知';
     }
 
     /**
@@ -183,7 +183,7 @@ class User extends Widget
     }
 
     /**
-     * 登陆
+     * 登陆验证
      *
      * @return void
      */
@@ -248,7 +248,7 @@ class User extends Widget
     }
 
     /**
-     * 注册
+     * 注册验证
      *
      * @return void
      */
@@ -299,7 +299,7 @@ class User extends Widget
         }
 
         // 用户名是否存在
-        if ($this->db->has('users', ['username' => $data['username']])) {
+        if ($this->db->has('users')->where(['username' => $data['username']])->execute()) {
             Cache::factory()->set('registerEmail', $this->request->post('email', ''));
             Cache::factory()->set('registerCode', $this->request->post('code', ''));
 
@@ -308,7 +308,7 @@ class User extends Widget
         }
 
         // 邮箱是否存在
-        if ($this->db->has('users', ['email' => $data['email']])) {
+        if ($this->db->has('users')->where(['email' => $data['email']])->execute()) {
             Cache::factory()->set('registerUsername', $this->request->post('username', ''));
 
             Notice::factory()->set('邮箱已存在', 'warning');
@@ -348,7 +348,7 @@ class User extends Widget
      *
      * @return void
      */
-    private function update()
+    private function updateInfo()
     {
         // 判断用户权限
         if (!$this->hasLogin()) {
@@ -358,7 +358,7 @@ class User extends Widget
         $uid = $this->params('uid');
 
         // 修改用户不存在
-        if (!$this->db->has('users', ['uid' => $uid])) {
+        if (!$this->db->has('users')->where(['uid' => $uid])->execute()) {
             Notice::factory()->set('未知用户', 'error');
             $this->response->redirect('/admin/profile.php?uid=' . $this->loginUserInfo['uid']);
         }
@@ -435,7 +435,7 @@ class User extends Widget
         $uid = $this->params('uid');
 
         // 修改用户不存在
-        if (!$this->db->has('users', ['uid' => $uid])) {
+        if (!$this->db->has('users')->where(['uid' => $uid])->execute()) {
             Notice::factory()->set('未知用户', 'error');
             $this->response->redirect('/admin/profile.php?action=password&uid=' . $this->loginUserInfo['uid']);
         }
@@ -492,7 +492,7 @@ class User extends Widget
         $uid = $this->params('uid');
 
         // 修改用户不存在
-        if (!$this->db->has('users', ['uid' => $uid])) {
+        if (!$this->db->has('users')->where(['uid' => $uid])->execute()) {
             Notice::factory()->set('未知用户', 'error');
             $this->response->redirect('/admin/profile.php?action=permission&uid=' . $this->loginUserInfo['uid']);
         }
@@ -546,7 +546,7 @@ class User extends Widget
         }
 
         // 邮箱是否存在
-        if ($this->db->has('users', ['email' => $data['email']])) {
+        if ($this->db->has('users')->where(['email' => $data['email']])->execute()) {
             $this->response->sendJSON(['errorCode' => 3, 'type' => 'warning', 'message' => '邮箱已存在']);
         }
 
@@ -575,7 +575,7 @@ class User extends Widget
         $this->on('logout' === $action)->logout();
 
         // 更新用户信息
-        $this->on('update' === $action)->update();
+        $this->on('update-info' === $action)->updateInfo();
 
         // 更新用户密码
         $this->on('update-password' === $action)->updatePassword();

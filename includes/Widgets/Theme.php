@@ -39,6 +39,21 @@ class Theme extends Widget
     }
 
     /**
+     * 获取主题信息
+     *
+     * @param null|string $name 字段名
+     * @return mixed
+     */
+    public function get($name = null)
+    {
+        if (null === $name) {
+            return $this->enabled;
+        } else {
+            return $this->enabled[$name];
+        }
+    }
+
+    /**
      * 获取主题列表
      *
      * @return array 主题列表
@@ -77,6 +92,8 @@ class Theme extends Widget
 
     /**
      * 插件配置
+     *
+     * @return void
      */
     public function config()
     {

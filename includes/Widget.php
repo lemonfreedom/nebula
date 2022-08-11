@@ -12,7 +12,7 @@
 namespace Nebula;
 
 use Nebula\Helpers\MySQL;
-use Nebula\Helpers\EmptyClass;
+use Nebula\Helpers\Fragment;
 
 class Widget
 {
@@ -108,7 +108,7 @@ class Widget
         if ($condition) {
             return $this;
         } else {
-            return EmptyClass::getInstance();
+            return Fragment::getInstance();
         }
     }
 

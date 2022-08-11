@@ -55,7 +55,7 @@ class Cache extends Widget
      *
      * @param null|string $name 缓存名
      * @param null|string $defaultValue 默认值
-     * @return null|string|array
+     * @return mixed
      */
     public function get($name = null, $defaultValue = null)
     {

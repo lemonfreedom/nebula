@@ -11,12 +11,12 @@
 
 namespace Nebula\Helpers;
 
-class EmptyClass
+class Fragment
 {
     /**
      * 单例实例
      *
-     * @var EmptyClass
+     * @var Fragment
      */
     private static $instance;
 
@@ -36,7 +36,7 @@ class EmptyClass
     /**
      * 获取单例实例
      *
-     * @return EmptyClass
+     * @return Fragment
      */
     public static function getInstance()
     {
