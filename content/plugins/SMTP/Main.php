@@ -11,11 +11,11 @@ use Nebula\Widgets\Option;
 
 /**
  * name: SMTP 邮件
- * url: https://www.nebulaio.com/
+ * url: https://www.nbacms.com/
  * description: 让系统支持邮件通知，具体功能有：注册邮件验证
  * version: 1.0
  * author: Noah Zhang
- * author_url: http://www.nebulaio.com/
+ * author_url: http://www.nbacms.com/
  */
 class Main
 {

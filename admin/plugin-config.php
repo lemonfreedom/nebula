@@ -10,7 +10,13 @@
             <a href="/admin/plugins.php">返回</a>
         </div>
     </div>
-    <?php \Nebula\Widgets\Plugin::factory()->config() ?>
+    <form class="nebula-form" action="/plugin/update-config" method="post">
+        <input type="text" hidden name="pluginName" value="<?= $request->get('name') ?>">
+        <?php \Nebula\Widgets\Plugin::factory()->config() ?>
+        <div class="form-tools">
+            <button class="nebula-button" type="submit">保存设置</button>
+        </div>
+    </form>
 </div>
 <?php require __DIR__ . '/copyright.php'; ?>
 <?php require __DIR__ . '/common-js.php'; ?>

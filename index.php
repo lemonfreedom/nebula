@@ -23,5 +23,11 @@ if (!@include_once NEBULA_ROOT_PATH . 'config.php') {
 // 初始化
 \Nebula\Common::init();
 
+// 注册一个开始插件
+\Nebula\Plugin::factory('index.php')->begin();
+
 // 路由分发
 \Nebula\Router::dispatch();
+
+// 注册一个结束插件
+\Nebula\Plugin::factory('index.php')->end();

@@ -250,7 +250,7 @@ class Plugin extends Widget
         }
 
         // 更新
-        Plugin::updateConfig($pluginClassName, $data);
+        NebulaPlugin::updateConfig($pluginClassName, $data);
 
         // 提交修改
         $this->db

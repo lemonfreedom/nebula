@@ -132,16 +132,16 @@ class User extends Widget
      */
     public function getUserList()
     {
-        $keyword = trim($this->params('keyword'));
+        $keyword = '%' . trim($this->params('keyword', '')) . '%';
 
         return $this->db
             ->select('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'])
             ->where([
                 'OR' => [
-                    'uid[~]' => $keyword,
-                    'username[~]' => $keyword,
-                    'email[~]' => $keyword,
-                    'nickname[~]' => $keyword,
+                    'uid[LIKE]' => $keyword,
+                    'username[LIKE]' => $keyword,
+                    'email[LIKE]' => $keyword,
+                    'nickname[LIKE]' => $keyword,
                 ],
             ])
             ->execute();

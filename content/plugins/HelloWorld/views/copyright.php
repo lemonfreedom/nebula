@@ -1,1 +1,1 @@
-<p><?= $data['message'] ?></p>
+<p id="chickenSoup"></p>

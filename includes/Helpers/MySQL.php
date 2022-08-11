@@ -54,6 +54,13 @@ class MySQL
      */
     private $params = [];
 
+    /**
+     * 执行过的 SQL 语句
+     *
+     * @var array
+     */
+    public $sqls = [];
+
     private function __construct()
     {
     }
@@ -235,7 +242,10 @@ class MySQL
             $params = array_merge($params, array_values($value));
         }
 
-        $sth = $this->mysql->prepare('INSERT INTO ' . $this->tableParse($table) . ' (' . $columns . ') VALUES ' . implode(', ', $stack));
+        $query = 'INSERT INTO ' . $this->tableParse($table) . ' (' . $columns . ') VALUES ' . implode(', ', $stack);
+        array_push($this->sqls, $query);
+
+        $sth = $this->mysql->prepare($query);
 
         return $sth->execute($params);
     }
@@ -270,7 +280,10 @@ class MySQL
 
         $table = $this->tableParse($table);
 
-        return false !== $this->mysql->exec('CREATE TABLE ' . $table . ' (' . implode(', ', $options) . ')');
+        $statement = 'CREATE TABLE ' . $table . ' (' . implode(', ', $options) . ')';
+        array_push($this->sqls, $statement);
+
+        return false !== $this->mysql->exec($statement);
     }
 
     /**
@@ -283,7 +296,10 @@ class MySQL
     {
         $table = $this->tableParse($table);
 
-        return false !== $this->mysql->exec('DROP TABLE ' . $table);
+        $statement = 'DROP TABLE ' . $table;
+        array_push($this->sqls, $statement);
+
+        return false !== $this->mysql->exec($statement);
     }
 
     /**
@@ -307,6 +323,8 @@ class MySQL
      */
     public function execute()
     {
+        array_push($this->sqls, $this->query);
+
         $sth = $this->mysql->prepare($this->query);
         $result = $sth->execute($this->params);
 

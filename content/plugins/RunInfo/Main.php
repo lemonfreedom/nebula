@@ -1,13 +1,14 @@
 <?php
 
-namespace Content\Plugins\HelloWorld;
+namespace Content\Plugins\RunInfo;
 
+use Nebula\Helpers\MySQL;
 use Nebula\Plugin;
 
 /**
- * name: 你好世界
+ * name: 运行信息
  * url: https://www.nbacms.com/
- * description: 这是默认插件，在底部输出一段毒鸡汤
+ * description: 在底部输出程序运行信息
  * version: 1.0
  * author: Noah Zhang
  * author_url: http://www.nbacms.com/
@@ -21,8 +22,8 @@ class Main
      */
     public static function activate()
     {
-        Plugin::factory('admin/copyright.php')->begin = __CLASS__ . '::render';
-        Plugin::factory('admin/common-js.php')->script = __CLASS__ . '::script';
+        Plugin::factory('admin/common.php')->begin = __CLASS__ . '::begin';
+        Plugin::factory('admin/footer.php')->render = __CLASS__ . '::render';
     }
 
     /**
@@ -42,19 +43,21 @@ class Main
      */
     public static function config($renderer)
     {
-        $renderer->setValue('api', 'https://api.oick.cn/dutang/api.php');
+        $renderer->setValue('showSQL', '0');
         $renderer->setTemplate(function ($data) {
             include __DIR__ . '/config.php';
         });
     }
 
-    public static function render()
+    public static function begin()
     {
-        include __DIR__ . '/views/copyright.php';
+        define('START_TIME', microtime(true));
     }
 
-    public static function script($data)
+    public static function render($data)
     {
-        include __DIR__ . '/views/script.php';
+        $time = round(microtime(true) - START_TIME, 4);
+        $sqls = MySQL::getInstance()->sqls;
+        include __DIR__ . '/views/time.php';
     }
 }

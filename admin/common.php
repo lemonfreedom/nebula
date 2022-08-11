@@ -13,6 +13,9 @@ if (!@include_once NEBULA_ROOT_PATH . 'config.php') {
 // 初始化
 \Nebula\Common::init();
 
+// 注册一个开始插件
+\Nebula\Plugin::factory('admin/common.php')->begin();
+
 // 请求对象
 $request = \Nebula\Request::getInstance();
 

@@ -2,11 +2,11 @@
 
 /**
  * name: Nebula 主题
- * url: https://www.nebulaio.com/
+ * url: https://www.nbacms.com/
  * description: nebula 测试主题
  * version: 1.0
  * author: Noah Zhang
- * author_url: http://www.nebulaio.com/
+ * author_url: http://www.nbacms.com/
  */
 
 if (!defined('NEBULA_ROOT_PATH')) exit;

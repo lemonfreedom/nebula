@@ -2,11 +2,11 @@
 
 /**
  * name: Default
- * url: https://www.nebulaio.com/
+ * url: https://www.nbacms.com/
  * description: 这是默认主题
  * version: 1.0
  * author: Noah Zhang
- * author_url: http://www.nebulaio.com/
+ * author_url: http://www.nbacms.com/
  */
 
 if (!defined('NEBULA_ROOT_PATH')) exit;
