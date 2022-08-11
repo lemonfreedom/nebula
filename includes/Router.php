@@ -53,6 +53,12 @@ class Router
                 'action' => '',
             ],
         ],
+        'common' => [
+            'widget' => '\Nebula\Widgets\Common',
+            'params' => [
+                'action' => '',
+            ],
+        ],
         'index' => [
             'widget' => '\Nebula\Widgets\Index',
             'action' => 'render',

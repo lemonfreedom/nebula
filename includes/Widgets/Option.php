@@ -154,7 +154,7 @@ class Option extends Widget
         // 注册表单验证插件
         Plugin::factory('includes/Widgets/Option.php')->update([
             'optionName' => $optionName,
-            'data' => $data
+            'data' => $data,
         ]);
 
         if ('basic' === $optionName) {

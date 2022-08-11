@@ -11,8 +11,19 @@
 
 namespace Nebula\Widgets;
 
+use Nebula\Plugin;
 use Nebula\Widget;
 
 class Common extends Widget
 {
+    /**
+     * 行动方法
+     *
+     * @return void
+     */
+    public function action()
+    {
+        // 注册公共行动插件，主要用于插件
+        Plugin::factory('includes/Widgets/Common.php')->action($this->params());
+    }
 }
