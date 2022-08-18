@@ -281,9 +281,9 @@ class User extends Widget
             ],
         ]);
         if (!$validate->run()) {
-            Cache::factory()->set('registerUsername', $this->request->post('username', ''));
-            Cache::factory()->set('registerEmail', $this->request->post('email', ''));
-            Cache::factory()->set('registerCode', $this->request->post('code', ''));
+            Cache::factory()->set('registerUsername', $this->request->post('username', ''))
+                ->set('registerEmail', $this->request->post('email', ''))
+                ->set('registerCode', $this->request->post('code', ''));
 
             Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/register.php');
@@ -291,17 +291,17 @@ class User extends Widget
 
         // 验证码是否正确
         if (!Common::hashValidate($data['email'] . $data['code'], Cookie::get('code_hash', ''))) {
-            Cache::factory()->set('registerUsername', $this->request->post('username', ''));
-            Cache::factory()->set('registerEmail', $this->request->post('email', ''));
+            Cache::factory()->set('registerUsername', $this->request->post('username', ''))
+                ->set('registerEmail', $this->request->post('email', ''))
+                ->set('验证码错误', 'warning');
 
-            Notice::factory()->set('验证码错误', 'warning');
             $this->response->redirect('/admin/register.php');
         }
 
         // 用户名是否存在
         if ($this->db->has('users')->where(['username' => $data['username']])->execute()) {
-            Cache::factory()->set('registerEmail', $this->request->post('email', ''));
-            Cache::factory()->set('registerCode', $this->request->post('code', ''));
+            Cache::factory()->set('registerEmail', $this->request->post('email', ''))
+                ->set('registerCode', $this->request->post('code', ''));
 
             Notice::factory()->set('用户名已存在', 'warning');
             $this->response->redirect('/admin/register.php');

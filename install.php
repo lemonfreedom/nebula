@@ -154,11 +154,11 @@ function step2()
 
     try {
         // 删除表
-        $mysql->drop('users');
-        $mysql->drop('options');
-        $mysql->drop('terms');
-        $mysql->drop('posts');
-        $mysql->drop('caches');
+        // $mysql->drop('users');
+        // $mysql->drop('options');
+        // $mysql->drop('terms');
+        // $mysql->drop('posts');
+        // $mysql->drop('caches');
 
         // 创建用户表
         $mysql->create('users', [

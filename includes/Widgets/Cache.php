@@ -75,7 +75,7 @@ class Cache extends Widget
      * @param string $name 缓存名
      * @param string $value 缓存值
      * @param int $expires 过期时间
-     * @return void
+     * @return $this
      */
     public function set($name, $value, $expires = 60)
     {
@@ -104,6 +104,8 @@ class Cache extends Widget
                 $this->caches[$index]['value'] = $value;
             }
         }
+
+        return $this;
     }
 
     /**
