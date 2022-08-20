@@ -303,8 +303,8 @@ function render()
         Response::getInstance()->redirect('/install.php');
     }
 }
+ob_start();
 ?>
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -327,3 +327,8 @@ function render()
 </body>
 
 </html>
+
+<?php
+$html = ob_get_contents();
+ob_end_clean();
+echo $html;
