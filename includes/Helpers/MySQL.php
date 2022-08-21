@@ -74,7 +74,7 @@ class MySQL
     public function init($options)
     {
         try {
-            $this->mysql = new PDO('mysql:dbname=' . $options['dbname'] . ';host=' . $options['host'] . ';port=' . $options['port'], $options['username'], $options['password'], [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8']);
+            $this->mysql = new PDO('mysql:dbname=' . $options['dbname'] . ';host=' . $options['host'] . ';port=' . $options['port'], $options['username'], $options['password']);
         } catch (PDOException $e) {
             throw $e;
         }
