@@ -30,3 +30,4 @@ html_logo = '_static/logo.png'
 html_theme_options = {
     'logo_only': True,
 }
+html_show_sourcelink = True
