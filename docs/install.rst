@@ -5,7 +5,7 @@
 程序获取
 ====================
 
-#. :download:`直接下载 <_static/logo.png>`
+#. :download:`直接下载「v0.1.0-alpha」<https://github.com/nbacms/nebula/releases/download/v0.1.0-alpha/v0.1.0-alpha.zip>`
 #. https://github.com/nbacms/nebula/
 
 开始安装
