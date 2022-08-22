@@ -3,14 +3,14 @@
 ********************
 
 .. toctree::
-   :maxdepth: 2
-   :caption: 使用
+    :maxdepth: 2
+    :caption: 使用
 
-   install
+    install
 
 .. toctree::
-   :maxdepth: 2
-   :caption: 开发
+    :maxdepth: 2
+    :caption: 开发
 
-   theme
-   plugin
+    theme
+    plugin
