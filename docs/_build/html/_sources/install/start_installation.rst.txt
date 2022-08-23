@@ -6,7 +6,7 @@
 环境准备
 ********************
 
-PHP>=7.4、MySQL、Nginx「推荐」或 Apache。
+`PHP>=7.4 <https://www.php.net/>`_\ 、\ `MySQL <https://www.mysql.com/>`_\ 、\ `Nginx「推荐」 <http://nginx.org/>`_\ 或 Apache。
 
 ********************
 安装流程
@@ -38,7 +38,7 @@ PHP>=7.4、MySQL、Nginx「推荐」或 Apache。
 
 程序安装完成后，还需配置伪静态才能正常访问。
 
-如果您使用 **Nginx**，则需在您的 **Nginx** 配置里添加如下配置：
+如果您使用 Nginx，则需在您的 **Nginx 配置** 添加如下配置：
 
 .. code::
 

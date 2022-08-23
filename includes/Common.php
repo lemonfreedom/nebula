@@ -67,10 +67,10 @@ namespace Nebula {
          * 生成随机字符串
          *
          * @param int $length 字符串长度
-         * @param bool $number 是否有数字
-         * @param bool $lowerCase 是否有小写字母
-         * @param bool $mixedCase 是否有大写字母
-         * @param bool $specialChars 是否有特殊字符
+         * @param bool $number 是否包含数字
+         * @param bool $lowerCase 是否包含小写字母
+         * @param bool $mixedCase 是否包含大写字母
+         * @param bool $specialChars 是否包含特殊字符
          * @return string
          */
         public static function randString($length,  $number = true, $lowerCase = true, $mixedCase = false, $specialChars = false)
