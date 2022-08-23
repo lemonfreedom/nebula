@@ -111,13 +111,13 @@
 <section id="id4">
 <h2>配置伪静态<a class="headerlink" href="#id4" title="此标题的永久链接"></a></h2>
 <p>程序安装完成后，还需配置伪静态才能正常访问。</p>
-<p>如果您使用 <cite>Nginx</cite>，则需在您的 <cite>Nginx</cite> 配置里添加如下配置：</p>
+<p>如果您使用 <strong>Nginx</strong>，则需在您的 <strong>Nginx</strong> 配置里添加如下配置：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>location / {
     try_files  $uri $uri/ /index.php?$query_string;
 }
 </pre></div>
 </div>
-<p>如果您使用 <cite>Apache</cite>，则需新建 <code class="docutils literal notranslate"><span class="pre">.htaccess</span></code> 文件，内容如下：</p>
+<p>如果您使用 <strong>Apache</strong>，则需新建 <code class="docutils literal notranslate"><span class="pre">.htaccess</span></code> 文件，内容如下：</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
