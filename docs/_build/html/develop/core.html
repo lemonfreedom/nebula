@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>核心类 &mdash; Nebula  文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="prev" title="开发" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html">
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../wecome/index.html">欢迎使用 Nebula</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">安装您的程序</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Nebula 概览</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">开发</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">核心类</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Nebula</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">开发</a> &raquo;</li>
+      <li>核心类</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/develop/core.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>核心类<a class="headerlink" href="#id1" title="永久链接至标题"></a></h1>
+<section id="includes-common-php">
+<h2>includes/Common.php<a class="headerlink" href="#includes-common-php" title="永久链接至标题"></a></h2>
+<p>公共类</p>
+<dl class="php class">
+<dt class="sig sig-object php">
+<span class="sig-name descname"><span class="pre">Nebula\Common</span></span></dt>
+<dd><dl class="php staticmethod">
+<dt class="sig sig-object php" id="init">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">init</span></span><a class="headerlink" href="#init" title="永久链接至目标"></a></dt>
+<dd><p>初始化方法</p>
+</dd></dl>
+
+<dl class="php staticmethod">
+<dt class="sig sig-object php" id="randString">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">randString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">$length</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">$number</span> <span class="pre">=</span> <span class="pre">true</span></em>, <em class="sig-param"><span class="pre">$lowerCase</span> <span class="pre">=</span> <span class="pre">true</span></em>, <em class="sig-param"><span class="pre">$mixedCase</span> <span class="pre">=</span> <span class="pre">false</span></em>, <em class="sig-param"><span class="pre">$specialChars</span> <span class="pre">=</span> <span class="pre">false</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#randString" title="永久链接至目标"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>$length</strong> (<span><code class="xref php php-obj docutils literal notranslate"><span class="pre">int</span></code></span>) – 字符串长度</p></li>
+<li><p><strong>$number</strong> (<span><code class="xref php php-obj docutils literal notranslate"><span class="pre">bool</span></code></span>) – 是否包含数字</p></li>
+<li><p><strong>$lowerCase</strong> (<span><code class="xref php php-obj docutils literal notranslate"><span class="pre">bool</span></code></span>) – 是否包含小写字母</p></li>
+<li><p><strong>$mixedCase</strong> (<span><code class="xref php php-obj docutils literal notranslate"><span class="pre">bool</span></code></span>) – 是否包含大写字母</p></li>
+<li><p><strong>$specialChars</strong> (<span><code class="xref php php-obj docutils literal notranslate"><span class="pre">bool</span></code></span>) – 是否包含特殊字符</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>生成的随机字符串</p>
+</dd>
+<dt class="field-odd">返回类型</dt>
+<dd class="field-odd"><p><span><code class="xref php php-obj docutils literal notranslate"><span class="pre">string</span></code></span></p>
+</dd>
+</dl>
+<p>生成随机字符串</p>
+</dd></dl>
+
+<dl class="php staticmethod">
+<dt class="sig sig-object php" id="hash">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">$string</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">$salt</span> <span class="pre">=</span> <span class="pre">null</span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#hash" title="永久链接至目标"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>$string</strong> (<span><code class="xref php php-obj docutils literal notranslate"><span class="pre">string</span></code></span>) – 目标字符串</p></li>
+<li><p><strong>$salt</strong> (<span><code class="xref php php-obj docutils literal notranslate"><span class="pre">null|string</span></code></span>) – 32 位扰码</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>哈希值</p>
+</dd>
+<dt class="field-odd">返回类型</dt>
+<dd class="field-odd"><p><span><code class="xref php php-obj docutils literal notranslate"><span class="pre">string</span></code></span></p>
+</dd>
+</dl>
+<p>对字符串进行 hash 加密</p>
+</dd></dl>
+
+<dl class="php staticmethod">
+<dt class="sig sig-object php" id="hashValidate">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">hashValidate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">$from</span></em>, <em class="sig-param"><span class="pre">$to</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hashValidate" title="永久链接至目标"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>$from</strong> (<span><code class="xref php php-obj docutils literal notranslate"><span class="pre">string</span></code></span>) – 源字符串</p></li>
+<li><p><strong>$to</strong> (<span><code class="xref php php-obj docutils literal notranslate"><span class="pre">string</span></code></span>) – 目标字符串</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>是否验证成功</p>
+</dd>
+<dt class="field-odd">返回类型</dt>
+<dd class="field-odd"><p><span><code class="xref php php-obj docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+<p>验证 hash</p>
+</dd></dl>
+
+<dl class="php staticmethod">
+<dt class="sig sig-object php" id="parseDoc">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">parseDoc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">$path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#parseDoc" title="永久链接至目标"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">参数</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>$path</strong> (<span><code class="xref php php-obj docutils literal notranslate"><span class="pre">string</span></code></span>) – 文件路径</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回</dt>
+<dd class="field-even"><p>注释信息</p>
+</dd>
+<dt class="field-odd">返回类型</dt>
+<dd class="field-odd"><p><span><code class="xref php php-obj docutils literal notranslate"><span class="pre">array</span></code></span></p>
+</dd>
+</dl>
+<p>文档头注释解析</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="includes-router-php">
+<h2>includes/Router.php<a class="headerlink" href="#includes-router-php" title="永久链接至标题"></a></h2>
+<p>路由类</p>
+<dl class="php class">
+<dt class="sig sig-object php">
+<span class="sig-name descname"><span class="pre">Nebula\Router</span></span></dt>
+<dd><dl class="php staticmethod">
+<dt class="sig sig-object php" id="dispatch">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">dispatch</span></span><a class="headerlink" href="#dispatch" title="永久链接至目标"></a></dt>
+<dd><p>路由分发，访问入口</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="includes-request-php">
+<h2>includes/Request.php<a class="headerlink" href="#includes-request-php" title="永久链接至标题"></a></h2>
+</section>
+<section id="includes-response-php">
+<h2>includes/Response.php<a class="headerlink" href="#includes-response-php" title="永久链接至标题"></a></h2>
+</section>
+<section id="includes-widget-php">
+<h2>includes/Widget.php<a class="headerlink" href="#includes-widget-php" title="永久链接至标题"></a></h2>
+</section>
+<section id="includes-plugin-php">
+<h2>includes/Plugin.php<a class="headerlink" href="#includes-plugin-php" title="永久链接至标题"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="开发" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2022, nbacms.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

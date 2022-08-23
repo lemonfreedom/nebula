@@ -145,7 +145,7 @@ namespace Nebula {
         /**
          * 格式化 DOC
          *
-         * @param $path 文件路径
+         * @param string $path 文件路径
          * @return array
          */
         public static function parseDoc($path)

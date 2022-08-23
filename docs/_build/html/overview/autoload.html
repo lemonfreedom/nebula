@@ -19,6 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="开发" href="../develop/index.html" />
     <link rel="prev" title="程序结构" href="structure.html" /> 
 </head>
 
@@ -42,7 +43,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../wecome/index.html">欢迎使用 Nebula</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../install/index.html">安装您的博客</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">安装您的程序</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Nebula 概览</a><ul class="current">
@@ -50,6 +51,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">自动加载</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">开发</a></li>
 </ul>
 
         </div>
@@ -79,26 +81,19 @@
              
   <section id="id1">
 <h1>自动加载<a class="headerlink" href="#id1" title="永久链接至标题"></a></h1>
-<section id="id2">
-<h2>默认目录<a class="headerlink" href="#id2" title="永久链接至标题"></a></h2>
-<p>新安装程序都有 4 个目录：<code class="docutils literal notranslate"><span class="pre">/admin</span></code>,<code class="docutils literal notranslate"><span class="pre">/content</span></code>,<code class="docutils literal notranslate"><span class="pre">/includes</span></code>,<code class="docutils literal notranslate"><span class="pre">/docs</span></code>，这些目录每个都有非常具体的使用规范。</p>
-<section id="admin">
-<h3>admin<a class="headerlink" href="#admin" title="永久链接至标题"></a></h3>
-<p>存放后台文件与一部分静态资源，如果你是新手，勿动，详情请见后续说明。</p>
-</section>
-<section id="content">
-<h3>content<a class="headerlink" href="#content" title="永久链接至标题"></a></h3>
-<p>内容文件夹，插件、主题、上传文件等存放于此。</p>
-</section>
-<section id="includes">
-<h3>includes<a class="headerlink" href="#includes" title="永久链接至标题"></a></h3>
-<p>系统文件，如果你是新手，勿动，详情请见后续说明。</p>
-</section>
-<section id="docs">
-<h3>docs<a class="headerlink" href="#docs" title="永久链接至标题"></a></h3>
-<p>程序文档，可直接打开里面 <code class="docutils literal notranslate"><span class="pre">index.html</span></code> 查看文档。</p>
-</section>
-</section>
+<p>Nebula 提供一个非常灵活的自动加载器，不需要手动 <code class="docutils literal notranslate"><span class="pre">requires()</span></code> 即可引入类文件。自动加载在 <code class="docutils literal notranslate"><span class="pre">includes/Common.php</span></code> 中注册。</p>
+<p>自动加载符合 <a class="reference external" href="https://www.php-fig.org/psr/psr-4/">PSR4</a> 规范加载类。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>以下目录结构使用别名命名空间</p>
+<ul class="simple">
+<li><p>admin =&gt; <strong>Admin</strong></p></li>
+<li><p>content =&gt; <strong>Content</strong></p></li>
+<li><p>plugins =&gt; <strong>Plugins</strong></p></li>
+<li><p>themes =&gt; <strong>Themes</strong></p></li>
+<li><p>includes =&gt; <strong>Nebula</strong></p></li>
+</ul>
+</div>
 </section>
 
 
@@ -106,6 +101,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="structure.html" class="btn btn-neutral float-left" title="程序结构" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../develop/index.html" class="btn btn-neutral float-right" title="开发" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
