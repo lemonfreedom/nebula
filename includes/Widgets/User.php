@@ -277,7 +277,14 @@ class User extends Widget
             ],
             'confirmPassword' => [
                 ['type' => 'required', 'message' => '确认密码不能为空'],
-                ['type' => 'confirm', 'key' => 'password', 'message' => '两次输入密码不一致'],
+                [
+                    'type' => 'custom',
+                    'validator' => function ($rule, $value, $callback) use ($data) {
+                        if ($data['password'] !== $value) {
+                            $callback('两次输入密码不一致');
+                        }
+                    },
+                ]
             ],
         ]);
         if (!$validate->run()) {
@@ -455,7 +462,14 @@ class User extends Widget
             'confirmPassword' => [
                 ['type' => 'required', 'message' => '确认密码不能为空'],
                 ['type' => 'required', 'message' => '确认密码不能为空'],
-                ['type' => 'confirm', 'key' => 'password', 'message' => '两次输入密码不一致'],
+                [
+                    'type' => 'custom',
+                    'validator' => function ($rule, $value, $callback) use ($data) {
+                        if ($data['password'] !== $value) {
+                            $callback('两次输入密码不一致');
+                        }
+                    },
+                ]
             ],
         ]);
         if (!$validate->run()) {
