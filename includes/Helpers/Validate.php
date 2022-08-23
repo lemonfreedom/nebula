@@ -48,25 +48,12 @@ class Validate
     /**
      * 验证是否为邮箱
      *
-     * @param string $value  值
+     * @param string $value 值
      * @return bool
      */
     public function email($value)
     {
         return filter_var($value, FILTER_VALIDATE_EMAIL);
-    }
-
-    /**
-     * 一致性验证
-     *
-     * @param string $value 值
-     * @param string $key 比对的键
-     * @return bool
-     */
-    public function confirm($value, $key)
-    {
-        $confirmValue = $this->data[$key] ?? null;
-        return null !== $confirmValue ? $value === $this->data[$key] : false;
     }
 
     /**
@@ -92,14 +79,18 @@ class Validate
         foreach ($this->rules as $key => $rule) {
             foreach ($rule as $ruleItem) {
                 $value = $this->data[$key] ?? '';
-                if ('confirm' === $ruleItem['type']) {
-                    if (!$this->{$ruleItem['type']}($value, $ruleItem['key'])) {
-                        array_push($this->result, [
-                            'key' => $key,
-                            'message' => $ruleItem['message'],
-                        ]);
-                    }
+                if ('custom' === $ruleItem['type']) {
+                    // 自定义表单校验
+                    call_user_func($ruleItem['validator'], $ruleItem, $value, function ($message = null) use ($key) {
+                        if (null !== $message) {
+                            array_push($this->result, [
+                                'key' => $key,
+                                'message' => $message,
+                            ]);
+                        }
+                    });
                 } else {
+                    // 内置表单验证
                     if (!$this->{$ruleItem['type']}($value)) {
                         array_push($this->result, [
                             'key' => $key,
