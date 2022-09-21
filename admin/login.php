@@ -1,6 +1,6 @@
-<?php include __DIR__ . '/common.php'; ?>
+<?php include __DIR__ . '/modules/common.php'; ?>
 <?php $user->hasLogin() && $response->redirect('/'); ?>
-<?php include __DIR__ . '/header.php'; ?>
+<?php include __DIR__ . '/modules/header.php'; ?>
 <div class="nebula-account">
     <div class="board">
         <h1 class="title">Nebula</h1>
@@ -22,5 +22,5 @@
         </div>
     </div>
 </div>
-<?php include __DIR__ . '/common-js.php'; ?>
-<?php include __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . '/modules/common-js.php'; ?>
+<?php include __DIR__ . '/modules/footer.php'; ?>

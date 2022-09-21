@@ -1,8 +1,8 @@
-<?php include __DIR__ . '/common.php'; ?>
+<?php include __DIR__ . '/modules/common.php'; ?>
 <?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php $plugin = \Nebula\Widgets\Plugin::factory(['pluginName' => $request->get('name')]); ?>
-<?php include __DIR__ . '/header.php'; ?>
-<?php include __DIR__ . '/navbar.php'; ?>
+<?php include __DIR__ . '/modules/header.php'; ?>
+<?php include __DIR__ . '/modules/navbar.php'; ?>
 <div class="container">
     <div class="nebula-title">
         <div>
@@ -18,6 +18,6 @@
         </div>
     </form>
 </div>
-<?php include __DIR__ . '/copyright.php'; ?>
-<?php include __DIR__ . '/common-js.php'; ?>
-<?php include __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . '/modules/copyright.php'; ?>
+<?php include __DIR__ . '/modules/common-js.php'; ?>
+<?php include __DIR__ . '/modules/footer.php'; ?>

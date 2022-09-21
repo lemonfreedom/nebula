@@ -1,14 +1,14 @@
-<?php include __DIR__ . '/common.php'; ?>
+<?php include __DIR__ . '/modules/common.php'; ?>
 <?php $user->hasLogin() || $response->redirect('/admin/login.php'); ?>
-<?php include __DIR__ . '/header.php'; ?>
-<?php include __DIR__ . '/navbar.php'; ?>
+<?php include __DIR__ . '/modules/header.php'; ?>
+<?php include __DIR__ . '/modules/navbar.php'; ?>
 <?php $action = $request->get('action'); ?>
 <?php $userInfo = \Nebula\Widgets\User::factory(['uid' => $request->get('uid')], 'render')->get(); ?>
 <?php null === $userInfo && $response->redirect('/admin'); ?>
 <div class="container">
     <div class="nebula-tabs">
         <div class="scroll">
-            <div class="tab<?= 'password' !== $action && 'permission' !== $action ? ' active' : '' ?>">
+            <div class="tab<?= null === $action ? ' active' : '' ?>">
                 <a href="/admin/profile.php?uid=<?= $request->get('uid') ?>">用户资料</a>
             </div>
             <div class="tab<?= 'password' === $action ? ' active' : '' ?>">
@@ -41,8 +41,7 @@
                 <button type="submit" class="nebula-button">保存设置</button>
             </div>
         </form>
-    <?php endif; ?>
-    <?php if ('password' === $action) : ?>
+    <?php elseif ('password' === $action) : ?>
         <form class="nebula-form" action="/user/update-password/<?= $userInfo['uid'] ?>" method="POST">
             <div class="form-item">
                 <label class="form-label" for="password">密码</label>
@@ -56,8 +55,7 @@
                 <button type="submit" class="nebula-button">保存设置</button>
             </div>
         </form>
-    <?php endif; ?>
-    <?php if ('permission' === $action && \Nebula\Widgets\User::factory()->inRole(['0'])) : ?>
+    <?php elseif ('permission' === $action && \Nebula\Widgets\User::factory()->inRole(['0'])) : ?>
         <form class="nebula-form" action="/user/update-permission/<?= $userInfo['uid'] ?>" method="POST">
             <div class="form-item">
                 <label class="form-label" for="role">用户角色</label>
@@ -73,6 +71,6 @@
         </form>
     <?php endif; ?>
 </div>
-<?php include __DIR__ . '/copyright.php'; ?>
-<?php include __DIR__ . '/common-js.php'; ?>
-<?php include __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . '/modules/copyright.php'; ?>
+<?php include __DIR__ . '/modules/common-js.php'; ?>
+<?php include __DIR__ . '/modules/footer.php'; ?>

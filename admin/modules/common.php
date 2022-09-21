@@ -1,6 +1,6 @@
 <?php
 // 定义根路径
-define('NEBULA_ROOT_PATH', dirname(__DIR__) . '/');
+define('NEBULA_ROOT_PATH', dirname(dirname(__DIR__)) . '/');
 
 // 加载公共文件
 include NEBULA_ROOT_PATH . 'includes/Common.php';

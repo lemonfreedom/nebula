@@ -93,6 +93,7 @@
                 overflow-x: hidden;
                 overflow-y: auto;
                 z-index: 10000;
+                filter: drop-shadow(16px 16px 10px black);
 
                 .menu {
                     flex-direction: column;

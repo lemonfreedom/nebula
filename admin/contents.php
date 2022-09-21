@@ -1,15 +1,18 @@
 <?php include __DIR__ . '/modules/common.php'; ?>
-<?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
+<?php $user->hasLogin() || $response->redirect('/admin/login.php'); ?>
 <?php include __DIR__ . '/modules/header.php'; ?>
 <?php include __DIR__ . '/modules/navbar.php'; ?>
 <?php $action = $request->get('action'); ?>
 <div class="container">
     <div class="nebula-tabs">
         <div class="scroll">
-            <div class="tab<?= 'smtp' !== $action ? ' active' : '' ?>">
-                <a href="/admin/options.php">基本设置</a>
+            <div class="tab<?= null === $action ? ' active' : '' ?>">
+                <a href="/admin/contents.php">文章</a>
             </div>
-            <?php \Nebula\Plugin::factory('admin/options.php')->tab(['action' => $action]); ?>
+            <div class="tab<?= 'cat' === $action ? ' active' : '' ?>">
+                <a href="/admin/contents.php?action=cat">分类</a>
+            </div>
+            <?php \Nebula\Plugin::factory('admin/contents.php')->tab(['action' => $action]); ?>
         </div>
     </div>
     <?php if (null === $action) : ?>

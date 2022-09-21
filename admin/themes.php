@@ -1,7 +1,7 @@
-<?php include __DIR__ . '/common.php'; ?>
+<?php include __DIR__ . '/modules/common.php'; ?>
 <?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
-<?php include __DIR__ . '/header.php'; ?>
-<?php include __DIR__ . '/navbar.php'; ?>
+<?php include __DIR__ . '/modules/header.php'; ?>
+<?php include __DIR__ . '/modules/navbar.php'; ?>
 <?php $themeList = \Nebula\Widgets\Theme::factory()->getThemeList(); ?>
 <div class="container theme">
     <div class="nebula-title">主题</div>
@@ -59,6 +59,6 @@
         </table>
     </div>
 </div>
-<?php include __DIR__ . '/copyright.php'; ?>
-<?php include __DIR__ . '/common-js.php'; ?>
-<?php include __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . '/modules/copyright.php'; ?>
+<?php include __DIR__ . '/modules/common-js.php'; ?>
+<?php include __DIR__ . '/modules/footer.php'; ?>

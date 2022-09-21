@@ -203,12 +203,12 @@ define('NEBULA_DEBUG', true);
 
 // 数据库初始化
 \Nebula\Helpers\MySQL::getInstance()->init([
-'dbname' => '{$data['dbname']}',
-'host' => '{$data['host']}',
-'port' => '{$data['port']}',
-'username' => '{$data['username']}',
-'password' => '{$data['password']}',
-'prefix' => '{$data['prefix']}',
+    'dbname' => '{$data['dbname']}',
+    'host' => '{$data['host']}',
+    'port' => '{$data['port']}',
+    'username' => '{$data['username']}',
+    'password' => '{$data['password']}',
+    'prefix' => '{$data['prefix']}',
 ]);\n
 EOT;
 

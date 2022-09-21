@@ -26,15 +26,15 @@ a {
 .mask {
     overflow: hidden;
 
-    &::before {
+    &::after {
         content: "";
         position: absolute;
         top: 3.6rem;
         left: 0;
         bottom: 0;
         right: 0;
-        background-color: rgba($color: #000, $alpha: .3);
-        z-index: 1000;
+        z-index: 9999;
+        background-color: rgba($color: #000, $alpha: .4);
     }
 }
 
