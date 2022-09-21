@@ -323,7 +323,7 @@ ob_start();
         <?php render(); ?>
     </div>
     <script src="/admin/js/js.cookie.min.js"></script>
-    <script src="/admin/js/nebula.js"></script>
+    <script src="/admin/js/index.js"></script>
 </body>
 
 </html>
