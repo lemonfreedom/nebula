@@ -85,8 +85,8 @@ class Widget
      * 获取参数
      *
      * @param null|string $name 参数名
-     * @param null|string $defaultValue 默认值
-     * @return null|string|array
+     * @param mixed $defaultValue 默认值
+     * @return mixed
      */
     public function params($name = null, $defaultValue = null)
     {

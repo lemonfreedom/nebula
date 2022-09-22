@@ -3,16 +3,16 @@
 <?php include __DIR__ . '/modules/header.php'; ?>
 <?php include __DIR__ . '/modules/navbar.php'; ?>
 <div class="container">
-    <div class="nebula-title">
+    <div class="title">
         <div>
             <span>主题配置「<?= $option->get('theme')['name'] ?>」</span>
             <a href="/admin/themes.php">返回</a>
         </div>
     </div>
-    <form class="nebula-form" action="/theme/update-config" method="post">
+    <form class="form" action="/theme/update-config" method="post">
         <?php \Nebula\Widgets\Theme::factory()->config() ?>
         <div class="form-tools">
-            <button class="nebula-button" type="submit">保存设置</button>
+            <button class="button" type="submit">保存设置</button>
         </div>
     </form>
 </div>

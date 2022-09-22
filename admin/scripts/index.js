@@ -1,8 +1,8 @@
 // 显示通知
 const notice = (message, type = 'info') => {
     let noticeEl = document.createElement('div');
-    noticeEl.classList.add('nebula-notice');
-    noticeEl.classList.add('nebula-' + type);
+    noticeEl.classList.add('notice');
+    noticeEl.classList.add('notice-' + type);
     noticeEl.innerText = message;
     document.body.append(noticeEl);
     setTimeout(() => {
@@ -14,7 +14,7 @@ const notice = (message, type = 'info') => {
 let menuToggleButtonEl = document.querySelector('#menuToggleButton');
 if (menuToggleButtonEl) {
     menuToggleButtonEl.addEventListener('click', function () {
-        let mainEl = document.querySelector('.nebula-navbar .main');
+        let mainEl = document.querySelector('.navbar .main');
         mainEl.classList.toggle('open');
         window.scrollTo(0, 0);
         document.body.classList.toggle('mask');
@@ -22,7 +22,7 @@ if (menuToggleButtonEl) {
 }
 
 // 折叠按钮切换
-let buttonDropdownEl = document.querySelectorAll('.nebula-button-dropdown');
+let buttonDropdownEl = document.querySelectorAll('.button-dropdown');
 buttonDropdownEl.forEach(el => {
     el.addEventListener('click', function () {
         el.classList.toggle('open');

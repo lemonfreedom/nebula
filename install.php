@@ -39,8 +39,8 @@ function step()
     }
 
     echo <<<EOT
-<div class="nebula-title">欢迎使用 Nebula</div>
-<div class="nebula-wecome">
+<div class="title">欢迎使用 Nebula</div>
+<div class="wecome">
 <div class="title">安装说明</div>
 <p>本安装程序将自动检测服务器环境是否符合安装需求。如果服务器环境符合要求，将在下方出现「<em class="mark">现在就开始</em>」按钮，点击此按钮即可开始下一步。</p>
 <div class="title">许可协议</div>
@@ -50,7 +50,7 @@ function step()
 EOT;
     if (null === $errorMessage) {
         echo <<<EOT
-<a href="/install.php?step=1" class="nebula-button">
+<a href="/install.php?step=1" class="button">
     <span>现在就开始</span>
     <i class="bi bi-chevron-double-right"></i>
 </a>
@@ -70,35 +70,35 @@ EOT;
 function step1()
 {
     echo <<<EOT
-<div class="nebula-title">数据库配置</div>
-<form class="nebula-form" action="/install.php?step=2" method="post">
+<div class="title">数据库配置</div>
+<form class="form" action="/install.php?step=2" method="post">
     <div class="form-item">
         <label class="form-label" for="dbname">数据库名</label>
-        <input class="nebula-input" id="dbname" name="dbname" value="nebula">
+        <input class="input" id="dbname" name="dbname" value="nebula">
     </div>
     <div class="form-item">
         <label class="form-label" for="host">数据库地址</label>
-        <input class="nebula-input" id="host" name="host" value="localhost">
+        <input class="input" id="host" name="host" value="localhost">
     </div>
     <div class="form-item">
         <label class="form-label" for="port">数据库端口</label>
-        <input class="nebula-input" id="port" name="port" value="3306">
+        <input class="input" id="port" name="port" value="3306">
         <label class="form-sublabel">MySQL 端口默认 3306</label>
     </div>
     <div class="form-item">
         <label class="form-label" for="username">用户名</label>
-        <input class="nebula-input" id="username" name="username">
+        <input class="input" id="username" name="username">
     </div>
     <div class="form-item">
         <label class="form-label" for="password">密码</label>
-        <input class="nebula-input" type="password" id="password" name="password">
+        <input class="input" type="password" id="password" name="password">
     </div>
     <div class="form-item">
         <label class="form-label" for="prefix">表前缀</label>
-        <input class="nebula-input" id="prefix" name="prefix" value="nebula_">
+        <input class="input" id="prefix" name="prefix" value="nebula_">
         <label class="form-sublabel">同数据库多程序请设置前缀</label>
     </div>
-    <button class="nebula-button" type="submit">
+    <button class="button" type="submit">
         <span>开始安装</span>
         <i class="bi bi-chevron-double-right"></i>
     </button>
@@ -216,28 +216,28 @@ EOT;
     file_put_contents(NEBULA_ROOT_PATH . 'config.php', $configString);
 
     echo <<<EOT
-<div class="nebula-title">站点设置</div>
-<form class="nebula-form" action="/install.php?step=3" method="post">
+<div class="title">站点设置</div>
+<form class="form" action="/install.php?step=3" method="post">
     <div class="form-item">
         <label class="form-label" for="title">站点名称</label>
-        <input class="nebula-input" id="title" name="title" value="Nebula">
+        <input class="input" id="title" name="title" value="Nebula">
     </div>
     <div class="form-item">
         <label class="form-label" for="username">用户名</label>
-        <input class="nebula-input" id="username" name="username">
+        <input class="input" id="username" name="username">
         <label class="form-sublabel">请填写您的用户名</label>
     </div>
     <div class="form-item">
         <label class="form-label" for="password">密码</label>
-        <input class="nebula-input" type="password" id="password" name="password">
+        <input class="input" type="password" id="password" name="password">
         <label class="form-sublabel">请填写您的登录密码</label>
     </div>
     <div class="form-item">
         <label class="form-label" for="email">邮箱</label>
-        <input class="nebula-input" id="email" name="email">
+        <input class="input" id="email" name="email">
         <label class="form-sublabel">请填写一个您的常用邮箱</label>
     </div>
-    <button class="nebula-button" type="submit">
+    <button class="button" type="submit">
         <span>继续安装</span>
         <i class="bi bi-chevron-double-right"></i>
     </button>
@@ -280,8 +280,8 @@ function step3()
     User::factory()->set($data['username'], $data['password'], $data['email'], '0');
 
     echo <<<EOT
-<div class="nebula-title">安装成功</div>
-<div class="nebula-wecome">
+<div class="title">安装成功</div>
+<div class="wecome">
     <p>您的用户名是：<span class="mark">{$data['username']}</span></p>
     <p>您的密码是：<span class="mark">{$data['password']}</span></p>
     <ul>
@@ -313,8 +313,8 @@ ob_start();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nebula 安装程序</title>
-    <link rel="stylesheet" href="/admin/css/index.min.css">
-    <link rel="stylesheet" href="/admin/css/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/admin/styles/index.min.css">
+    <link rel="stylesheet" href="/admin/styles/bootstrap-icons.min.css">
 </head>
 
 <body>
@@ -322,8 +322,8 @@ ob_start();
         <h1 class="logo">Nebula</h1>
         <?php render(); ?>
     </div>
-    <script src="/admin/js/js.cookie.min.js"></script>
-    <script src="/admin/js/index.js"></script>
+    <script src="/admin/scripts/js.cookie.min.js"></script>
+    <script src="/admin/scripts/index.js"></script>
 </body>
 
 </html>

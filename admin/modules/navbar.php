@@ -1,5 +1,5 @@
 <?php defined('NEBULA_ROOT_PATH') || exit; ?>
-<div class="nebula-navbar">
+<div class="navbar">
     <div class="container">
         <h1 class="logo"><?= $option->get('title') ?></h1>
         <div class="main">

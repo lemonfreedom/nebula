@@ -48,11 +48,11 @@ class Response
     /**
      * 加载视图
      *
-     * @param string $fileName 文件名
+     * @param string|array $view 视图文件
      * @param array $data 视图数据
-     * @return $this
+     * @return void
      */
-    public function render($fileName, $data = [])
+    public function render($view, $data = [])
     {
         // 当前主题
         $theme = Option::factory()->get('theme');
@@ -61,17 +61,21 @@ class Response
         header('Content-Type: text/html; charset=utf-8');
 
         ob_start();
-        $filePath = NEBULA_ROOT_PATH . 'content/themes/' . $theme['name'] . '/' . $fileName . '.php';
-        if (file_exists($filePath)) {
-            extract($data);
-            include $filePath;
-        } else {
-            throw new Exception("主题缺少 {$fileName} 文件");
+        extract($data);
+
+        $views = is_array($view) ? $view : [$view];
+        foreach ($views as $view) {
+            $filePath = NEBULA_ROOT_PATH . 'content/themes/' . $theme['name'] . '/' . $view . '.php';
+            if (file_exists($filePath)) {
+                include $filePath;
+            } else {
+                throw new Exception("主题缺少 {$view} 文件");
+            }
         }
+
         $html = ob_get_contents();
         ob_end_clean();
         echo $html;
-        return $this;
     }
 
     /**

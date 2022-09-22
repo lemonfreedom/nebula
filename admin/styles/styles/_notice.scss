@@ -16,7 +16,7 @@
     }
 }
 
-.nebula-notice {
+.notice {
     position: fixed;
     top: 0;
     left: 0;
@@ -33,19 +33,19 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    &.nebula-info {
+    &-info {
         background-color: $color-info;
     }
 
-    &.nebula-success {
+    &-success {
         background-color: $color-success;
     }
 
-    &.nebula-warning {
+    &-warning {
         background-color: $color-warning;
     }
 
-    &.nebula-error {
+    &-error {
         background-color: $color-error;
     }
 }

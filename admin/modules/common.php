@@ -1,4 +1,5 @@
 <?php
+
 // 定义根路径
 define('NEBULA_ROOT_PATH', dirname(dirname(__DIR__)) . '/');
 
@@ -30,3 +31,6 @@ $option = \Nebula\Widgets\Option::factory();
 
 // 用户组件
 $user = \Nebula\Widgets\User::factory();
+
+// 显示页面
+$action = $request->get('action');

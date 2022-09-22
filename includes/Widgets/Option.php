@@ -31,11 +31,6 @@ class Option extends Widget
             ->execute();
 
         foreach ($this->options as $index => $option) {
-            // 布尔选项处理
-            if ('allowRegister' === $option['name']) {
-                $this->options[$index]['value'] = '1' === $this->options[$index]['value'];
-            }
-
             // 选项去序列化处理
             if (in_array($option['name'], ['smtp', 'plugins', 'theme'])) {
                 $this->options[$index]['value'] = unserialize($this->options[$index]['value']);

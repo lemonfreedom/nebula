@@ -1,4 +1,4 @@
-<?php $this->render('header'); ?>
+<?php $this->render('modules/header'); ?>
 <?php $user = \Nebula\Widgets\User::factory(); ?>
 <div class="container">
     <div>这是主题 default</div>

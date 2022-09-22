@@ -1,16 +1,16 @@
-.nebula-account {
+.signup {
     height: 100%;
     display: flex;
     justify-content: center;
     padding: 10% 16px;
     box-sizing: border-box;
 
-    .board {
+    .signup-wrapper {
         width: 100%;
         max-width: 18rem;
         padding: 1rem;
 
-        .title {
+        .signup-title {
             color: $color-primary;
             text-align: center;
             font-size: 2.6rem;
@@ -18,12 +18,12 @@
             margin: 0 0 3rem;
         }
 
-        .nebula-input,
-        .nebula-button {
+        .input,
+        .button {
             height: 3rem;
         }
 
-        .tools {
+        .signup-tools {
             margin-top: 2rem;
             display: flex;
             justify-content: space-between;
