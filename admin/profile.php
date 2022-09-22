@@ -16,55 +16,63 @@
     ) ?>
     <?php if (null === $action) : ?>
         <!-- 用户资料 -->
-        <form class="form" action="/user/update-info/<?= $userInfo['uid'] ?>" method="POST">
-            <div class="form-item">
-                <label class="form-label" for="nickname">昵称</label>
-                <input class="input" id="nickname" name="nickname" value="<?= $userInfo['nickname'] ?>"></input>
-                <label class="form-sublabel">若昵称为空，则显示用户名</label>
-            </div>
-            <div class="form-item">
-                <label class="form-label" for="username">用户名</label>
-                <input class="input" id="username" name="username" value="<?= $userInfo['username'] ?>"></input>
-                <label class="form-sublabel">系统登录用户名</label>
-            </div>
-            <div class="form-item">
-                <label class="form-label" for="email">邮箱</label>
-                <input class="input" id="email" name="email" value="<?= $userInfo['email'] ?>"></input>
-            </div>
-            <div class="form-tools">
-                <button type="submit" class="button">保存设置</button>
-            </div>
-        </form>
+        <?= \Nebula\Helpers\Template::form("/user/update-info/{$userInfo['uid']}", [
+            \Nebula\Helpers\Template::formItem(
+                \Nebula\Helpers\Template::input('nickname', $userInfo['nickname']),
+                'nickname',
+                '昵称',
+                '若昵称为空，则显示用户名'
+            ),
+            \Nebula\Helpers\Template::formItem(
+                \Nebula\Helpers\Template::input('username', $userInfo['username']),
+                'username',
+                '用户名',
+                '系统登录用户名'
+            ),
+            \Nebula\Helpers\Template::formItem(
+                \Nebula\Helpers\Template::input('email', $userInfo['email']),
+                'email',
+                '邮箱',
+            ),
+            \Nebula\Helpers\Template::createElement(
+                'div',
+                ['class' => 'form-tools'],
+                \Nebula\Helpers\Template::button('保存设置', 'submit')
+            )
+        ]) ?>
     <?php elseif ('password' === $action) : ?>
         <!-- 修改密码 -->
-        <form class="form" action="/user/update-password/<?= $userInfo['uid'] ?>" method="POST">
-            <div class="form-item">
-                <label class="form-label" for="password">密码</label>
-                <input class="input" type="password" id="password" name="password" value="" autocomplete></input>
-            </div>
-            <div class="form-item">
-                <label class="form-label" for="confirmPassword">确认密码</label>
-                <input class="input" type="password" id="confirmPassword" name="confirmPassword" value="" autocomplete></input>
-            </div>
-            <div class="form-tools">
-                <button type="submit" class="button">保存设置</button>
-            </div>
-        </form>
+        <?= \Nebula\Helpers\Template::form("/user/update-password/{$userInfo['uid']}", [
+            \Nebula\Helpers\Template::formItem(
+                \Nebula\Helpers\Template::input('password', '', 'password'),
+                'password',
+                '密码',
+            ),
+            \Nebula\Helpers\Template::formItem(
+                \Nebula\Helpers\Template::input('confirmPassword', '', 'password'),
+                'confirmPassword',
+                '确认密码',
+            ),
+            \Nebula\Helpers\Template::createElement(
+                'div',
+                ['class' => 'form-tools'],
+                \Nebula\Helpers\Template::button('保存设置', 'submit')
+            )
+        ]) ?>
     <?php elseif ('permission' === $action && \Nebula\Widgets\User::factory()->inRole(['0'])) : ?>
         <!-- 权限控制 -->
-        <form class="form" action="/user/update-permission/<?= $userInfo['uid'] ?>" method="POST">
-            <div class="form-item">
-                <label class="form-label" for="role">用户角色</label>
-                <select class="select" id="role" name="role">
-                    <?php foreach (\Nebula\Widgets\User::factory()->roleList as $role) : ?>
-                        <option value="<?= $role['value'] ?>" <?= $role['value'] === $userInfo['role'] ? 'selected' : '' ?>><?= $role['name'] ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="form-tools">
-                <button type="submit" class="button">保存设置</button>
-            </div>
-        </form>
+        <?= \Nebula\Helpers\Template::form("/user/update-permission/{$userInfo['uid']}", [
+            \Nebula\Helpers\Template::formItem(
+                \Nebula\Helpers\Template::select('role', \Nebula\Widgets\User::factory()->roleList, $userInfo['role']),
+                'role',
+                '用户角色',
+            ),
+            \Nebula\Helpers\Template::createElement(
+                'div',
+                ['class' => 'form-tools'],
+                \Nebula\Helpers\Template::button('保存设置', 'submit')
+            )
+        ]) ?>
     <?php endif; ?>
 </div>
 <?php include __DIR__ . '/modules/copyright.php'; ?>

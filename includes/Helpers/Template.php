@@ -103,22 +103,46 @@ class Template
      *
      * @param string $name name 属性
      * @param string $value value 属性
+     * @param string $type type 属性
      * @return string
      */
-    public static function input($name, $value = '')
+    public static function input($name, $value = '', $type = 'text')
     {
         return self::createElement('input', [
             'class' => 'input',
             'id' => $name,
             'name' => $name,
             'value' => $value,
+            'type' => $type,
         ]);
+    }
+
+    /**
+     * 渲染一个 select
+     *
+     * @param string $name name 属性
+     * @param array $options 选项列表
+     * @param string $value value 属性
+     * @return string
+     */
+    public static function select($name, $options = [], $value = '')
+    {
+        $optionContent = [];
+        foreach ($options as $option) {
+            array_push($optionContent, self::createElement('option', ['value' => $option['value'], 'selected' => $value === $option['value']], $option['name']));
+        }
+
+        return self::createElement('select', [
+            'class' => 'select',
+            'id' => $name,
+            'name' => $name,
+        ], $optionContent);
     }
 
     /**
      * 渲染一个 radio
      *
-     * @param string $radio name 属性
+     * @param string $name name 属性
      * @param array $radios 选项列表
      * @param string $value value 属性
      * @return string
