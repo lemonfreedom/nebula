@@ -186,6 +186,13 @@ function step2()
             ['name' => 'theme', 'value' => 'a:2:{s:4:"name";s:7:"default";s:6:"config";a:0:{}}'],
         ]);
 
+        // 创建分类表
+        $mysql->create('terms', [
+            'tid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
+            'name' => ['VARCHAR(100)', 'NOT NULL'],
+            'slug' => ['VARCHAR(100)', 'NOT NULL'],
+        ]);
+
         // 创建文章表
         $mysql->create('contents', [
             'cid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],

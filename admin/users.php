@@ -14,15 +14,18 @@
     ) ?>
     <?php if (null === $action) : ?>
         <div class="tools">
-            <form class="group" action="/admin/users.php" method="GET">
-                <input class="input" type="text" name="keyword" placeholder="输入关键字">
-                <button class="button">搜索</button>
-            </form>
-            <div class="button-dropdown">
-                <span>选择项</span>
-                <ul class="dropdown-menu">
-                    <li><a href="">删除</a></li>
-                </ul>
+            <a class="button" href="/admin/create-user.php">新建用户</a>
+            <div class="group">
+                <div class="button-dropdown">
+                    <span>选择项</span>
+                    <ul class="dropdown-menu">
+                        <li><a href="">删除</a></li>
+                    </ul>
+                </div>
+                <form class="group" action="/admin/users.php" method="GET">
+                    <input class="input" type="text" name="keyword" placeholder="输入关键字">
+                    <button class="button">搜索</button>
+                </form>
             </div>
         </div>
         <div class="table">

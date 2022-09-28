@@ -65,7 +65,7 @@ class User extends Widget
                 // 用户信息是否存在
                 if ($loginUserInfo) {
                     // token 有效性
-                    $this->hasLogin = Common::hashValidate($loginUserInfo['token'], $token);
+                    $this->hasLogin = null !== $loginUserInfo['token'] && Common::hashValidate($loginUserInfo['token'], $token);
                     if ($this->hasLogin) {
                         $this->loginUserInfo = $loginUserInfo;
                     }

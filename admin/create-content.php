@@ -8,7 +8,7 @@
         <a href="/admin/contents.php">返回</a>
     </div>
     <?= \Nebula\Helpers\Template::form(
-        '/content/post',
+        '/content/create-content',
         [
             \Nebula\Helpers\Template::formItem(
                 \Nebula\Helpers\Template::input('title', $cache->get('setPostTitle', '')),
@@ -21,11 +21,11 @@
                 '内容'
             ),
             \Nebula\Helpers\Template::formItem(
-                \Nebula\Helpers\Template::select('category', [
+                \Nebula\Helpers\Template::select('tid', [
                     ['name' => '分类一', 'value' => '0'],
                     ['name' => '分类二', 'value' => '1'],
                 ], ''),
-                'category',
+                'tid',
                 '分类',
             ),
             \Nebula\Helpers\Template::createElement(

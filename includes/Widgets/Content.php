@@ -21,8 +21,11 @@ class Content extends Widget
      *
      * @return void
      */
-    public function getPosts()
+    public function queryContents()
     {
+        return $this->db
+            ->select('contents', ['cid', 'title', 'content', 'create_time'])
+            ->execute();
     }
 
     /**
@@ -30,7 +33,7 @@ class Content extends Widget
      *
      * @return void
      */
-    private function setPost()
+    private function createContent()
     {
         if (!User::factory()->hasLogin()) {
             $this->response->redirect('/admin/login.php');
@@ -53,6 +56,67 @@ class Content extends Widget
             Notice::factory()->set($validate->result[0]['message'], 'warning');
             $this->response->redirect('/admin/post.php');
         }
+
+        // 插入数据
+        $this->db->insert('contents', [
+            'title' => $this->request->post('title', ''),
+            'content' => $this->request->post('content', ''),
+            'create_time' => time(),
+        ]);
+
+        Notice::factory()->set('新建成功', 'success');
+        $this->response->redirect('/admin/contents.php');
+    }
+
+    /**
+     * 创建分类
+     *
+     * @return void
+     */
+    public function createTerm()
+    {
+        if (!User::factory()->hasLogin()) {
+            $this->response->redirect('/admin/login.php');
+        }
+
+        $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'name' => [
+                ['type' => 'required', 'message' => '名称不能为空'],
+            ],
+            'slug' => [
+                ['type' => 'required', 'message' => '缩略名不能为空'],
+            ],
+        ]);
+        if (!$validate->run()) {
+            Cache::factory()->set('createCategoryName', $this->request->post('name', ''))
+                ->set('createCategorySlug', $this->request->post('slug', ''));
+
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
+            $this->response->redirect('/admin/create-term.php');
+        }
+
+        // 插入数据
+        $this->db->insert('terms', [
+            'name' => $this->request->post('name', ''),
+            'slug' => $this->request->post('slug', ''),
+        ]);
+
+        Notice::factory()->set('新建成功', 'success');
+        $this->response->redirect('/admin/contents.php?action=terms');
+    }
+
+    /**
+     * 查询分类列表
+     *
+     * @return array
+     */
+    public function queryTerms()
+    {
+        return $this->db
+            ->select('terms', ['tid', 'name', 'slug'])
+            ->execute();
     }
 
     /**
@@ -64,7 +128,10 @@ class Content extends Widget
     {
         $action = $this->params('action');
 
-        // 更新选项
-        $this->on('post' === $action)->setPost();
+        // 创建文章
+        $this->on('create-content' === $action)->createContent();
+
+        // 创建分类
+        $this->on('create-term' === $action)->createTerm();
     }
 }
