@@ -215,7 +215,7 @@ a {
     justify-content: space-between;
     margin-bottom: 1rem;
 
-    form {
+    .group {
         display: flex;
         gap: .6rem;
     }
@@ -302,7 +302,8 @@ a {
         position: absolute;
         top: 100%;
         left: 0;
-        background-color: #e0e0e0;
+        background-color: #efefef;
+        box-shadow: .2rem .2rem .2rem rgba($color: #000, $alpha: .2);
         margin: 0;
         padding: 0;
         min-width: 150%;

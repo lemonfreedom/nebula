@@ -14,7 +14,7 @@
     ) ?>
     <?php if (null === $action) : ?>
         <div class="tools">
-            <form action="/admin/users.php" method="GET">
+            <form class="group" action="/admin/users.php" method="GET">
                 <input class="input" type="text" name="keyword" placeholder="输入关键字">
                 <button class="button">搜索</button>
             </form>
@@ -22,7 +22,6 @@
                 <span>选择项</span>
                 <ul class="dropdown-menu">
                     <li><a href="">删除</a></li>
-                    <li><a href="">标记为中国</a></li>
                 </ul>
             </div>
         </div>
