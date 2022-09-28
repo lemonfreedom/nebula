@@ -2,6 +2,7 @@
 <?php $user->hasLogin() || $response->redirect('/admin/login.php'); ?>
 <?php include __DIR__ . '/modules/header.php'; ?>
 <?php include __DIR__ . '/modules/navbar.php'; ?>
+<?php $list = \Nebula\Widgets\Plugin::factory()->getPluginList(); ?>
 <div class="container">
     <?= \Nebula\Helpers\Template::tabs(
         [
@@ -12,37 +13,42 @@
         \Nebula\Plugin::factory('admin/contents.php')->tab(['action' => $action])
     ) ?>
     <?php if (null === $action) : ?>
-        <form class="form" action="/option/update/basic" method="POST">
-            <div class="form-item">
-                <label class="form-label" for="title">站点名称</label>
-                <input class="input" id="title" name="title" value="<?= $option->get('title') ?>"></input>
-                <div class="form-sublabel">站点的名称将显示在网页的标题处</div>
-            </div>
-            <div class="form-item">
-                <label class="form-label" for="description">站点描述</label>
-                <input class="input" id="description" name="description" value="<?= $option->get('description') ?>"></input>
-                <div class="form-sublabel">站点描述将显示在网页代码的头部</div>
-            </div>
-            <div class="form-item">
-                <label class="form-label" for="allowRegister">是否允许注册</label>
-                <div class="radio-group">
-                    <label class="radio">
-                        <input type="radio" name="allowRegister" value="0" <?= !$option->get('allowRegister') ? 'checked' : '' ?>>
-                        <div class="checkmark"></div>
-                        <span>否</span>
-                    </label>
-                    <label class="radio">
-                        <input type="radio" name="allowRegister" value="1" <?= $option->get('allowRegister') ? 'checked' : '' ?>>
-                        <div class="checkmark"></div>
-                        <span>是</span>
-                    </label>
-                </div>
-                <div class="form-sublabel">允许访问者注册到你的网站</div>
-            </div>
-            <div class="form-tools">
-                <button class="button">保存设置</button>
-            </div>
-        </form>
+        <div class="tools">
+            <a class="button" href="/admin/post.php">发布文章</a>
+        </div>
+        <div class="table">
+            <table>
+                <colgroup>
+                    <col width="30%">
+                    <col width="20%">
+                    <col width="30%">
+                    <col width="20%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>标题</th>
+                        <th>作者</th>
+                        <th>发布日期</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($list as $item) : ?>
+                        <tr>
+                            <td><a href="<?= $item['url'] ?>" title="<?= $item['description'] ?>"><?= $item['name'] ?></a></td>
+                            <td><?= $item['version'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <ul class="pagination">
+            <li class="active"><a href="">1</a></li>
+            <li class="active"><a href="">2</a></li>
+            <li><span class="more">...</span></li>
+            <li><a href="">3</a></li>
+            <li><a href="">4</a></li>
+        </ul>
     <?php endif; ?>
     <?php \Nebula\Plugin::factory('admin/options.php')->tabContent(['action' => $action]); ?>
 </div>

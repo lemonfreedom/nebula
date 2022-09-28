@@ -178,7 +178,36 @@ a {
     }
 }
 
-// 页面工具
+.pagination {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 1.2rem 0;
+
+    li {
+        background-color: #efefef;
+        border-radius: .2rem;
+
+        a,
+        .more {
+            display: block;
+            height: 1.8rem;
+            line-height: 1.8rem;
+            padding: 0 .8rem;
+        }
+
+        &.active {
+            background-color: $color-primary;
+
+            a {
+                color: #fff;
+            }
+        }
+    }
+}
+
 .tools {
     display: flex;
     flex-direction: row-reverse;
@@ -192,7 +221,6 @@ a {
     }
 }
 
-// 表单
 .form {
     .form-item {
         display: flex;

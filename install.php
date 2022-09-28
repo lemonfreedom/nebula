@@ -176,13 +176,22 @@ function step2()
             'name' => ['VARCHAR(30)', 'NOT NULL', 'PRIMARY KEY'],
             'value' => ['LONGTEXT', 'NOT NULL'],
         ]);
+
         // 插入配置数据
-        $mysql->insert("options", [
+        $mysql->insert('options', [
             ['name' => 'title', 'value' => ''],
             ['name' => 'description', 'value' => '又一个博客网站诞生了'],
             ['name' => 'allowRegister', 'value' => '0'],
             ['name' => 'plugins', 'value' => 'a:0:{}'],
             ['name' => 'theme', 'value' => 'a:2:{s:4:"name";s:7:"default";s:6:"config";a:0:{}}'],
+        ]);
+
+        // 创建文章表
+        $mysql->create('contents', [
+            'cid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
+            'title' => ['VARCHAR(100)', 'NOT NULL'],
+            'content' => ['LONGTEXT', 'NOT NULL'],
+            'create_time' => ['int', 'UNSIGNED', 'NOT NULL'],
         ]);
 
         // 创建缓存表

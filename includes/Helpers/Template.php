@@ -118,6 +118,22 @@ class Template
     }
 
     /**
+     * 渲染一个 textarea
+     *
+     * @param string $name name 属性
+     * @param string $value value 属性
+     * @return string
+     */
+    public static function textarea($name, $value = '')
+    {
+        return self::createElement('textarea', [
+            'class' => 'textarea',
+            'id' => $name,
+            'name' => $name,
+        ], $value);
+    }
+
+    /**
      * 渲染一个 select
      *
      * @param string $name name 属性

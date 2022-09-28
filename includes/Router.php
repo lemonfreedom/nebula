@@ -47,6 +47,12 @@ class Router
                 'uid' => null,
             ],
         ],
+        'content' => [
+            'widget' => '\Nebula\Widgets\Content',
+            'params' => [
+                'action' => '',
+            ],
+        ],
         'common' => [
             'widget' => '\Nebula\Widgets\Common',
             'params' => [

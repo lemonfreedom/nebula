@@ -63,25 +63,24 @@
             </table>
         </div>
     <?php elseif ('role' === $action) : ?>
-
+        <div class="checkbox-group">
+            <label class="checkbox">
+                <input checked="checked" type="checkbox">
+                <div class="checkmark"></div>
+                <span>保存密码</span>
+            </label>
+            <label class="checkbox">
+                <input checked="checked" type="checkbox">
+                <div class="checkmark"></div>
+                <span>保存密码</span>
+            </label>
+            <label class="checkbox">
+                <input checked="checked" type="checkbox">
+                <div class="checkmark"></div>
+                <span>保存密码</span>
+            </label>
+        </div>
     <?php endif; ?>
-    <!-- <div class="checkbox-group">
-        <label class="checkbox">
-            <input checked="checked" type="checkbox">
-            <div class="checkmark"></div>
-            <span>保存密码</span>
-        </label>
-        <label class="checkbox">
-            <input checked="checked" type="checkbox">
-            <div class="checkmark"></div>
-            <span>保存密码</span>
-        </label>
-        <label class="checkbox">
-            <input checked="checked" type="checkbox">
-            <div class="checkmark"></div>
-            <span>保存密码</span>
-        </label>
-    </div> -->
 </div>
 <?php include __DIR__ . '/modules/copyright.php'; ?>
 <?php include __DIR__ . '/modules/common-js.php'; ?>
