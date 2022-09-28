@@ -2,9 +2,9 @@
 <?php $user->hasLogin() && $response->redirect('/'); ?>
 <?php $option->get('allowRegister') || $response->redirect('/'); ?>
 <?php include __DIR__ . '/modules/header.php'; ?>
-<div class="account">
-    <div class="board">
-        <h1 class="title">Nebula</h1>
+<div class="signup">
+    <div class="signup-wrapper">
+        <h1 class="signup-title">Nebula</h1>
         <form class="form" action="/user/register" method="POST">
             <div class="form-item">
                 <input class="input" type="text" name="username" placeholder="用户名" value="<?= $cache->get('registerUsername', '') ?>">
@@ -22,9 +22,9 @@
             <div class="form-item">
                 <input class="input" type="password" name="confirmPassword" placeholder="确认密码">
             </div>
-            <button type="submit" class="button block">注册</button>
+            <button type="submit" class="button button-block">注册</button>
         </form>
-        <div class="tools">
+        <div class="signup-tools">
             <a href="/admin/login.php">返回登陆</a>
         </div>
     </div>
