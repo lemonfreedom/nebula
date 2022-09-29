@@ -5,7 +5,7 @@
 <div class="container">
     <div class="title">
         <span>新建分类</span>
-        <a href="/admin/contents.php?action=category">返回</a>
+        <a href="/admin/contents.php?action=terms">返回</a>
     </div>
     <?= \Nebula\Helpers\Template::form(
         '/content/create-term',

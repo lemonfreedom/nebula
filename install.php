@@ -196,6 +196,7 @@ function step2()
         // 创建文章表
         $mysql->create('contents', [
             'cid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
+            'tid' => ['int', 'UNSIGNED', 'NOT NULL'],
             'title' => ['VARCHAR(100)', 'NOT NULL'],
             'content' => ['LONGTEXT', 'NOT NULL'],
             'create_time' => ['int', 'UNSIGNED', 'NOT NULL'],

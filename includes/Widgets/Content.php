@@ -17,14 +17,46 @@ use Nebula\Widget;
 class Content extends Widget
 {
     /**
-     * 查询文章列表
+     * 分页查询文章列表
      *
      * @return void
      */
     public function queryContents()
     {
+        $page = $this->request->get('page', '1');
+        $keyword = '%' . trim($this->request->get('keyword', '')) . '%';
+
+        $result = $this->db
+            ->select('contents', ['cid', 'title', 'content', 'create_time', 'terms.name[term_name]'])
+            ->join('terms', ['contents.tid' => 'terms.tid'], 'LEFT JOIN')
+            ->where([
+                'OR' => [
+                    'cid[LIKE]' => $keyword,
+                    'title[LIKE]' => $keyword,
+                    'content[LIKE]' => $keyword,
+                    'terms.name[LIKE]' => $keyword,
+                ],
+            ])
+            ->order(['create_time'])
+            ->limit(($page - 1) * 10, 10)
+            ->execute();
+
+        array_walk($result, function (&$item) {
+            $item['create_time'] = date('Y-m-d H:i:s', $item['create_time']);
+        });
+
+        return $result;
+    }
+
+    /**
+     * 查询文章条数
+     *
+     * @return void
+     */
+    public function queryContentCount()
+    {
         return $this->db
-            ->select('contents', ['cid', 'title', 'content', 'create_time'])
+            ->count('contents')
             ->execute();
     }
 
@@ -42,6 +74,9 @@ class Content extends Widget
         $data = $this->request->post();
 
         $validate = new Validate($data, [
+            'tid' => [
+                ['type' => 'required', 'message' => '分类不能为空'],
+            ],
             'title' => [
                 ['type' => 'required', 'message' => '标题不能为空'],
             ],
@@ -51,21 +86,69 @@ class Content extends Widget
         ]);
         if (!$validate->run()) {
             Cache::factory()->set('setPostTitle', $this->request->post('title', ''))
-                ->set('setPostContent', $this->request->post('content', ''));
+                ->set('setPostContent', $this->request->post('content', ''))
+                ->set('setPostTid', $this->request->post('tid', ''));
 
             Notice::factory()->set($validate->result[0]['message'], 'warning');
-            $this->response->redirect('/admin/post.php');
+            $this->response->redirect('/admin/create-content.php');
         }
 
         // 插入数据
         $this->db->insert('contents', [
+            'tid' => $this->request->post('tid', ''),
             'title' => $this->request->post('title', ''),
             'content' => $this->request->post('content', ''),
             'create_time' => time(),
         ]);
 
         Notice::factory()->set('新建成功', 'success');
+        Cache::factory()->clean();
         $this->response->redirect('/admin/contents.php');
+    }
+
+    /**
+     * 删除文章
+     *
+     * @return void
+     */
+    public function deleteContent()
+    {
+        if (!User::factory()->hasLogin()) {
+            $this->response->redirect('/admin/login.php');
+        }
+
+        $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'id' => [
+                ['type' => 'required', 'message' => '未选择删除项'],
+            ],
+        ]);
+        if (!$validate->run()) {
+            $this->response->sendJSON(null, 1, $validate->result[0]['message']);
+        }
+
+        $ids = explode(',', $data['id']);
+
+        // 删除
+        $this->db->delete('contents')
+            ->where(['cid[IN]' => $ids])
+            ->execute();
+
+        Notice::factory()->set('删除成功', 'success');
+        $this->response->sendJSON(['redirect' => '/admin/contents.php']);
+    }
+
+    /**
+     * 查询分类列表
+     *
+     * @return array
+     */
+    public function queryTerms()
+    {
+        return $this->db
+            ->select('terms', ['tid', 'name', 'slug'])
+            ->execute();
     }
 
     /**
@@ -73,7 +156,7 @@ class Content extends Widget
      *
      * @return void
      */
-    public function createTerm()
+    private function createTerm()
     {
         if (!User::factory()->hasLogin()) {
             $this->response->redirect('/admin/login.php');
@@ -108,18 +191,6 @@ class Content extends Widget
     }
 
     /**
-     * 查询分类列表
-     *
-     * @return array
-     */
-    public function queryTerms()
-    {
-        return $this->db
-            ->select('terms', ['tid', 'name', 'slug'])
-            ->execute();
-    }
-
-    /**
      * 行动方法
      *
      * @return void
@@ -130,6 +201,9 @@ class Content extends Widget
 
         // 创建文章
         $this->on('create-content' === $action)->createContent();
+
+        // 删除文章
+        $this->on('delete-content' === $action)->deleteContent();
 
         // 创建分类
         $this->on('create-term' === $action)->createTerm();

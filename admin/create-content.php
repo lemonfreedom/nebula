@@ -21,10 +21,12 @@
                 '内容'
             ),
             \Nebula\Helpers\Template::formItem(
-                \Nebula\Helpers\Template::select('tid', [
-                    ['name' => '分类一', 'value' => '0'],
-                    ['name' => '分类二', 'value' => '1'],
-                ], ''),
+                \Nebula\Helpers\Template::select('tid', array_map(function ($item) {
+                    return [
+                        'name' => $item['name'],
+                        'value' => $item['tid'],
+                    ];
+                }, \Nebula\Widgets\Content::factory()->queryTerms()), ''),
                 'tid',
                 '分类',
             ),

@@ -58,3 +58,24 @@ if (sendCaptchaEl) {
         })
     });
 }
+
+const deleteRows = document.querySelector('#deleteRows');
+if (deleteRows) {
+    deleteRows.addEventListener('click', function (e) {
+        e.preventDefault();
+        const checkboxList = document.querySelectorAll('input[type="checkbox"]');
+        let id = [];
+        checkboxList.forEach(el => el.checked && id.push(el.value));
+        fetch('/content/delete-content', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `id=${id.join(',')}`,
+        }).then(res => res.json()).then(res => {
+            if (res.code === 0) {
+                location.replace(res.data.redirect);
+            } else {
+                notice(res.message, 'warning');
+            }
+        })
+    });
+}

@@ -121,4 +121,16 @@ class Cache extends Widget
             $this->set($name, $value, $expires);
         }
     }
+
+    /**
+     * 清空用户缓存
+     *
+     * @return void
+     */
+    public function clean()
+    {
+        $this->db->delete('caches')
+            ->where(['name[LIKE]' => $this->cacheId . '%'])
+            ->execute();
+    }
 }

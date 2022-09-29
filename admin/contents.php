@@ -1,8 +1,12 @@
-<?php include __DIR__ . '/modules/common.php'; ?>
+<?php
+
+use Nebula\Helpers\Template;
+use Nebula\Widgets\Content;
+
+include __DIR__ . '/modules/common.php'; ?>
 <?php $user->hasLogin() || $response->redirect('/admin/login.php'); ?>
 <?php include __DIR__ . '/modules/header.php'; ?>
 <?php include __DIR__ . '/modules/navbar.php'; ?>
-
 <div class="container">
     <?= \Nebula\Helpers\Template::tabs(
         [
@@ -20,28 +24,29 @@
                 <div class="button-dropdown">
                     <span>选择项</span>
                     <ul class="dropdown-menu">
-                        <li><a href="">删除</a></li>
+                        <li><a id="deleteRows" href="">删除</a></li>
                     </ul>
                 </div>
-                <form class="group" action="/admin/users.php" method="GET">
+                <form class="group" action="/admin/contents.php" method="GET">
                     <input class="input" type="text" name="keyword" placeholder="输入关键字">
                     <button class="button">搜索</button>
                 </form>
             </div>
-
         </div>
         <div class="table">
             <table>
                 <colgroup>
                     <col width="10%">
                     <col width="30%">
-                    <col width="30%">
-                    <col width="30%">
+                    <col width="20%">
+                    <col width="20%">
+                    <col width="20%">
                 </colgroup>
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>标题</th>
+                        <th>分类</th>
                         <th>作者</th>
                         <th>发布日期</th>
                     </tr>
@@ -51,11 +56,12 @@
                         <tr>
                             <td>
                                 <label class="checkbox">
-                                    <input checked="checked" type="checkbox">
+                                    <input type="checkbox" value="<?= $item['cid'] ?>">
                                     <div class="checkmark"></div>
                                 </label>
                             </td>
                             <td><a href="" title=""><?= $item['title'] ?></a></td>
+                            <td><?= $item['term_name'] ?></td>
                             <td>张三</td>
                             <td><?= $item['create_time'] ?></td>
                         </tr>
@@ -63,13 +69,7 @@
                 </tbody>
             </table>
         </div>
-        <ul class="pagination">
-            <li class="active"><a href="">1</a></li>
-            <li class="active"><a href="">2</a></li>
-            <li><span class="more">...</span></li>
-            <li><a href="">3</a></li>
-            <li><a href="">4</a></li>
-        </ul>
+        <?= Template::pagination('/admin/contents.php', [], $request->get('page', 1), ceil(Content::factory()->queryContentCount() / 10)) ?>
     <?php elseif ('terms' === $action) : ?>
         <?php $list = \Nebula\Widgets\Content::factory()->queryTerms(); ?>
         <div class="tools">
@@ -100,7 +100,7 @@
                         <tr>
                             <td>
                                 <label class="checkbox">
-                                    <input checked="checked" type="checkbox">
+                                    <input type="checkbox">
                                     <div class="checkmark"></div>
                                 </label>
                             </td>
@@ -111,13 +111,6 @@
                 </tbody>
             </table>
         </div>
-        <ul class="pagination">
-            <li class="active"><a href="">1</a></li>
-            <li class="active"><a href="">2</a></li>
-            <li><span class="more">...</span></li>
-            <li><a href="">3</a></li>
-            <li><a href="">4</a></li>
-        </ul>
     <?php endif; ?>
     <?php \Nebula\Plugin::factory('admin/options.php')->tabContent(['action' => $action]); ?>
 </div>

@@ -2,6 +2,8 @@
 
 namespace Nebula\Helpers;
 
+use Nebula\Request;
+
 class Template
 {
     /**
@@ -10,19 +12,24 @@ class Template
      * @param string $name 标签名
      * @param array $attributes 标签属性
      * @param bool|string|array $content 插槽内容
+     * @param bool $has 是否存在
      * @return string
      */
-    public static function createElement($name, $attributes = [], $content = false)
+    public static function createElement($name, $attributes = [], $content = false, $has = true)
     {
-        $content = is_array($content) ? implode('', $content) : $content;
+        if ($has) {
+            $content = is_array($content) ? implode('', $content) : $content;
 
-        $attribute = "";
-        foreach ($attributes as $key => $value) {
-            $value = is_array($value) ? implode(' ', $value) : $value;
-            $attribute .= is_bool($value) ? ($value ? $key : '') : " {$key}=\"{$value}\"";
+            $attribute = "";
+            foreach ($attributes as $key => $value) {
+                $value = is_array($value) ? implode(' ', $value) : $value;
+                $attribute .= is_bool($value) ? ($value ? $key : '') : " {$key}=\"{$value}\"";
+            }
+
+            return false !== $content ? "<{$name}{$attribute}>{$content}</{$name}>" : "<{$name}{$attribute} />";
+        } else {
+            return '';
         }
-
-        return false !== $content ? "<{$name}{$attribute}>{$content}</{$name}>" : "<{$name}{$attribute} />";
     }
 
     /**
@@ -189,5 +196,37 @@ class Template
     public static function button($content, $type = "button")
     {
         return self::createElement('button', ['class' => 'button', 'type' => $type], $content);
+    }
+
+    /**
+     * 渲染一个分页组件
+     *
+     * @param string $url
+     * @param string $query
+     * @param int $page 当前页
+     * @param int $totalPage 总页数
+     * @return string
+     */
+    public static function pagination($url, $query = [], $page, $totalPage)
+    {
+        if ($page > $totalPage) {
+            return '';
+        }
+
+        return self::createElement(
+            'ul',
+            ['class' => 'pagination'],
+            [
+                self::createElement('li', [], self::createElement('a', ['href' => $url . '?' . http_build_query(array_merge($query, ['page' => 1]))], '1'), $page - 1 > 1),
+                self::createElement('li', [], self::createElement('a', ['href' => $url . '?' . http_build_query(array_merge($query, ['page' => 2]))], '2'), $page - 1 > 2),
+                self::createElement('li', [], self::createElement('span', ['class' => "more"], '...'), $page - 1 > 3),
+                self::createElement('li', [], self::createElement('a', ['href' => $url . '?' . http_build_query(array_merge($query, ['page' => $page - 1]))], $page - 1), $page - 1 > 0),
+                self::createElement('li', ['class' => 'active'], self::createElement('a', ['href' => $url . '?' . http_build_query(array_merge($query, ['page' => $page]))], $page)),
+                self::createElement('li', [], self::createElement('a', ['href' => $url . '?' . http_build_query(array_merge($query, ['page' => $page + 1]))], $page + 1),  $page + 1 <= $totalPage),
+                self::createElement('li', [], self::createElement('span', ['class' => "more"], '...'), $totalPage - $page > 3),
+                self::createElement('li', [], self::createElement('a', ['href' => $url . '?' . http_build_query(array_merge($query, ['page' => $totalPage - 1]))], $totalPage - 1), $totalPage - 1 > $page + 1),
+                self::createElement('li', [], self::createElement('a', ['href' => $url . '?' . http_build_query(array_merge($query, ['page' => $totalPage]))], $totalPage), $totalPage > $page + 1),
+            ]
+        );
     }
 }

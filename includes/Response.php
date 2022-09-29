@@ -81,13 +81,19 @@ class Response
     /**
      * 响应 JSON 数据
      *
-     * @param array $data 数据
+     * @param mixed $data 数据
+     * @param int $code 错误码
+     * @param string $message 错误消息
      * @return void
      */
-    public function sendJSON($data)
+    public function sendJSON($data = null, $code = 0, $message = '处理成功')
     {
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($data);
+        echo json_encode([
+            'code' => $code,
+            'message' => $message,
+            'data' => $data,
+        ]);
         exit;
     }
 

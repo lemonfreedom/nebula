@@ -105,11 +105,13 @@ class MySQL
 
         if (2 === count($columnArray)) {
             $columnArray[0] = $this->tableParse($columnArray[0]);
+            preg_match('/^(.*)\[(.*)\]$/', $columnArray[1], $matches);
+            $columnArray[1] = '`' . ($matches[1] ?? $columnArray[1]) . '`' . (isset($matches[2]) ? ' AS `' . $matches[2] . '`' : '');
+        } else {
+            array_walk($columnArray, function (&$part) {
+                $part = '`' . $part . '`';
+            });
         }
-
-        array_walk($columnArray, function (&$part) {
-            $part = '`' . $part . '`';
-        });
 
         return implode('.', $columnArray);
     }
@@ -152,13 +154,51 @@ class MySQL
                 preg_match('/^(.*)\[(.*)\]$/', $key, $matches);
                 $column = $this->columnParse($matches[1] ?? $key);
                 $operator = $matches[2] ?? '=';
-                $where .=  $column . ' ' . $operator . ' ? ' . $separator . ' ';
 
-                array_push($this->params, $value);
+                if (in_array($operator, ['IN', 'NOT IN'])) {
+                    $placeholders = rtrim(str_repeat('?, ', count($value)), ', ');
+                    $where .=  $column . ' ' . $operator . ' (' . $placeholders . ') ' . $separator . ' ';
+                    $this->params = array_merge($this->params, $value);
+                } else {
+                    $where .=  $column . ' ' . $operator . ' ? ' . $separator . ' ';
+                    array_push($this->params, $value);
+                }
             }
         }
 
         return rtrim($where, ' ' . $separator . ' ');
+    }
+
+    /**
+     * on 格式化
+     *
+     * @param array $on
+     * @param string $separator
+     * @return string
+     */
+    private function onParse($ons, $separator = 'AND')
+    {
+        $on = '';
+
+        foreach ($ons as $key => $value) {
+            if ('AND' === $key || 'OR' === $key) {
+                end($ons);
+                if ($key === key($ons)) {
+                    $on .= '(' . $this->whereParse($value, $key) . ')';
+                } else {
+                    $on .= '(' . $this->whereParse($value, $key) . ') ' . $separator . ' ';
+                }
+            } else {
+                preg_match('/^(.*)\[(.*)\]$/', $key, $matches);
+                $column = $this->columnParse($matches[1] ?? $key);
+                $operator = $matches[2] ?? '=';
+                $value = $this->columnParse($value);
+
+                $on .=  $column . ' ' . $operator . ' ' . $value . ' ' . $separator . ' ';
+            }
+        }
+
+        return rtrim($on, ' ' . $separator . ' ');
     }
 
     /**
@@ -173,6 +213,21 @@ class MySQL
         $this->type = 'SELECT';
 
         $this->query = 'SELECT ' . $this->columnsParse($columns) . ' FROM ' . $this->tableParse($table);
+
+        return $this;
+    }
+
+    /**
+     * 查询数据条数
+     *
+     * @param string $table 表名
+     * @return $this
+     */
+    public function count($table)
+    {
+        $this->type = 'COUNT';
+
+        $this->query = 'SELECT COUNT(*) AS `count` FROM ' . $this->tableParse($table);
 
         return $this;
     }
@@ -332,6 +387,48 @@ class MySQL
     }
 
     /**
+     * 返回指定范围数据
+     *
+     * @param int $start 开始位置
+     * @param int $length 长度
+     * @return $this
+     */
+    public function limit($start, $length)
+    {
+        $this->query .= ' LIMIT ' . $start . ', ' . $length;
+
+        return $this;
+    }
+
+    /**
+     * 联表查询
+     *
+     * @param string $table 联表
+     * @param string $type 联表方式
+     * @return $this
+     */
+    public function join($table, $on, $type = 'LEFT JOIN')
+    {
+        $this->query .= ' ' . $type . ' ' . $this->tableParse($table) . ' ON ' . $this->onParse($on);
+
+        return $this;
+    }
+
+    /**
+     * 排序
+     *
+     * @param array $columns 排序字段
+     * @param string $type 排序方式
+     * @return $this
+     */
+    public function order($columns, $type = 'DESC')
+    {
+        $this->query .= ' ORDER BY ' . $this->columnsParse($columns) . ' ' . $type;
+
+        return $this;
+    }
+
+    /**
      * 执行
      *
      * @return mixed
@@ -343,6 +440,7 @@ class MySQL
         $result = $sth->execute($this->params);
 
         array_push($this->sqls, $this->query);
+
         // 清空上次查询条件
         $this->query = '';
         $this->params = [];
@@ -353,6 +451,8 @@ class MySQL
             return json_decode(json_encode($sth->fetchAll(PDO::FETCH_CLASS)), true)[0] ?? [];
         } else if ('HAS' === $this->type) {
             return 0 < $sth->fetch(PDO::FETCH_ASSOC)['count'];
+        } else if ('COUNT' === $this->type) {
+            return $sth->fetch(PDO::FETCH_ASSOC)['count'];
         } else {
             return $result;
         }
