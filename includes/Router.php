@@ -49,15 +49,16 @@ class Router
         ],
         'content' => [
             'widget' => '\Nebula\Widgets\Content',
-            'params' => [
-                'action' => '',
-            ],
+            'params' => ['action' => ''],
+        ],
+        'article' => [
+            'widget' => '\Nebula\Widgets\Content',
+            'action' => 'article',
+            'params' => ['id' => ''],
         ],
         'common' => [
             'widget' => '\Nebula\Widgets\Common',
-            'params' => [
-                'action' => '',
-            ],
+            'params' => ['action' => ''],
         ],
         'index' => [
             'widget' => '\Nebula\Widgets\Index',

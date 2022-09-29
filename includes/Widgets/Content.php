@@ -12,10 +12,26 @@
 namespace Nebula\Widgets;
 
 use Nebula\Helpers\Validate;
+use Nebula\Libraries\Michelf\Markdown;
+use Nebula\Libraries\Michelf\MarkdownExtra;
 use Nebula\Widget;
 
 class Content extends Widget
 {
+    /**
+     * 渲染文章详情页
+     *
+     * @return void
+     */
+    public function article()
+    {
+        $data = $this->queryContentById($this->params('id'));
+
+        $data['parse_content'] = Markdown::defaultTransform($data['content']);
+
+        $this->response->render('article', $data);
+    }
+
     /**
      * 分页查询文章列表
      *
@@ -46,6 +62,24 @@ class Content extends Widget
         });
 
         return $result;
+    }
+
+    /**
+     * 通过文章 ID 获取文章详情
+     *
+     * @return void
+     */
+    public function queryContentById($cid)
+    {
+        $data = $this->db
+            ->get('contents', ['cid', 'title', 'content', 'create_time', 'terms.name[term_name]'])
+            ->join('terms', ['contents.tid' => 'terms.tid'], 'LEFT JOIN')
+            ->where(['cid' => $cid])
+            ->execute();
+
+        $data['create_time'] = date('Y-m-d H:i:s', $data['create_time']);
+
+        return $data;
     }
 
     /**

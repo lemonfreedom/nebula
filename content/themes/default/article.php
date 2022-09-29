@@ -1,7 +1,8 @@
 <?php $this->render('modules/header'); ?>
 <?php $user = \Nebula\Widgets\User::factory(); ?>
 <div class="container">
-    <div>这是主题 default</div>
+    <div>文章详情页</div>
+    <a href="/">返回首页</a>
     <?php if ($user->hasLogin()) : ?>
         欢迎：<?= $user->get('username') ?>
         <a href="/user/logout">退出登录</a>
@@ -9,11 +10,14 @@
     <?php else : ?>
         <a href="/admin/login.php">登录</a>
     <?php endif; ?>
+    <div>主题参数：<?php print_r($data['theme_config']) ?></div>
+    <h1><?= $data['title'] ?></h1>
+    <p>
+        <span><?= $data['term_name'] ?></span>
+        <span><?= $data['create_time'] ?></span>
+    </p>
+    <div class="markdown">
+        <?= $data['parse_content'] ?>
+    </div>
 </div>
-<div>主题参数：<?php print_r($data['theme_config']) ?></div>
-<ul>
-    <?php foreach (\Nebula\Widgets\Content::factory()->queryContents() as $item) : ?>
-        <li><a href="/article/<?= $item['cid'] ?>"><?= $item['title'] ?></a></li>
-    <?php endforeach; ?>
-</ul>
 <?php $this->render('modules/footer'); ?>
