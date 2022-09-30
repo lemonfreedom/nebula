@@ -60,7 +60,7 @@ class Plugin extends Widget
     {
         $pluginName = $this->params('pluginName');
 
-        $pluginList = $this->getPluginList();
+        $pluginList = $this->queryPlugins();
 
         if (null === $pluginName) {
             return $pluginList;
@@ -82,7 +82,7 @@ class Plugin extends Widget
      *
      * @return array 插件列表
      */
-    public function getPluginList()
+    public function queryPlugins()
     {
         if (null === $this->pluginList) {
             // 插件目录列表

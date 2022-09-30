@@ -187,6 +187,30 @@ class Template
     }
 
     /**
+     * 渲染一个 checkbox
+     *
+     * @param string $name name 属性
+     * @param array $checkboxs 选项列表
+     * @param string $value value 属性
+     * @return string
+     */
+    public static function checkbox($name, $checkboxs = [], $value = '')
+    {
+        $radioContent = [];
+        foreach ($checkboxs as $checkbox) {
+            array_push($radioContent, self::createElement('label', ['class' => 'checkbox'], [
+                self::createElement('input', ['type' => 'checkbox', 'name' => $name, 'value' => $checkbox['value'], 'checked' => $value === $checkbox['value']]),
+                self::createElement('div', ['class' => 'checkmark'], ''),
+                self::createElement('span', [], $checkbox['name']),
+            ]));
+        }
+
+        return self::createElement('div', [
+            'class' => 'checkbox-group',
+        ], $radioContent);
+    }
+
+    /**
      * 渲染一个 button
      *
      * @param string $content 按钮内容

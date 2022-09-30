@@ -12,7 +12,6 @@
 namespace Nebula\Widgets;
 
 use Nebula\Widget;
-use Nebula\Plugin;
 use Nebula\Helpers\Validate;
 use Nebula\Widgets\Notice;
 use Nebula\Widgets\User;
@@ -36,6 +35,21 @@ class Option extends Widget
                 $this->options[$index]['value'] = unserialize($this->options[$index]['value']);
             }
         }
+
+
+        array_push($this->options, [
+            'name' => 'auth',
+            'value' => [
+                ['name' => '仪表盘', 'value' => '1'],
+                ['name' => '文章管理', 'value' => '8'],
+                ['name' => '分类管理', 'value' => '16'],
+                ['name' => '用户管理', 'value' => '32'],
+                ['name' => '角色管理', 'value' => '64'],
+                ['name' => '基本设置', 'value' => '128'],
+                ['name' => '主题', 'value' => '256'],
+                ['name' => '插件', 'value' => '512'],
+            ],
+        ]);
     }
 
     /**

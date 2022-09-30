@@ -2,7 +2,7 @@
 <?php $user->inRole(['0']) || $response->redirect('/admin'); ?>
 <?php include __DIR__ . '/modules/header.php'; ?>
 <?php include __DIR__ . '/modules/navbar.php'; ?>
-<?php $userList = \Nebula\Widgets\User::factory(['keyword' => $request->get('keyword', '')], 'render')->getUserList() ?>
+<?php $userList = \Nebula\Widgets\User::factory(['keyword' => $request->get('keyword', '')], 'render')->queryUsers() ?>
 <div class="container">
     <?= \Nebula\Helpers\Template::tabs(
         [
@@ -14,7 +14,7 @@
     ) ?>
     <?php if (null === $action) : ?>
         <div class="tools">
-            <a class="button" href="/admin/create-user.php">新建用户</a>
+            <a class="button" href="/admin/create-user.php">创建用户</a>
             <div class="group">
                 <div class="button-dropdown">
                     <span>选择项</span>
@@ -64,23 +64,52 @@
                 </tbody>
             </table>
         </div>
+        <?= \Nebula\Helpers\Template::pagination('/admin/users.php', [], $request->get('page', 1), ceil(\Nebula\Widgets\User::factory()->queryUserCount() / 8)) ?>
     <?php elseif ('role' === $action) : ?>
-        <div class="checkbox-group">
-            <label class="checkbox">
-                <input checked="checked" type="checkbox">
-                <div class="checkmark"></div>
-                <span>保存密码</span>
-            </label>
-            <label class="checkbox">
-                <input checked="checked" type="checkbox">
-                <div class="checkmark"></div>
-                <span>保存密码</span>
-            </label>
-            <label class="checkbox">
-                <input checked="checked" type="checkbox">
-                <div class="checkmark"></div>
-                <span>保存密码</span>
-            </label>
+        <div class="tools">
+            <a class="button" href="/admin/create-role.php">新建角色</a>
+            <div class="button-dropdown">
+                <span>选择项</span>
+                <ul class="dropdown-menu">
+                    <li><a href="">删除</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="table">
+            <table>
+                <colgroup>
+                    <col width="10%">
+                    <col width="20%">
+                    <col width="20%">
+                    <col width="30%">
+                    <col width="20%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>用户名</th>
+                        <th>昵称</th>
+                        <th>邮箱</th>
+                        <th>角色</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($userList as  $userInfo) : ?>
+                        <tr>
+                            <td>
+                                <label class="checkbox">
+                                    <input checked="checked" type="checkbox">
+                                    <div class="checkmark"></div>
+                                </label>
+                            </td>
+                            <td><a href="/admin/profile.php?uid=<?= $userInfo['uid'] ?>"><?= $userInfo['username'] ?></a></td>
+                            <td><?= $userInfo['nickname'] ?></td>
+                            <td><?= $userInfo['email'] ?></td>
+                            <td><?= $user->roleParse($userInfo['role']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     <?php endif; ?>
 </div>

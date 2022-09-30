@@ -1,9 +1,4 @@
-<?php
-
-use Nebula\Helpers\Template;
-use Nebula\Widgets\Content;
-
-include __DIR__ . '/modules/common.php'; ?>
+<?php include __DIR__ . '/modules/common.php'; ?>
 <?php $user->hasLogin() || $response->redirect('/admin/login.php'); ?>
 <?php include __DIR__ . '/modules/header.php'; ?>
 <?php include __DIR__ . '/modules/navbar.php'; ?>
@@ -69,7 +64,7 @@ include __DIR__ . '/modules/common.php'; ?>
                 </tbody>
             </table>
         </div>
-        <?= Template::pagination('/admin/contents.php', [], $request->get('page', 1), ceil(Content::factory()->queryContentCount() / 10)) ?>
+        <?= \Nebula\Helpers\Template::pagination('/admin/contents.php', [], $request->get('page', 1), ceil(\Nebula\Widgets\Content::factory()->queryContentCount() / 8)) ?>
     <?php elseif ('terms' === $action) : ?>
         <?php $list = \Nebula\Widgets\Content::factory()->queryTerms(); ?>
         <div class="tools">

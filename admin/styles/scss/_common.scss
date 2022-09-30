@@ -420,7 +420,8 @@ a {
 .button-group {
     display: inline-flex;
     display: flex;
-    gap: .6rem;
+    flex-wrap: wrap;
+    gap: 0 1.2rem;
 }
 
 .checkbox,

@@ -97,6 +97,53 @@ class User extends Widget
         return '未知';
     }
 
+
+    /**
+     * 创建用户
+     *
+     * @return void
+     */
+    public function createUser()
+    {
+        if (!User::factory()->hasLogin()) {
+            $this->response->redirect('/admin/login.php');
+        }
+
+        $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'username' => [
+                ['type' => 'required', 'message' => '用户名不能为空'],
+            ],
+            'email' => [
+                ['type' => 'required', 'message' => '邮箱不能为空'],
+                ['type' => 'email', 'message' => '邮箱格式不正确'],
+            ],
+            'password' => [
+                ['type' => 'required', 'message' => '密码不能为空'],
+            ],
+            'role' => [
+                ['type' => 'required', 'message' => '角色不能为空'],
+            ],
+        ]);
+        if (!$validate->run()) {
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
+            $this->response->redirect('/admin/create-user.php');
+        }
+
+        // 插入数据
+        $this->db->insert('users', [
+            'nickname' => $data['username'],
+            'username' => $data['username'],
+            'password' => Common::hash($data['password']),
+            'email' =>  $data['email'],
+            'role' =>  $data['role'],
+        ]);
+
+        Notice::factory()->set('新建成功', 'success');
+        $this->response->redirect('/admin/users.php');
+    }
+
     /**
      * 获取指定用户信息，若参数为空，则查询登陆用户信息
      *
@@ -126,12 +173,13 @@ class User extends Widget
     }
 
     /**
-     * 获取用户列表
+     * 分页查询用户列表
      *
-     * @return array 用户列表
+     * @return array
      */
-    public function getUserList()
+    public function queryUsers()
     {
+        $page = $this->request->get('page', '1');
         $keyword = '%' . trim($this->params('keyword', '')) . '%';
 
         return $this->db
@@ -144,6 +192,19 @@ class User extends Widget
                     'nickname[LIKE]' => $keyword,
                 ],
             ])
+            ->limit(($page - 1) * 8, 8)
+            ->execute();
+    }
+
+    /**
+     * 查询用户条数
+     *
+     * @return int
+     */
+    public function queryUserCount()
+    {
+        return $this->db
+            ->count('users')
             ->execute();
     }
 
@@ -596,6 +657,8 @@ class User extends Widget
 
         // 更新用户权限
         $this->on('update-permission' === $action)->updatePermission();
+
+        $this->on('create-user' === $action)->createUser();
 
         // 发送注册验证码
         $this->on('send-register-captcha' === $action)->sendRegisterCaptcha();

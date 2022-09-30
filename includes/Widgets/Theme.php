@@ -56,9 +56,9 @@ class Theme extends Widget
     /**
      * 获取主题列表
      *
-     * @return array 主题列表
+     * @return array
      */
-    public function getThemeList()
+    public function queryThemes()
     {
         if (null === $this->themeList) {
             // 主题目录列表

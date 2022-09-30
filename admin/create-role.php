@@ -4,11 +4,11 @@
 <?php include __DIR__ . '/modules/navbar.php'; ?>
 <div class="container">
     <div class="title">
-        <span>新建分类</span>
-        <a href="/admin/contents.php?action=terms">返回</a>
+        <span>新建角色</span>
+        <a href="/admin/users.php?action=role">返回</a>
     </div>
     <?= \Nebula\Helpers\Template::form(
-        '/content/create-term',
+        '/user/create-role',
         [
             \Nebula\Helpers\Template::formItem(
                 \Nebula\Helpers\Template::input('name'),
@@ -16,9 +16,9 @@
                 '名称',
             ),
             \Nebula\Helpers\Template::formItem(
-                \Nebula\Helpers\Template::input('slug'),
-                'slug',
-                '缩略名'
+                \Nebula\Helpers\Template::checkbox('auth', $option->get('auth')),
+                'auth',
+                '权限',
             ),
             \Nebula\Helpers\Template::createElement(
                 'div',

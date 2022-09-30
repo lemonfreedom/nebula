@@ -35,7 +35,7 @@ class Content extends Widget
     /**
      * 分页查询文章列表
      *
-     * @return void
+     * @return array
      */
     public function queryContents()
     {
@@ -54,7 +54,7 @@ class Content extends Widget
                 ],
             ])
             ->order(['create_time'])
-            ->limit(($page - 1) * 10, 10)
+            ->limit(($page - 1) * 8, 8)
             ->execute();
 
         array_walk($result, function (&$item) {
@@ -67,7 +67,7 @@ class Content extends Widget
     /**
      * 通过文章 ID 获取文章详情
      *
-     * @return void
+     * @return array
      */
     public function queryContentById($cid)
     {
@@ -85,7 +85,7 @@ class Content extends Widget
     /**
      * 查询文章条数
      *
-     * @return void
+     * @return int
      */
     public function queryContentCount()
     {

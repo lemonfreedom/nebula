@@ -4,31 +4,36 @@
 <?php include __DIR__ . '/modules/navbar.php'; ?>
 <div class="container">
     <div class="title">
-        <span>发布文章</span>
-        <a href="/admin/contents.php">返回</a>
+        <span>创建用户</span>
+        <a href="/admin/users.php">返回</a>
     </div>
     <?= \Nebula\Helpers\Template::form(
-        '/content/create-content',
+        '/user/create-user',
         [
             \Nebula\Helpers\Template::formItem(
-                \Nebula\Helpers\Template::input('title'),
-                'title',
-                '标题',
+                \Nebula\Helpers\Template::input('username'),
+                'username',
+                '用户名',
             ),
             \Nebula\Helpers\Template::formItem(
-                \Nebula\Helpers\Template::textarea('content'),
-                'content',
-                '内容'
+                \Nebula\Helpers\Template::input('email', '', 'email'),
+                'email',
+                '邮箱',
             ),
             \Nebula\Helpers\Template::formItem(
-                \Nebula\Helpers\Template::select('tid', array_map(function ($item) {
+                \Nebula\Helpers\Template::input('password', '', 'password'),
+                'password',
+                '密码',
+            ),
+            \Nebula\Helpers\Template::formItem(
+                \Nebula\Helpers\Template::select('role', array_map(function ($item) {
                     return [
                         'name' => $item['name'],
                         'value' => $item['tid'],
                     ];
                 }, \Nebula\Widgets\Content::factory()->queryTerms())),
-                'tid',
-                '分类',
+                'role',
+                '角色',
             ),
             \Nebula\Helpers\Template::createElement(
                 'div',
