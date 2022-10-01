@@ -160,10 +160,17 @@ function step2()
         // $mysql->drop('posts');
         // $mysql->drop('caches');
 
+        // 创建角色表
+        $mysql->create('roles', [
+            'rid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
+            'name' => ['VARCHAR(30)', 'NOT NULL'],
+            'auth' => ['int', 'UNSIGNED', 'NOT NULL'],
+        ]);
+
         // 创建用户表
         $mysql->create('users', [
             'uid' => ['int', 'UNSIGNED', 'NOT NULL', 'AUTO_INCREMENT', 'PRIMARY KEY'],
-            'role' => ['TINYINT', 'UNSIGNED', 'NOT NULL'],
+            'rid' => ['int', 'UNSIGNED', 'NOT NULL'],
             'nickname' => ['VARCHAR(60)', 'NOT NULL'],
             'username' => ['VARCHAR(60)', 'NOT NULL', 'UNIQUE'],
             'password' => ['VARCHAR(64)', 'NOT NULL'],

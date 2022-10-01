@@ -59,7 +59,7 @@ class User extends Widget
             // cookie 是否存在
             if (null !== $uid && null !== $token) {
                 $loginUserInfo = $this->db
-                    ->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'])
+                    ->get('users', ['uid', 'rid', 'username', 'email', 'nickname', 'token'])
                     ->where(['uid' => $uid])
                     ->execute();
                 // 用户信息是否存在
@@ -122,7 +122,7 @@ class User extends Widget
             'password' => [
                 ['type' => 'required', 'message' => '密码不能为空'],
             ],
-            'role' => [
+            'rid' => [
                 ['type' => 'required', 'message' => '角色不能为空'],
             ],
         ]);
@@ -136,12 +136,104 @@ class User extends Widget
             'nickname' => $data['username'],
             'username' => $data['username'],
             'password' => Common::hash($data['password']),
-            'email' =>  $data['email'],
-            'role' =>  $data['role'],
+            'email' => $data['email'],
+            'rid' => $data['rid'],
         ]);
 
         Notice::factory()->set('新建成功', 'success');
         $this->response->redirect('/admin/users.php');
+    }
+
+    /**
+     * 注册验证
+     *
+     * @return void
+     */
+    private function register()
+    {
+        // 权限验证，避免登陆注册
+        if ($this->hasLogin()) {
+            $this->response->redirect('/admin');
+        }
+
+        $data = $this->request->post();
+
+        $validate = new Validate($data, [
+            'username' => [
+                ['type' => 'required', 'message' => '用户名不能为空'],
+                [
+                    'type' => 'custom',
+                    'validator' => function ($rule, $value, $callback) use ($data) {
+                        if ($this->db->has('users')->where(['username' => $value])->execute()) {
+                            Cache::factory()->set('registerEmail', $this->request->post('email', ''))
+                                ->set('registerCode', $this->request->post('code', ''));
+                            $callback('用户名已存在');
+                        }
+                    },
+                ],
+            ],
+            'email' => [
+                ['type' => 'required', 'message' => '邮箱不能为空'],
+                ['type' => 'email', 'message' => '邮箱格式不正确'],
+                [
+                    'type' => 'custom',
+                    'validator' => function ($rule, $value, $callback) use ($data) {
+                        if ($this->db->has('users')->where(['email' => $value])->execute()) {
+                            Cache::factory()->set('registerUsername', $this->request->post('username', ''));
+                            $callback('邮箱已存在');
+                        }
+                    },
+                ],
+            ],
+            'code' => [
+                ['type' => 'required', 'message' => '验证码不能为空'],
+                [
+                    'type' => 'custom',
+                    'validator' => function ($rule, $value, $callback) use ($data) {
+                        if (!Common::hashValidate($data['email'] . $value, Cookie::get('code_hash', ''))) {
+                            Cache::factory()->set('registerUsername', $this->request->post('username', ''))
+                                ->set('registerEmail', $this->request->post('email', ''));
+                            $callback('验证码错误');
+                        }
+                    },
+                ],
+            ],
+            'password' => [
+                ['type' => 'required', 'message' => '密码不能为空'],
+            ],
+            'confirmPassword' => [
+                ['type' => 'required', 'message' => '确认密码不能为空'],
+                [
+                    'type' => 'custom',
+                    'validator' => function ($rule, $value, $callback) use ($data) {
+                        if ($data['password'] !== $value) {
+                            $callback('两次输入密码不一致');
+                        }
+                    },
+                ]
+            ],
+        ]);
+        if (!$validate->run()) {
+            Cache::factory()->set('registerUsername', $this->request->post('username', ''))
+                ->set('registerEmail', $this->request->post('email', ''))
+                ->set('registerCode', $this->request->post('code', ''));
+
+            Notice::factory()->set($validate->result[0]['message'], 'warning');
+            $this->response->redirect('/admin/register.php');
+        }
+
+        // 插入数据
+        $this->db->insert('users', [
+            'nickname' => $data['username'],
+            'username' => $data['username'],
+            'password' => Common::hash($data['password']),
+            'email' => $data['email'],
+            'rid' => '0',
+        ]);
+
+
+        Notice::factory()->set('注册成功', 'success');
+        $this->response->redirect('/admin/login.php');
     }
 
     /**
@@ -160,7 +252,7 @@ class User extends Widget
             $userInfo = $this->loginUserInfo;
         } else {
             $userInfo = $this->db
-                ->get('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'])
+                ->get('users', ['uid', 'rid', 'username', 'email', 'nickname', 'token'])
                 ->where(['uid' => $uid])
                 ->execute();
         }
@@ -183,7 +275,7 @@ class User extends Widget
         $keyword = '%' . trim($this->params('keyword', '')) . '%';
 
         return $this->db
-            ->select('users', ['uid', 'role', 'username', 'email', 'nickname', 'token'])
+            ->select('users', ['uid', 'rid', 'username', 'email', 'nickname', 'token'])
             ->where([
                 'OR' => [
                     'uid[LIKE]' => $keyword,
@@ -217,30 +309,10 @@ class User extends Widget
     public function inRole($roles)
     {
         if ($this->hasLogin()) {
-            return in_array($this->get('role'), $roles);
+            return in_array($this->get('rid'), $roles);
         } else {
             return false;
         }
-    }
-
-    /**
-     * 创建用户
-     *
-     * @param string $username 用户名
-     * @param string $password 密码
-     * @param string $email 邮箱
-     * @param string $role 角色
-     * @return void
-     */
-    public function set($username, $password, $email, $role = 1)
-    {
-        $this->db->insert('users', [
-            'nickname' => $username,
-            'username' => $username,
-            'password' => Common::hash($password),
-            'email' => $email,
-            'role' => $role,
-        ]);
     }
 
     /**
@@ -306,88 +378,6 @@ class User extends Widget
             Notice::factory()->set('登录失败', 'warning');
             $this->response->redirect('/admin/login.php');
         }
-    }
-
-    /**
-     * 注册验证
-     *
-     * @return void
-     */
-    private function register()
-    {
-        // 权限验证，避免登陆注册
-        if ($this->hasLogin()) {
-            $this->response->redirect('/admin');
-        }
-
-        $data = $this->request->post();
-
-        $validate = new Validate($data, [
-            'username' => [
-                ['type' => 'required', 'message' => '用户名不能为空'],
-            ],
-            'email' => [
-                ['type' => 'required', 'message' => '邮箱不能为空'],
-                ['type' => 'email', 'message' => '邮箱格式不正确'],
-            ],
-            'code' => [
-                ['type' => 'required', 'message' => '验证码不能为空'],
-            ],
-            'password' => [
-                ['type' => 'required', 'message' => '密码不能为空'],
-            ],
-            'confirmPassword' => [
-                ['type' => 'required', 'message' => '确认密码不能为空'],
-                [
-                    'type' => 'custom',
-                    'validator' => function ($rule, $value, $callback) use ($data) {
-                        if ($data['password'] !== $value) {
-                            $callback('两次输入密码不一致');
-                        }
-                    },
-                ]
-            ],
-        ]);
-        if (!$validate->run()) {
-            Cache::factory()->set('registerUsername', $this->request->post('username', ''))
-                ->set('registerEmail', $this->request->post('email', ''))
-                ->set('registerCode', $this->request->post('code', ''));
-
-            Notice::factory()->set($validate->result[0]['message'], 'warning');
-            $this->response->redirect('/admin/register.php');
-        }
-
-        // 验证码是否正确
-        if (!Common::hashValidate($data['email'] . $data['code'], Cookie::get('code_hash', ''))) {
-            Cache::factory()->set('registerUsername', $this->request->post('username', ''))
-                ->set('registerEmail', $this->request->post('email', ''))
-                ->set('验证码错误', 'warning');
-
-            $this->response->redirect('/admin/register.php');
-        }
-
-        // 用户名是否存在
-        if ($this->db->has('users')->where(['username' => $data['username']])->execute()) {
-            Cache::factory()->set('registerEmail', $this->request->post('email', ''))
-                ->set('registerCode', $this->request->post('code', ''));
-
-            Notice::factory()->set('用户名已存在', 'warning');
-            $this->response->redirect('/admin/register.php');
-        }
-
-        // 邮箱是否存在
-        if ($this->db->has('users')->where(['email' => $data['email']])->execute()) {
-            Cache::factory()->set('registerUsername', $this->request->post('username', ''));
-
-            Notice::factory()->set('邮箱已存在', 'warning');
-            $this->response->redirect('/admin/register.php');
-        }
-
-        // 插入数据
-        $this->set($data['username'], $data['password'], $data['email']);
-
-        Notice::factory()->set('注册成功', 'success');
-        $this->response->redirect('/admin/login.php');
     }
 
     /**
@@ -575,8 +565,8 @@ class User extends Widget
         $data = $this->request->post();
 
         $validate = new Validate($data, [
-            'role' => [
-                ['type' => 'required', 'message' => '用户角色不能为空'],
+            'rid' => [
+                ['type' => 'required', 'message' => '角色不能为空'],
             ],
         ]);
         if (!$validate->run()) {
@@ -587,7 +577,7 @@ class User extends Widget
         // 修改数据
         $this->db
             ->update('users', [
-                'role' => $data['role'],
+                'rid' => $data['rid'],
             ])
             ->where(['uid' => $uid])
             ->execute();

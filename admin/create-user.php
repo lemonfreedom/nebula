@@ -26,13 +26,13 @@
                 '密码',
             ),
             \Nebula\Helpers\Template::formItem(
-                \Nebula\Helpers\Template::select('role', array_map(function ($item) {
+                \Nebula\Helpers\Template::select('rid', array_map(function ($item) {
                     return [
                         'name' => $item['name'],
                         'value' => $item['tid'],
                     ];
                 }, \Nebula\Widgets\Content::factory()->queryTerms())),
-                'role',
+                'rid',
                 '角色',
             ),
             \Nebula\Helpers\Template::createElement(

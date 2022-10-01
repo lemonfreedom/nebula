@@ -58,7 +58,7 @@
                             <td><a href="/admin/profile.php?uid=<?= $userInfo['uid'] ?>"><?= $userInfo['username'] ?></a></td>
                             <td><?= $userInfo['nickname'] ?></td>
                             <td><?= $userInfo['email'] ?></td>
-                            <td><?= $user->roleParse($userInfo['role']) ?></td>
+                            <td><?= $user->roleParse($userInfo['rid']) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -105,7 +105,7 @@
                             <td><a href="/admin/profile.php?uid=<?= $userInfo['uid'] ?>"><?= $userInfo['username'] ?></a></td>
                             <td><?= $userInfo['nickname'] ?></td>
                             <td><?= $userInfo['email'] ?></td>
-                            <td><?= $user->roleParse($userInfo['role']) ?></td>
+                            <td><?= $user->roleParse($userInfo['rid']) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

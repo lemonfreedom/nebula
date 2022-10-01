@@ -63,8 +63,8 @@
         <!-- 权限控制 -->
         <?= \Nebula\Helpers\Template::form("/user/update-permission/{$userInfo['uid']}", [
             \Nebula\Helpers\Template::formItem(
-                \Nebula\Helpers\Template::select('role', \Nebula\Widgets\User::factory()->roleList, $userInfo['role']),
-                'role',
+                \Nebula\Helpers\Template::select('rid', \Nebula\Widgets\User::factory()->roleList, $userInfo['rid']),
+                'rid',
                 '用户角色',
             ),
             \Nebula\Helpers\Template::createElement(
