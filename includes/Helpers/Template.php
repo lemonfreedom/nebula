@@ -199,7 +199,7 @@ class Template
         $radioContent = [];
         foreach ($checkboxs as $checkbox) {
             array_push($radioContent, self::createElement('label', ['class' => 'checkbox'], [
-                self::createElement('input', ['type' => 'checkbox', 'name' => $name, 'value' => $checkbox['value'], 'checked' => $value === $checkbox['value']]),
+                self::createElement('input', ['type' => 'checkbox', 'name' => $name . '[]', 'value' => $checkbox['value'], 'checked' => $value === $checkbox['value']]),
                 self::createElement('div', ['class' => 'checkmark'], ''),
                 self::createElement('span', [], $checkbox['name']),
             ]));

@@ -145,6 +145,53 @@ class User extends Widget
     }
 
     /**
+     * 创建角色
+     *
+     * @return void
+     */
+    public function createRole()
+    {
+        if (!User::factory()->hasLogin()) {
+            $this->response->redirect('/admin/login.php');
+        }
+
+        $data = $this->request->post();
+        print_r($data);
+
+        // $validate = new Validate($data, [
+        //     'username' => [
+        //         ['type' => 'required', 'message' => '用户名不能为空'],
+        //     ],
+        //     'email' => [
+        //         ['type' => 'required', 'message' => '邮箱不能为空'],
+        //         ['type' => 'email', 'message' => '邮箱格式不正确'],
+        //     ],
+        //     'password' => [
+        //         ['type' => 'required', 'message' => '密码不能为空'],
+        //     ],
+        //     'rid' => [
+        //         ['type' => 'required', 'message' => '角色不能为空'],
+        //     ],
+        // ]);
+        // if (!$validate->run()) {
+        //     Notice::factory()->set($validate->result[0]['message'], 'warning');
+        //     $this->response->redirect('/admin/create-user.php');
+        // }
+
+        // // 插入数据
+        // $this->db->insert('users', [
+        //     'nickname' => $data['username'],
+        //     'username' => $data['username'],
+        //     'password' => Common::hash($data['password']),
+        //     'email' => $data['email'],
+        //     'rid' => $data['rid'],
+        // ]);
+
+        // Notice::factory()->set('新建成功', 'success');
+        // $this->response->redirect('/admin/users.php');
+    }
+
+    /**
      * 注册验证
      *
      * @return void
@@ -649,6 +696,7 @@ class User extends Widget
         $this->on('update-permission' === $action)->updatePermission();
 
         $this->on('create-user' === $action)->createUser();
+        $this->on('create-role' === $action)->createRole();
 
         // 发送注册验证码
         $this->on('send-register-captcha' === $action)->sendRegisterCaptcha();
